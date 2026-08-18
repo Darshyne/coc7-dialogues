@@ -3,6 +3,7 @@
     {{#if portrait}}<img src="{{portrait}}" alt="{{speaker}}">{{/if}}
   </figure>
   <section class="dialogue-panel">
+    <button type="button" class="dialogue-close" data-action="end" data-tooltip="{{localize "COC7DIALOGUES.UI.Close"}}" aria-label="{{localize "COC7DIALOGUES.UI.Close"}}"><i class="fa-solid fa-xmark"></i></button>
     <header class="dialogue-speaker">{{speaker}}</header>
     <div class="dialogue-text" data-action="skip">{{{text}}}</div>
     <nav class="dialogue-choices">
@@ -18,5 +19,4 @@
       {{/if}}
     </nav>
   </section>
-  <button type="button" class="dialogue-close" data-action="end" data-tooltip="{{localize "COC7DIALOGUES.UI.Close"}}" aria-label="{{localize "COC7DIALOGUES.UI.Close"}}"><i class="fa-solid fa-xmark"></i></button>
 </div>

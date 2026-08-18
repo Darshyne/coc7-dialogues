@@ -62,6 +62,7 @@
 
 /* Text panel */
 #coc7-dialogues-overlay .dialogue-panel {
+  position: relative;
   align-self: end;
   display: flex;
   flex-direction: column;
@@ -81,7 +82,7 @@
   text-transform: uppercase;
   color: #d6ba80;
   border-bottom: 1px solid rgba(214, 186, 128, 0.35);
-  padding-bottom: 6px;
+  padding: 0 40px 6px 0; /* room for the close button */
 }
 #coc7-dialogues-overlay .dialogue-text {
   flex: 1 1 auto;
@@ -157,10 +158,10 @@
 /* Close button */
 #coc7-dialogues-overlay .dialogue-close {
   position: absolute;
-  top: -44px;
-  right: 0;
-  width: 36px;
-  height: 36px;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border-radius: 50%;
   border: 1px solid rgba(214, 186, 128, 0.4) !important;
@@ -223,33 +224,33 @@
 /* Journal view mode                                                            */
 /* -------------------------------------------------------------------------- */
 
-.coc7-dialogues-page-view .node-meta {
+.dialogue-node-view .node-meta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 8px;
 }
-.coc7-dialogues-page-view .node-meta button { margin-left: auto; width: auto; }
-.coc7-dialogues-page-view .portrait-thumb {
+.dialogue-node-view .node-meta button { margin-left: auto; width: auto; }
+.dialogue-node-view .portrait-thumb {
   height: 48px;
   width: auto;
   border: none;
   border-radius: 4px;
   background: rgba(0,0,0,0.15);
 }
-.coc7-dialogues-page-view .tag {
+.dialogue-node-view .tag {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 8px; border-radius: 3px; font-size: 0.85em;
   background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.25);
 }
-.coc7-dialogues-page-view .tag.start { background: rgba(60, 140, 80, 0.2); border-color: rgba(60, 140, 80, 0.5); }
-.coc7-dialogues-page-view .node-text { margin: 0 0 10px; }
-.coc7-dialogues-page-view .node-choices { margin: 0; padding-left: 1.6em; }
-.coc7-dialogues-page-view .node-choices li { margin: 4px 0; }
-.coc7-dialogues-page-view .node-choices .fa-arrow-right { margin: 0 6px; opacity: 0.6; }
-.coc7-dialogues-page-view .node-choices a.target { text-decoration: underline dotted; cursor: pointer; }
-.coc7-dialogues-page-view .node-choices .target.end { font-style: italic; opacity: 0.75; }
-.coc7-dialogues-page-view .node-choices .target.missing { color: var(--color-level-error, #b22); }
-.coc7-dialogues-page-view .node-choices code { margin-left: 6px; font-size: 0.85em; opacity: 0.85; }
-.coc7-dialogues-page-view .end-node { list-style: none; margin-left: -1.6em; font-style: italic; opacity: 0.75; }
+.dialogue-node-view .tag.start { background: rgba(60, 140, 80, 0.2); border-color: rgba(60, 140, 80, 0.5); }
+.dialogue-node-view .node-text { margin: 0 0 10px; }
+.dialogue-node-view .node-choices { margin: 0; padding-left: 1.6em; }
+.dialogue-node-view .node-choices li { margin: 4px 0; }
+.dialogue-node-view .node-choices .fa-arrow-right { margin: 0 6px; opacity: 0.6; }
+.dialogue-node-view .node-choices a.target { text-decoration: underline dotted; cursor: pointer; }
+.dialogue-node-view .node-choices .target.end { font-style: italic; opacity: 0.75; }
+.dialogue-node-view .node-choices .target.missing { color: var(--color-level-error, #b22); }
+.dialogue-node-view .node-choices code { margin-left: 6px; font-size: 0.85em; opacity: 0.85; }
+.dialogue-node-view .end-node { list-style: none; margin-left: -1.6em; font-style: italic; opacity: 0.75; }

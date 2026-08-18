@@ -207,7 +207,7 @@ function fillRegion(g, region, color, alpha, outline) {
   g.beginFill(color, alpha);
   for ( const poly of region.polygons ) g.drawPolygon(poly);
   g.endFill();
-  if ( outline ) g.lineStyle();
+  if ( outline ) g.lineStyle(0); // PIXI: lineStyle() with no argument throws (options=null)
 }
 
 function colorOf(region, behavior) {
