@@ -1,0 +1,63 @@
+<section class="dialogue-node-editor">
+
+  <div class="node-toolbar">
+    {{#if isStart}}<span class="tag start" data-tooltip="{{localize "COC7DIALOGUES.Page.StartHint"}}"><i class="fa-solid fa-play"></i> {{localize "COC7DIALOGUES.Page.Start"}}</span>{{/if}}
+    <button type="button" data-action="play" data-tooltip="{{localize "COC7DIALOGUES.Page.PlayHint"}}"><i class="fa-solid fa-comments"></i> {{localize "COC7DIALOGUES.Page.Play"}}</button>
+  </div>
+
+  {{formGroup systemFields.text value=source.system.text enriched=enrichedText toggled=true collaborate=false height=220 documentUUID=uuid}}
+
+  <fieldset class="node-overrides">
+    <legend>{{localize "COC7DIALOGUES.Page.Overrides"}}</legend>
+    {{formGroup systemFields.speaker value=source.system.speaker}}
+    {{formGroup systemFields.portrait value=source.system.portrait input=portraitInput}}
+  </fieldset>
+
+  <fieldset class="node-choices">
+    <legend>{{localize "COC7DIALOGUES.Page.Choices"}}</legend>
+    <p class="hint">{{localize "COC7DIALOGUES.Page.ChoicesHint"}}</p>
+    {{#if choices.length}}
+    <table>
+      <thead>
+        <tr>
+          <th class="col-key">#</th>
+          <th class="col-label">{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.label.label"}}</th>
+          <th class="col-target">{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.target.label"}}</th>
+          <th class="col-cond">{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.condition.label"}}</th>
+          <th class="col-set">{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.set.label"}}</th>
+          <th class="col-actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each choices}}
+        <tr data-index="{{this.index}}">
+          <td class="col-key">{{this.key}}</td>
+          <td class="col-label"><input type="text" name="system.choices.{{this.index}}.label" value="{{this.label}}" placeholder="{{localize "COC7DIALOGUES.Page.LabelPlaceholder"}}"></td>
+          <td class="col-target">
+            <select name="system.choices.{{this.index}}.target" {{#if this.targetMissing}}class="missing"{{/if}}>
+              {{selectOptions ../targetOptions selected=this.target valueAttr="value" labelAttr="label"}}
+            </select>
+          </td>
+          <td class="col-cond"><input type="text" name="system.choices.{{this.index}}.condition" value="{{this.condition}}" placeholder="!visited:… , flag"></td>
+          <td class="col-set"><input type="text" name="system.choices.{{this.index}}.set" value="{{this.set}}" placeholder="flag, !autre"></td>
+          <td class="col-actions">
+            <a data-action="moveChoice" data-dir="-1" data-tooltip="{{localize "COC7DIALOGUES.Page.MoveUp"}}"><i class="fa-solid fa-arrow-up"></i></a>
+            <a data-action="moveChoice" data-dir="1" data-tooltip="{{localize "COC7DIALOGUES.Page.MoveDown"}}"><i class="fa-solid fa-arrow-down"></i></a>
+            <a data-action="removeChoice" data-tooltip="{{localize "COC7DIALOGUES.Page.RemoveChoice"}}"><i class="fa-solid fa-trash"></i></a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <p class="hint empty">{{localize "COC7DIALOGUES.Page.NoChoices"}}</p>
+    {{/if}}
+    <button type="button" data-action="addChoice"><i class="fa-solid fa-plus"></i> {{localize "COC7DIALOGUES.Page.AddChoice"}}</button>
+  </fieldset>
+
+  <details class="node-help">
+    <summary>{{localize "COC7DIALOGUES.Page.Help.Title"}}</summary>
+    <div class="help-body">{{{localize "COC7DIALOGUES.Page.Help.Body"}}}</div>
+  </details>
+
+</section>

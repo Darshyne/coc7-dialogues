@@ -1,0 +1,22 @@
+<div class="dialogue-stage">
+  <figure class="dialogue-portrait">
+    {{#if portrait}}<img src="{{portrait}}" alt="{{speaker}}">{{/if}}
+  </figure>
+  <section class="dialogue-panel">
+    <header class="dialogue-speaker">{{speaker}}</header>
+    <div class="dialogue-text" data-action="skip">{{{text}}}</div>
+    <nav class="dialogue-choices">
+      {{#each choices}}
+        <button type="button" class="dialogue-choice" data-action="choose" data-index="{{this.index}}" data-key="{{this.key}}">
+          <span class="key">{{this.key}}</span><span class="label">{{this.label}}</span>
+        </button>
+      {{/each}}
+      {{#if noChoices}}
+        <button type="button" class="dialogue-choice dialogue-end" data-action="end" data-key="1">
+          <span class="key">1</span><span class="label">{{localize "COC7DIALOGUES.UI.End"}}</span>
+        </button>
+      {{/if}}
+    </nav>
+  </section>
+  <button type="button" class="dialogue-close" data-action="end" data-tooltip="{{localize "COC7DIALOGUES.UI.Close"}}" aria-label="{{localize "COC7DIALOGUES.UI.Close"}}"><i class="fa-solid fa-xmark"></i></button>
+</div>

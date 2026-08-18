@@ -1,0 +1,38 @@
+<div class="coc7-dialogues-page-view">
+
+  {{#if title.show}}
+  <header class="journal-page-header">
+    <h{{ title.level }}>{{ name }}</h{{ title.level }}>
+  </header>
+  {{/if}}
+
+  <section class="journal-page-content dialogue-node-view">
+    <div class="node-meta">
+      {{#if isStart}}<span class="tag start"><i class="fa-solid fa-play"></i> {{localize "COC7DIALOGUES.Page.Start"}}</span>{{/if}}
+      {{#if system.speaker}}<span class="tag"><i class="fa-solid fa-user"></i> {{system.speaker}}</span>{{/if}}
+      {{#if system.portrait}}<img class="portrait-thumb" src="{{system.portrait}}" alt="">{{/if}}
+      {{#if canPlay}}<button type="button" data-action="play"><i class="fa-solid fa-comments"></i> {{localize "COC7DIALOGUES.Page.Play"}}</button>{{/if}}
+    </div>
+
+    <blockquote class="node-text">{{{enrichedText}}}</blockquote>
+
+    <ol class="node-choices">
+      {{#each choices}}
+      <li>
+        <span class="label">{{#if this.label}}{{this.label}}{{else}}<em>{{localize "COC7DIALOGUES.Page.EmptyLabel"}}</em>{{/if}}</span>
+        <i class="fa-solid fa-arrow-right"></i>
+        {{#if this.targetId}}
+          <a class="target" data-action="openPage" data-page-id="{{this.targetId}}">{{this.targetName}}</a>
+        {{else}}
+          <span class="target {{#if this.targetMissing}}missing{{else}}end{{/if}}">{{this.targetName}}</span>
+        {{/if}}
+        {{#if this.condition}}<code class="cond" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.condition.label"}}">? {{this.condition}}</code>{{/if}}
+        {{#if this.set}}<code class="set" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.set.label"}}">= {{this.set}}</code>{{/if}}
+      </li>
+      {{else}}
+      <li class="end-node"><i class="fa-solid fa-flag-checkered"></i> {{localize "COC7DIALOGUES.Page.NoChoicesView"}}</li>
+      {{/each}}
+    </ol>
+  </section>
+
+</div>

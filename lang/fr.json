@@ -1,0 +1,81 @@
+{
+  "TYPES": {
+    "JournalEntryPage": {
+      "coc7-dialogues": { "dialogue": "Nœud de dialogue" }
+    },
+    "RegionBehavior": {
+      "coc7-dialogues": { "dialogue": "Dialogue (PNJ cliquable)" }
+    }
+  },
+  "COC7DIALOGUES": {
+    "SheetLabel": "Nœud de dialogue",
+    "Fallback": { "Name": "Investigateur" },
+    "Title": { "M": "Monsieur", "F": "Madame" },
+    "UI": {
+      "End": "Prendre congé",
+      "Close": "Fermer le dialogue (Échap)"
+    },
+    "Warn": {
+      "NoJournal": "Cette région de dialogue n'a pas de journal configuré.",
+      "NoPermission": "Vous n'avez pas accès à ce dialogue — demandez au Gardien de vous donner la permission d'observer le journal.",
+      "NoStartNode": "Ce journal ne contient aucune page « Nœud de dialogue ».",
+      "MissingTarget": "Ce choix mène à une page qui n'existe plus."
+    },
+    "Settings": {
+      "Blur": { "Name": "Flouter la scène", "Hint": "Floute la scène derrière la fenêtre de dialogue." },
+      "Typewriter": { "Name": "Effet machine à écrire", "Hint": "Fait apparaître les répliques lettre par lettre (Espace/Entrée ou clic pour tout afficher)." },
+      "TypewriterSpeed": { "Name": "Vitesse d'écriture", "Hint": "Caractères par seconde." }
+    },
+    "Behavior": {
+      "Hint": "Rend la région cliquable : un clic ouvre le dialogue du journal choisi (aucun token nécessaire — pensé pour les scènes en théâtre de l'esprit).",
+      "FIELDS": {
+        "journal": { "label": "Journal de dialogue", "hint": "Journal contenant les pages « Nœud de dialogue ». Le dialogue démarre sur la première de ces pages. Les joueurs doivent avoir la permission Observateur dessus." },
+        "speaker": { "label": "Nom du PNJ", "hint": "Affiché au-dessus des répliques. Vide = nom de la région." },
+        "portrait": { "label": "Portrait du PNJ", "hint": "Image détourée (PNG à fond transparent) affichée à gauche du dialogue." },
+        "highlight": {
+          "label": "Surbrillance",
+          "hint": "Comment signaler la zone cliquable aux joueurs.",
+          "choices": { "hover": "Au survol seulement", "always": "Toujours (discrète) + survol", "never": "Jamais (curseur seulement)" }
+        },
+        "color": { "label": "Couleur de surbrillance", "hint": "Vide = couleur de la région." }
+      }
+    },
+    "Page": {
+      "FIELDS": {
+        "text": { "label": "Réplique du PNJ", "hint": "Placeholders : {nom}, {prenom}, {titre}, {il|elle}, {cher|chère|cher·e}…" },
+        "speaker": { "label": "Nom du PNJ (pour ce nœud)", "hint": "Vide = nom configuré sur la région." },
+        "portrait": { "label": "Portrait (pour ce nœud)", "hint": "Vide = portrait configuré sur la région. Utile pour changer d'expression." },
+        "choices": {
+          "label": "Choix",
+          "element": {
+            "label": { "label": "Réponse de l'investigateur" },
+            "target": { "label": "Mène à" },
+            "condition": { "label": "Condition" },
+            "set": { "label": "Définit" }
+          }
+        }
+      },
+      "Start": "Nœud de départ",
+      "StartHint": "Première page « Nœud de dialogue » du journal : c'est ici que le dialogue commence.",
+      "Play": "Tester d'ici",
+      "PlayHint": "Ouvre le dialogue en commençant par ce nœud (avec votre personnage).",
+      "Overrides": "Surcharges pour ce nœud (optionnel)",
+      "Choices": "Choix proposés à l'investigateur",
+      "ChoicesHint": "Dans l'ordre d'affichage. « Mène à » vide = ce choix termine le dialogue. Sans aucun choix, un bouton « Prendre congé » est proposé.",
+      "NoChoices": "Aucun choix : ce nœud termine le dialogue.",
+      "NoChoicesView": "Fin du dialogue",
+      "AddChoice": "Ajouter un choix",
+      "RemoveChoice": "Supprimer ce choix",
+      "MoveUp": "Monter",
+      "MoveDown": "Descendre",
+      "LabelPlaceholder": "« De quoi s'agit-il ? »",
+      "EndTarget": "— Fin du dialogue —",
+      "MissingTarget": "(page supprimée)",
+      "EmptyLabel": "(sans texte)",
+      "Help": {
+        "Title": "Aide : placeholders, conditions, variables",
+        "Body": "<p><strong>Placeholders</strong> (dans la réplique et les réponses) : <code>{nom}</code> nom complet, <code>{prenom}</code>, <code>{nomdefamille}</code>, <code>{titre}</code> (Monsieur/Madame), <code>{masculin|féminin}</code> p. ex. <code>{il|elle}</code>, <code>{cher|chère}</code>, et <code>{m|f|neutre}</code> pour une 3<sup>e</sup> forme quand le genre est inconnu. Le genre vient du champ « Sexe » de la fiche.</p><p><strong>Condition</strong> (le choix n'apparaît que si tout est vrai, séparer par des virgules) : <code>clef</code> la variable est définie, <code>!clef</code> non définie, <code>visited:ID</code> / <code>!visited:ID</code> le nœud d'identifiant ID a déjà été vu (ID = identifiant de la page, visible dans son en-tête).</p><p><strong>Définit</strong> (appliqué quand le choix est cliqué) : <code>clef</code> définit la variable, <code>!clef</code> la retire. Les variables et l'historique sont stockés dans les flags de l'acteur du joueur (<code>flags.coc7-dialogues</code>).</p>"
+      }
+    }
+  }
+}

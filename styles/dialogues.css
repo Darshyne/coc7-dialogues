@@ -1,0 +1,255 @@
+/* ==========================================================================
+   CoC7 Dialogues — overlay, page sheet, journal view
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------- */
+/* Full-screen dialogue overlay (ApplicationV2, frameless, unpositioned)       */
+/* -------------------------------------------------------------------------- */
+
+#coc7-dialogues-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;               /* above the canvas + interface, below tooltips/notifications */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 clamp(16px, 4vw, 64px) clamp(16px, 5vh, 56px);
+  background: rgba(8, 6, 4, 0.45);
+  backdrop-filter: blur(6px) saturate(0.7);
+  -webkit-backdrop-filter: blur(6px) saturate(0.7);
+  animation: coc7d-fade-in 220ms ease-out;
+  font-family: "Libre Caslon Text", "Signika", Georgia, serif;
+  color: #ede4d1;
+}
+#coc7-dialogues-overlay.no-blur {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(8, 6, 4, 0.55);
+}
+@keyframes coc7d-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+#coc7-dialogues-overlay .dialogue-stage {
+  position: relative;
+  width: min(1200px, 100%);
+  display: grid;
+  grid-template-columns: minmax(180px, 32%) 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: end;
+  gap: 24px;
+  max-height: 100%;
+}
+
+/* Portrait — bottom-aligned cut-out, sits "on" the panel line */
+#coc7-dialogues-overlay .dialogue-portrait {
+  margin: 0;
+  align-self: end;
+  justify-self: center;
+  max-height: min(78vh, 720px);
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.7));
+  animation: coc7d-slide-up 320ms ease-out;
+}
+#coc7-dialogues-overlay .dialogue-portrait img {
+  display: block;
+  max-height: min(78vh, 720px);
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  border: none;
+}
+@keyframes coc7d-slide-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Text panel */
+#coc7-dialogues-overlay .dialogue-panel {
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 220px;
+  max-height: min(70vh, 640px);
+  padding: 22px 28px 20px;
+  background: rgba(22, 17, 12, 0.88);
+  border: 1px solid rgba(214, 186, 128, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+#coc7-dialogues-overlay .dialogue-speaker {
+  font-family: "Cristoforo", "CapitoliumNews2", "Modesto Condensed", serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #d6ba80;
+  border-bottom: 1px solid rgba(214, 186, 128, 0.35);
+  padding-bottom: 6px;
+}
+#coc7-dialogues-overlay .dialogue-text {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  cursor: default;
+}
+#coc7-dialogues-overlay .dialogue-text.typing { cursor: pointer; }
+#coc7-dialogues-overlay .dialogue-text p { margin: 0 0 0.6em; }
+#coc7-dialogues-overlay .dialogue-text p:last-child { margin-bottom: 0; }
+#coc7-dialogues-overlay .dialogue-text a.content-link,
+#coc7-dialogues-overlay .dialogue-text a.inline-roll {
+  background: rgba(214, 186, 128, 0.15);
+  border-color: rgba(214, 186, 128, 0.4);
+  color: inherit;
+}
+
+/* Choices */
+#coc7-dialogues-overlay .dialogue-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: opacity 200ms ease-out;
+}
+#coc7-dialogues-overlay .dialogue-choices.pending {
+  opacity: 0;
+  pointer-events: none;
+}
+#coc7-dialogues-overlay button.dialogue-choice {
+  --button-background-color: transparent;
+  --button-text-color: #ede4d1;
+  --button-border-color: transparent;
+  --button-hover-background-color: rgba(214, 186, 128, 0.14);
+  --button-hover-text-color: #fff6df;
+  --button-hover-border-color: rgba(214, 186, 128, 0.5);
+  --button-focus-outline-color: #d6ba80;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: 7px 12px;
+  text-align: left;
+  font-family: inherit;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  background: transparent !important;
+  color: #ede4d1 !important;
+  border: 1px solid transparent !important;
+  border-radius: 4px;
+  box-shadow: none;
+  cursor: pointer;
+}
+#coc7-dialogues-overlay button.dialogue-choice:hover,
+#coc7-dialogues-overlay button.dialogue-choice:focus-visible {
+  background: rgba(214, 186, 128, 0.14) !important;
+  border-color: rgba(214, 186, 128, 0.5) !important;
+  color: #fff6df !important;
+  outline: none;
+}
+#coc7-dialogues-overlay button.dialogue-choice:disabled { opacity: 0.5; cursor: wait; }
+#coc7-dialogues-overlay button.dialogue-choice .key {
+  flex: 0 0 1.4em;
+  font-family: "Cristoforo", serif;
+  color: #d6ba80;
+  opacity: 0.85;
+}
+#coc7-dialogues-overlay button.dialogue-choice .label { flex: 1 1 auto; }
+#coc7-dialogues-overlay button.dialogue-end .label { font-style: italic; opacity: 0.85; }
+
+/* Close button */
+#coc7-dialogues-overlay .dialogue-close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(214, 186, 128, 0.4) !important;
+  background: rgba(22, 17, 12, 0.85) !important;
+  color: #d6ba80 !important;
+  font-size: 1rem;
+  line-height: 1;
+}
+#coc7-dialogues-overlay .dialogue-close:hover { background: rgba(214, 186, 128, 0.25) !important; }
+
+@media (max-width: 800px) {
+  #coc7-dialogues-overlay .dialogue-stage { grid-template-columns: 1fr; }
+  #coc7-dialogues-overlay .dialogue-portrait { display: none; }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Page sheet — edit mode                                                       */
+/* -------------------------------------------------------------------------- */
+
+.coc7-dialogues-page .dialogue-node-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.coc7-dialogues-page .node-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.coc7-dialogues-page .node-toolbar button { flex: 0 0 auto; margin-left: auto; }
+.coc7-dialogues-page .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: var(--font-size-12);
+  background: var(--color-cool-5, rgba(0,0,0,0.1));
+  border: 1px solid var(--color-border-light-2, rgba(0,0,0,0.3));
+}
+.coc7-dialogues-page .tag.start { background: rgba(60, 140, 80, 0.2); border-color: rgba(60, 140, 80, 0.5); }
+.coc7-dialogues-page fieldset { display: flex; flex-direction: column; gap: 8px; }
+.coc7-dialogues-page .node-choices table { width: 100%; border-collapse: collapse; margin: 0; }
+.coc7-dialogues-page .node-choices th { font-size: var(--font-size-12); text-align: left; padding: 2px 4px; }
+.coc7-dialogues-page .node-choices td { padding: 2px 4px; vertical-align: middle; }
+.coc7-dialogues-page .node-choices td input,
+.coc7-dialogues-page .node-choices td select { width: 100%; }
+.coc7-dialogues-page .node-choices .col-key { width: 1.6em; text-align: center; opacity: 0.7; }
+.coc7-dialogues-page .node-choices .col-label { width: 34%; }
+.coc7-dialogues-page .node-choices .col-target { width: 22%; }
+.coc7-dialogues-page .node-choices .col-actions { width: 66px; white-space: nowrap; text-align: right; }
+.coc7-dialogues-page .node-choices .col-actions a { padding: 0 3px; cursor: pointer; }
+.coc7-dialogues-page .node-choices select.missing { border-color: var(--color-level-error, #b22); }
+.coc7-dialogues-page .node-choices > button { align-self: flex-start; }
+.coc7-dialogues-page .node-help summary { cursor: pointer; font-weight: bold; }
+.coc7-dialogues-page .node-help .help-body { padding: 6px 10px; font-size: var(--font-size-13); }
+.coc7-dialogues-page .node-help code { font-size: 0.95em; }
+
+/* -------------------------------------------------------------------------- */
+/* Journal view mode                                                            */
+/* -------------------------------------------------------------------------- */
+
+.coc7-dialogues-page-view .node-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.coc7-dialogues-page-view .node-meta button { margin-left: auto; width: auto; }
+.coc7-dialogues-page-view .portrait-thumb {
+  height: 48px;
+  width: auto;
+  border: none;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.15);
+}
+.coc7-dialogues-page-view .tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 3px; font-size: 0.85em;
+  background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.25);
+}
+.coc7-dialogues-page-view .tag.start { background: rgba(60, 140, 80, 0.2); border-color: rgba(60, 140, 80, 0.5); }
+.coc7-dialogues-page-view .node-text { margin: 0 0 10px; }
+.coc7-dialogues-page-view .node-choices { margin: 0; padding-left: 1.6em; }
+.coc7-dialogues-page-view .node-choices li { margin: 4px 0; }
+.coc7-dialogues-page-view .node-choices .fa-arrow-right { margin: 0 6px; opacity: 0.6; }
+.coc7-dialogues-page-view .node-choices a.target { text-decoration: underline dotted; cursor: pointer; }
+.coc7-dialogues-page-view .node-choices .target.end { font-style: italic; opacity: 0.75; }
+.coc7-dialogues-page-view .node-choices .target.missing { color: var(--color-level-error, #b22); }
+.coc7-dialogues-page-view .node-choices code { margin-left: 6px; font-size: 0.85em; opacity: 0.85; }
+.coc7-dialogues-page-view .end-node { list-style: none; margin-left: -1.6em; font-style: italic; opacity: 0.75; }
