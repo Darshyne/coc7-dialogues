@@ -16,9 +16,9 @@ Foundry v13 minimum, testé sur v14.
    page »). Une page = un nœud : la réplique du PNJ (éditeur riche,
    enrichers `@UUID` OK) + la liste des choix, chacun menant à une autre
    page du même journal (menu déroulant) ou à « Fin du dialogue ». Le
-   dialogue démarre sur la **première** page « Nœud de dialogue » du
-   journal (dans l'ordre des pages) — badge « Nœud de départ » sur sa
-   fiche. Le bouton **« Tester d'ici »** joue le dialogue à partir du nœud
+   dialogue démarre sur la première page « Nœud de dialogue » dont la
+   **condition d'entrée** passe (dans l'ordre des pages ; vide = toujours
+   valable) — badge « Nœud de départ » sur la première. Le bouton **« Tester d'ici »** joue le dialogue à partir du nœud
    ouvert.
 2. Donner aux joueurs la permission **Observateur** sur ce journal, puis —
    réglage recommandé, anti-spoil — passer **chaque page** à **« Aucun »**
@@ -208,6 +208,13 @@ virgules) :
 
 Un nœud **sans aucun choix** (ou dont tous les choix sont masqués par
 leurs conditions) affiche un bouton « Prendre congé ».
+
+Chaque **nœud** a aussi sa propre **condition d'entrée** (même syntaxe) :
+au lancement, le dialogue démarre sur le **premier nœud (dans l'ordre des
+pages) dont la condition passe** — vide = toujours valable. C'est ainsi
+qu'on change l'intro au retour du joueur : un nœud « Accueil (retour) »
+avec `visited:ID_de_l'accueil`, placé **avant** l'accueil normal, prend
+la main dès la deuxième visite (vérifié en jeu sur le dialogue de Ruby).
 
 ## Mot de passe, argent et jets de compétence (par choix)
 

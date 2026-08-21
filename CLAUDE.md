@@ -124,6 +124,15 @@ pattern que `../coc7-ledger/`).
   Monde de test : modèle « La cave du Green Ocean » dans « Modèles de
   quêtes (dialogues) », log « Quêtes — Charline meyer ».
 
+- **Condition d'entrée par nœud (v0.6.0, 2026-08-21)** : champ
+  `system.condition` sur la PAGE (pas le choix) — `firstDialoguePage()`
+  prend le premier nœud (ordre `sort`) dont la condition passe, repli sur
+  le tout premier. Usage canonique : intro alternative au retour
+  (`visited:ID` sur un nœud placé avant l'accueil). Exemple vivant : « 0.
+  Accueil (retour) » (sort -100000) dans le journal de Ruby. Vérifié en
+  jeu (1ʳᵉ ouverture → « 1. Accueil », réouverture → « 0. Accueil
+  (retour) »).
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

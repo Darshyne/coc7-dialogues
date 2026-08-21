@@ -18,6 +18,11 @@ export class DialoguePageModel extends foundry.abstract.TypeDataModel {
     return {
       // What the NPC says. HTML (enrichers OK) + placeholders ({nom}, {il|elle}…).
       text: new fields.HTMLField({ required: true, blank: true, initial: '' }),
+      // Entry condition (state.js#checkCondition syntax): when the dialogue
+      // opens, the FIRST dialogue page (in sort order) whose condition
+      // passes becomes the start node — so a "returning visitor" intro is
+      // just a page with `visited:ID` placed before the first-time intro.
+      condition: new fields.StringField({ required: true, blank: true, initial: '' }),
       // Optional per-node overrides of what the Region behavior configures.
       speaker: new fields.StringField({ required: true, blank: true, initial: '' }),
       portrait: new fields.FilePathField({ categories: ['IMAGE'], required: false, blank: true }),

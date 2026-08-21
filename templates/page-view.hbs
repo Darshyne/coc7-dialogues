@@ -9,6 +9,7 @@
   <section class="journal-page-content dialogue-node-view">
     <div class="node-meta">
       {{#if isStart}}<span class="tag start"><i class="fa-solid fa-play"></i> {{localize "COC7DIALOGUES.Page.Start"}}</span>{{/if}}
+      {{#if system.condition}}<code class="cond" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.condition.label"}}">? {{system.condition}}</code>{{/if}}
       {{#if system.speaker}}<span class="tag"><i class="fa-solid fa-user"></i> {{system.speaker}}</span>{{/if}}
       {{#if system.portrait}}<img class="portrait-thumb" src="{{system.portrait}}" alt="">{{/if}}
       {{#if canPlay}}<button type="button" data-action="play"><i class="fa-solid fa-comments"></i> {{localize "COC7DIALOGUES.Page.Play"}}</button>{{/if}}

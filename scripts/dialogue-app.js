@@ -67,11 +67,18 @@ export async function openDialogue(journal, { speaker = '', portrait = '', start
   return current;
 }
 
-/** @param {JournalEntry} journal */
+/**
+ * The entry node: first dialogue page (in sort order) whose entry
+ * condition passes for the current user — so an intro can differ on a
+ * return visit. Falls back to the very first dialogue page when no
+ * condition passes at all.
+ * @param {JournalEntry} journal
+ */
 export function firstDialoguePage(journal) {
-  return journal.pages.contents
+  const pages = journal.pages.contents
     .filter(p => p.type === PAGE_TYPE)
-    .sort((a, b) => a.sort - b.sort)[0] ?? null;
+    .sort((a, b) => a.sort - b.sort);
+  return pages.find(p => checkCondition(p.system.condition, journal)) ?? pages[0] ?? null;
 }
 
 /* -------------------------------------------- */
