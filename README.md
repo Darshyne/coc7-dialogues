@@ -126,6 +126,27 @@ de volume Musique du joueur. Cette macro reproduit le mode *aléatoire*
 d'une playlist de pistes en boucle ; pour un mode séquentiel il faudrait
 enchaîner les pistes via l'événement `end` du son.
 
+## Mise en place des quêtes (Simple Quest requis)
+
+1. Le Gardien écrit ses **quêtes modèles** (pages « Quest ») dans un
+   journal dédié — par ex. « Modèles de quêtes (dialogues) » dans le
+   dossier Quests de Simple Quest — en permission **Observateur**, pages à
+   « Aucun » (même pattern anti-spoil que les dialogues : les données
+   restent lisibles par le module, invisibles dans l'interface). Les
+   objectifs sont les puces de liste du texte de la page.
+2. Chaque joueur a besoin d'un **journal de quêtes dont il est
+   propriétaire** — c'est ce qui permet au dialogue d'écrire dedans sans
+   MJ connecté (Simple Quest fait passer les joueurs non-propriétaires par
+   un relais MJ). Deux façons : le module le crée tout seul au premier
+   `give` si les joueurs ont la permission « Créer des journaux » ; sinon
+   le Gardien le crée une fois — nom `Quêtes — {nom du personnage}` (ou
+   n'importe quel nom via
+   `api.createQuestLogFor(user)` / `api.createQuestLogFor(user, journal)`
+   qui pose le flag de reconnaissance), joueur propriétaire, rangé dans le
+   dossier Quests pour apparaître dans l'app Simple Quest.
+3. Chaque joueur voit alors **ses** quêtes dans Simple Quest, le Gardien
+   voit tout.
+
 ## Placeholders
 
 Dans les répliques comme dans les réponses :
@@ -194,7 +215,20 @@ l'éditeur) :
   vide (pas de re-tentative en spammant le choix). Le jet a lieu *après* le
   paiement éventuel (on paie pour tenter). Nom introuvable sur la fiche →
   avertissement, rien ne se passe.
-- **En cas d'échec** — le nœud de repli commun aux trois mécanismes.
+- **Quête (Simple Quest)** 📜 — directives appliquées en cas de succès du
+  choix, séparées par `;` :
+  - `give:UUID` — donne la quête au joueur : la page de quête **modèle**
+    (type « Quest » de Simple Quest, UUID par clic droit → Copier
+    l'identifiant) est copiée dans **son** journal de quêtes, statut
+    « En cours ». Idempotent : une quête déjà donnée ne l'est pas deux fois.
+  - `status:UUID|done` (aussi `failed`, `progress`, `hidden`) — change le
+    statut de la quête du joueur issue de ce modèle.
+  - `objective:UUID|texte de l'objectif|done` (aussi `undone`, `failed`) —
+    coche un objectif (une ligne de liste du texte de la quête), identifié
+    par son texte exactement comme le fait Simple Quest.
+  L'UUID est **toujours celui du modèle** — la copie du joueur est
+  retrouvée via un flag posé au `give`.
+- **En cas d'échec** — le nœud de repli commun aux mécanismes ci-dessus.
 
 Tout reste côté client : le joueur paie et lance ses dés depuis son propre
 acteur, aucune permission ni MJ nécessaires. Le jet est rendu par le

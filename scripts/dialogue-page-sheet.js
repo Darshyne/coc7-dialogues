@@ -124,7 +124,7 @@ export class DialoguePageSheet extends Base {
 
   static async #onAddChoice() {
     const choices = foundry.utils.deepClone(this.page.system._source.choices ?? []);
-    choices.push({ label: '', target: '', condition: '', set: '', answer: '', cost: 0, check: '', checkDifficulty: 'regular', failTarget: '' });
+    choices.push({ label: '', target: '', condition: '', set: '', answer: '', cost: 0, check: '', checkDifficulty: 'regular', quest: '', failTarget: '' });
     await this.page.update({ 'system.choices': choices });
   }
 

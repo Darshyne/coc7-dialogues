@@ -105,6 +105,25 @@ pattern que `../coc7-ledger/`).
   (« Mise en place » étape 2). Ne pas « corriger » ce comportement en
   ajoutant un test de permission par page : il est volontaire.
 
+- **Quêtes Simple Quest dans les choix (v0.5.0, 2026-08-21)** : champ
+  `quest` par choix (`give:UUID ; status:UUID|done ; objective:UUID|texte|
+  done`, `scripts/quest.js`), appliqué APRÈS `set`, en cas de succès
+  seulement. Architecture : quêtes modèles (pages `simple-quest.quest`)
+  copiées dans un **journal de quêtes possédé par le joueur** (résolu par
+  flag `questLog` OU nom `Quêtes — {acteur/user}`) — parce que Simple
+  Quest route les mises à jour des non-propriétaires par un **socket MJ**
+  (donc MJ en ligne requis), que posséder le journal évite. Faits utiles
+  sur Simple Quest 5.1.4 (bundlé) : le corps ET les objectifs d'une quête
+  = `text.content` standard de la page (les htmlFields description/
+  objectives du module.json sont un vestige) ; `objectiveState` = { slug:
+  0|1|2 } avec slug = `text.trim().slice(0,50).slugify({strict:true})` ;
+  statuts -1/0/1/2 = Undiscovered/In Progress/Completed/Failed ; l'app
+  liste les journaux sous son dossier racine (dossier « Simple Quest » →
+  sous-dossier Quests). Vérifié en jeu (compte test : refus propre sans
+  journal possédé, give idempotent, objectif coché au bon slug, statuts).
+  Monde de test : modèle « La cave du Green Ocean » dans « Modèles de
+  quêtes (dialogues) », log « Quêtes — Charline meyer ».
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

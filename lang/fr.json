@@ -1,16 +1,26 @@
 {
   "TYPES": {
     "JournalEntryPage": {
-      "coc7-dialogues": { "dialogue": "Nœud de dialogue" }
+      "coc7-dialogues": {
+        "dialogue": "Nœud de dialogue"
+      }
     },
     "RegionBehavior": {
-      "coc7-dialogues": { "dialogue": "Dialogue (PNJ cliquable)", "clickMacro": "Macro au clic" }
+      "coc7-dialogues": {
+        "dialogue": "Dialogue (PNJ cliquable)",
+        "clickMacro": "Macro au clic"
+      }
     }
   },
   "COC7DIALOGUES": {
     "SheetLabel": "Nœud de dialogue",
-    "Fallback": { "Name": "Investigateur" },
-    "Title": { "M": "Monsieur", "F": "Madame" },
+    "Fallback": {
+      "Name": "Investigateur"
+    },
+    "Title": {
+      "M": "Monsieur",
+      "F": "Madame"
+    },
     "UI": {
       "End": "Prendre congé",
       "Close": "Fermer le dialogue (Échap)",
@@ -22,7 +32,11 @@
       "Paid": "<em>{actor}</em> paie <strong>{cost} $</strong> ({npc} — dialogue)."
     },
     "Check": {
-      "Difficulty": { "regular": "Normale", "hard": "Difficile", "extreme": "Extrême" },
+      "Difficulty": {
+        "regular": "Normale",
+        "hard": "Difficile",
+        "extreme": "Extrême"
+      },
       "Success": "Réussite",
       "Failure": "Échec",
       "Critical": "Réussite critique !",
@@ -38,57 +52,130 @@
       "NoActorMoney": "Aucun personnage assigné : impossible de payer {cost} $.",
       "NotEnoughMoney": "Pas assez d'argent pour payer {cost} $ (dépenses courantes, espèces et capital compris).",
       "NoActorCheck": "Aucun personnage assigné : impossible de faire le jet « {check} ».",
-      "UnknownCheck": "« {check} » ne correspond à aucune compétence ni caractéristique de votre personnage."
+      "UnknownCheck": "« {check} » ne correspond à aucune compétence ni caractéristique de votre personnage.",
+      "QuestBadDirective": "Directive de quête invalide : « {term} ».",
+      "QuestNoTemplate": "Quête modèle introuvable ({uuid}) — l'UUID doit pointer une page « Quest » de Simple Quest.",
+      "QuestNoLog": "Impossible de créer votre journal de quêtes — demandez au Gardien de vous en créer un (ou la permission de créer des journaux).",
+      "QuestNotGiven": "La quête « {name} » ne vous a pas encore été donnée.",
+      "QuestFailed": "La directive de quête « {term} » a échoué (voir console)."
     },
     "Settings": {
-      "Blur": { "Name": "Flouter la scène", "Hint": "Floute la scène derrière la fenêtre de dialogue." },
-      "Typewriter": { "Name": "Effet machine à écrire", "Hint": "Fait apparaître les répliques lettre par lettre (Espace/Entrée ou clic pour tout afficher)." },
-      "TypewriterSpeed": { "Name": "Vitesse d'écriture", "Hint": "Caractères par seconde." }
+      "Blur": {
+        "Name": "Flouter la scène",
+        "Hint": "Floute la scène derrière la fenêtre de dialogue."
+      },
+      "Typewriter": {
+        "Name": "Effet machine à écrire",
+        "Hint": "Fait apparaître les répliques lettre par lettre (Espace/Entrée ou clic pour tout afficher)."
+      },
+      "TypewriterSpeed": {
+        "Name": "Vitesse d'écriture",
+        "Hint": "Caractères par seconde."
+      }
     },
     "Behavior": {
       "Hint": "Rend la région cliquable : un clic ouvre le dialogue du journal choisi (aucun token nécessaire — pensé pour les scènes en théâtre de l'esprit).",
       "FIELDS": {
-        "journal": { "label": "Journal de dialogue", "hint": "Journal contenant les pages « Nœud de dialogue ». Le dialogue démarre sur la première de ces pages. Les joueurs doivent avoir la permission Observateur dessus." },
-        "speaker": { "label": "Nom du PNJ", "hint": "Affiché au-dessus des répliques. Vide = nom de la région." },
-        "portrait": { "label": "Portrait du PNJ", "hint": "Image détourée (PNG à fond transparent) affichée à gauche du dialogue." },
+        "journal": {
+          "label": "Journal de dialogue",
+          "hint": "Journal contenant les pages « Nœud de dialogue ». Le dialogue démarre sur la première de ces pages. Les joueurs doivent avoir la permission Observateur dessus."
+        },
+        "speaker": {
+          "label": "Nom du PNJ",
+          "hint": "Affiché au-dessus des répliques. Vide = nom de la région."
+        },
+        "portrait": {
+          "label": "Portrait du PNJ",
+          "hint": "Image détourée (PNG à fond transparent) affichée à gauche du dialogue."
+        },
         "highlight": {
           "label": "Surbrillance",
           "hint": "Comment signaler la zone cliquable aux joueurs.",
-          "choices": { "hover": "Au survol seulement", "always": "Toujours (discrète) + survol", "never": "Jamais (curseur seulement)" }
+          "choices": {
+            "hover": "Au survol seulement",
+            "always": "Toujours (discrète) + survol",
+            "never": "Jamais (curseur seulement)"
+          }
         },
-        "color": { "label": "Couleur de surbrillance", "hint": "Vide = couleur de la région." }
+        "color": {
+          "label": "Couleur de surbrillance",
+          "hint": "Vide = couleur de la région."
+        }
       }
     },
     "MacroBehavior": {
       "Hint": "Rend la région cliquable : un clic exécute la macro choisie sur le client de l'utilisateur qui clique — même sans permission sur la macro (aucun token nécessaire). La macro s'exécute avec les droits du joueur : ce qu'il n'a pas le droit de modifier reste hors de portée du script.",
       "FIELDS": {
-        "macro": { "label": "Macro à exécuter", "hint": "Glisser-déposer la macro (script ou chat). Elle s'exécute chez l'utilisateur qui clique, permission ou pas. Dans une macro script : scope.behavior et scope.region donnent le contexte." },
-        "label": { "label": "Libellé au survol", "hint": "Affiché au-dessus de la région au survol. Vide = nom de la région." },
+        "macro": {
+          "label": "Macro à exécuter",
+          "hint": "Glisser-déposer la macro (script ou chat). Elle s'exécute chez l'utilisateur qui clique, permission ou pas. Dans une macro script : scope.behavior et scope.region donnent le contexte."
+        },
+        "label": {
+          "label": "Libellé au survol",
+          "hint": "Affiché au-dessus de la région au survol. Vide = nom de la région."
+        },
         "highlight": {
           "label": "Surbrillance",
           "hint": "Comment signaler la zone cliquable aux joueurs.",
-          "choices": { "hover": "Au survol seulement", "always": "Toujours (discrète) + survol", "never": "Jamais (curseur seulement)" }
+          "choices": {
+            "hover": "Au survol seulement",
+            "always": "Toujours (discrète) + survol",
+            "never": "Jamais (curseur seulement)"
+          }
         },
-        "color": { "label": "Couleur de surbrillance", "hint": "Vide = couleur de la région." }
+        "color": {
+          "label": "Couleur de surbrillance",
+          "hint": "Vide = couleur de la région."
+        }
       }
     },
     "Page": {
       "FIELDS": {
-        "text": { "label": "Réplique du PNJ", "hint": "Placeholders : {nom}, {prenom}, {titre}, {il|elle}, {cher|chère|cher·e}…" },
-        "speaker": { "label": "Nom du PNJ (pour ce nœud)", "hint": "Vide = nom configuré sur la région." },
-        "portrait": { "label": "Portrait (pour ce nœud)", "hint": "Vide = portrait configuré sur la région. Utile pour changer d'expression." },
+        "text": {
+          "label": "Réplique du PNJ",
+          "hint": "Placeholders : {nom}, {prenom}, {titre}, {il|elle}, {cher|chère|cher·e}…"
+        },
+        "speaker": {
+          "label": "Nom du PNJ (pour ce nœud)",
+          "hint": "Vide = nom configuré sur la région."
+        },
+        "portrait": {
+          "label": "Portrait (pour ce nœud)",
+          "hint": "Vide = portrait configuré sur la région. Utile pour changer d'expression."
+        },
         "choices": {
           "label": "Choix",
           "element": {
-            "label": { "label": "Réponse de l'investigateur" },
-            "target": { "label": "Mène à" },
-            "condition": { "label": "Condition" },
-            "set": { "label": "Définit" },
-            "answer": { "label": "Mot attendu" },
-            "cost": { "label": "Coût" },
-            "check": { "label": "Jet de compétence" },
-            "checkDifficulty": { "label": "Difficulté" },
-            "failTarget": { "label": "En cas d'échec" }
+            "label": {
+              "label": "Réponse de l'investigateur"
+            },
+            "target": {
+              "label": "Mène à"
+            },
+            "condition": {
+              "label": "Condition"
+            },
+            "set": {
+              "label": "Définit"
+            },
+            "answer": {
+              "label": "Mot attendu"
+            },
+            "cost": {
+              "label": "Coût"
+            },
+            "check": {
+              "label": "Jet de compétence"
+            },
+            "checkDifficulty": {
+              "label": "Difficulté"
+            },
+            "failTarget": {
+              "label": "En cas d'échec"
+            },
+            "quest": {
+              "label": "Quête (Simple Quest)"
+            }
           }
         }
       },
@@ -118,8 +205,14 @@
       "EmptyLabel": "(sans texte)",
       "Help": {
         "Title": "Aide : placeholders, conditions, variables",
-        "Body": "<p><strong>Placeholders</strong> (dans la réplique et les réponses) : <code>{nom}</code> nom complet, <code>{prenom}</code>, <code>{nomdefamille}</code>, <code>{titre}</code> (Monsieur/Madame), <code>{masculin|féminin}</code> p. ex. <code>{il|elle}</code>, <code>{cher|chère}</code>, et <code>{m|f|neutre}</code> pour une 3<sup>e</sup> forme quand le genre est inconnu. Le genre vient du champ « Sexe » de la fiche.</p><p><strong>Condition</strong> (le choix n'apparaît que si tout est vrai, séparer par des virgules) : <code>clef</code> la variable est définie, <code>!clef</code> non définie, <code>visited:ID</code> / <code>!visited:ID</code> le nœud d'identifiant ID a déjà été vu (ID = identifiant de la page, visible dans son en-tête).</p><p><strong>Définit</strong> (appliqué quand le choix est cliqué) : <code>clef</code> définit la variable, <code>!clef</code> la retire. Les variables et l'historique sont stockés dans les flags de l'acteur du joueur (<code>flags.coc7-dialogues</code>).</p><p><strong>Mot attendu</strong> : le choix ouvre une saisie de texte (mot de passe…). Bonne réponse → « Mène à », mauvaise → « En cas d'échec » (vide = nouvelle tentative). Majuscules et accents ignorés ; plusieurs réponses possibles séparées par <code>|</code>.</p><p><strong>Coût</strong> : prélevé via CoC7 Ledger dans l'ordre Dépenses courantes → Espèces → Capital (tout ou rien). Impossible de payer → « En cas d'échec » (vide = rien ne se passe). Le paiement est tracé dans le chat.</p><p><strong>Jet de compétence</strong> : nom d'une compétence de la fiche, d'une caractéristique (<code>FOR</code>, <code>DEX</code>, <code>POU</code>…), <code>Chance</code> ou <code>SAN</code> + difficulté (Normale = valeur, Difficile = moitié, Extrême = cinquième). Le jet a lieu après le paiement éventuel ; 1 = critique, 96-100 (100 si valeur ≥ 50) = maladresse. Réussite → « Mène à », échec → « En cas d'échec » (vide : le PNJ met fin à l'échange). Le résultat s'affiche dans le dialogue et le d100 part dans le chat. « Définit » ne s'applique qu'en cas de réussite.</p>"
-      }
+        "Body": "<p><strong>Placeholders</strong> (dans la réplique et les réponses) : <code>{nom}</code> nom complet, <code>{prenom}</code>, <code>{nomdefamille}</code>, <code>{titre}</code> (Monsieur/Madame), <code>{masculin|féminin}</code> p. ex. <code>{il|elle}</code>, <code>{cher|chère}</code>, et <code>{m|f|neutre}</code> pour une 3<sup>e</sup> forme quand le genre est inconnu. Le genre vient du champ « Sexe » de la fiche.</p><p><strong>Condition</strong> (le choix n'apparaît que si tout est vrai, séparer par des virgules) : <code>clef</code> la variable est définie, <code>!clef</code> non définie, <code>visited:ID</code> / <code>!visited:ID</code> le nœud d'identifiant ID a déjà été vu (ID = identifiant de la page, visible dans son en-tête).</p><p><strong>Définit</strong> (appliqué quand le choix est cliqué) : <code>clef</code> définit la variable, <code>!clef</code> la retire. Les variables et l'historique sont stockés dans les flags de l'acteur du joueur (<code>flags.coc7-dialogues</code>).</p><p><strong>Mot attendu</strong> : le choix ouvre une saisie de texte (mot de passe…). Bonne réponse → « Mène à », mauvaise → « En cas d'échec » (vide = nouvelle tentative). Majuscules et accents ignorés ; plusieurs réponses possibles séparées par <code>|</code>.</p><p><strong>Coût</strong> : prélevé via CoC7 Ledger dans l'ordre Dépenses courantes → Espèces → Capital (tout ou rien). Impossible de payer → « En cas d'échec » (vide = rien ne se passe). Le paiement est tracé dans le chat.</p><p><strong>Jet de compétence</strong> : nom d'une compétence de la fiche, d'une caractéristique (<code>FOR</code>, <code>DEX</code>, <code>POU</code>…), <code>Chance</code> ou <code>SAN</code> + difficulté (Normale = valeur, Difficile = moitié, Extrême = cinquième). Le jet a lieu après le paiement éventuel ; 1 = critique, 96-100 (100 si valeur ≥ 50) = maladresse. Réussite → « Mène à », échec → « En cas d'échec » (vide : le PNJ met fin à l'échange). Le résultat s'affiche dans le dialogue et le d100 part dans le chat. « Définit » ne s'applique qu'en cas de réussite.</p><p><strong>Quête</strong> (nécessite Simple Quest) : <code>give:UUID</code> copie la quête modèle dans le journal de quêtes du joueur (créé automatiquement « Quêtes — Nom » si possible, sinon à créer par le Gardien avec le joueur propriétaire) ; <code>status:UUID|done/failed/progress/hidden</code> ; <code>objective:UUID|texte|done/undone/failed</code>. L'UUID est toujours celui de la page modèle. Plusieurs directives séparées par <code>;</code>. Appliqué seulement si le choix réussit (mot, paiement, jet).</p>"
+      },
+      "QuestPlaceholder": "give:UUID ; status:UUID|done …",
+      "QuestHint": "Directives Simple Quest appliquées en cas de succès, séparées par « ; » : give:UUID (donne la quête modèle au joueur — copie dans SON journal de quêtes, statut En cours), status:UUID|done (aussi failed, progress, hidden), objective:UUID|texte de l'objectif|done (aussi undone, failed). UUID = clic droit sur la page de quête modèle → Copier l'UUID."
+    },
+    "Info": {
+      "QuestGiven": "📜 Nouvelle quête : {name}",
+      "QuestUpdated": "📜 Quête mise à jour : {name}"
     }
   }
 }

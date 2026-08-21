@@ -3,7 +3,7 @@
   "type": "module",
   "title": "CoC7 Dialogues",
   "description": "Branching NPC dialogues for theatre-of-the-mind scenes: authored as journal pages of a dedicated 'Dialogue node' type, triggered by clicking a scene Region carrying a 'Dialogue' behavior, played in a full-screen overlay (NPC portrait, blurred scene, choices). Fully client-side, so players can talk to NPCs even when the Keeper is offline. Placeholders adapt the text to the investigator's name and gender.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "authors": [
     {
       "name": "Darsh MJ"
@@ -29,6 +29,12 @@
         "compatibility": {
           "minimum": "0.6.0"
         }
+      },
+      {
+        "id": "simple-quest",
+        "type": "module",
+        "reason": "Quest directives on dialogue choices (give/status/objective) write Simple Quest 'quest' pages into a player-owned quest log; without Simple Quest those directives are simply refused.",
+        "compatibility": {}
       }
     ]
   },

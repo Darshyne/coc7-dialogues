@@ -12,6 +12,7 @@ import { applyPlaceholders, describeActor, getPlayerActor } from './player.js';
 import { applySet, checkCondition, getStateOwner, markVisited } from './state.js';
 import { payFromActor } from './money.js';
 import { rollDialogueCheck } from './check.js';
+import { applyQuestDirectives } from './quest.js';
 
 /** Case/accent/whitespace-insensitive comparison key for free-text answers. */
 function normalizeAnswer(s) {
@@ -263,6 +264,7 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
       }
     }
     await applySet(choice.set, this.owner);
+    if ( choice.quest?.trim() ) await applyQuestDirectives(choice.quest);
     if ( choice.target ) return this.goTo(choice.target);
     return this.close();
   }

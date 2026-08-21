@@ -13,6 +13,7 @@ import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
 import { getVars, getVisited, resetState, applySet, checkCondition } from './state.js';
 import { rollDialogueCheck, resolveCheckTarget } from './check.js';
+import { applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor } from './quest.js';
 
 // Body font of the overlay — same Google Fonts <link> technique as coc7-ledger
 // / CoC7 Arkham Journal (falls back to Signika/Georgia offline).
@@ -71,6 +72,7 @@ Hooks.once('ready', () => {
     applyPlaceholders, describeActor, getPlayerActor, normalizeGender,
     getVars, getVisited, resetState, applySet, checkCondition,
     rollDialogueCheck, resolveCheckTarget,
+    applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor,
     PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO
   };
 });

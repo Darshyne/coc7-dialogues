@@ -65,6 +65,10 @@
                   {{selectOptions ../difficultyOptions selected=this.checkDifficulty valueAttr="value" labelAttr="label"}}
                 </select>
               </label>
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.QuestHint"}}">
+                <i class="fa-solid fa-scroll"></i>
+                <input type="text" name="system.choices.{{this.index}}.quest" value="{{this.quest}}" placeholder="{{localize "COC7DIALOGUES.Page.QuestPlaceholder"}}" class="quest-input">
+              </label>
               <label data-tooltip="{{localize "COC7DIALOGUES.Page.FailTargetHint"}}">
                 <i class="fa-solid fa-arrow-rotate-left"></i>
                 <select name="system.choices.{{this.index}}.failTarget" {{#if this.failTargetMissing}}class="missing"{{/if}}>

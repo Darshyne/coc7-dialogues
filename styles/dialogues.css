@@ -342,3 +342,7 @@
 
 .coc7-dialogues-check.success .result { color: #2e7d32; font-weight: bold; }
 .coc7-dialogues-check.failure .result { color: #b03a2e; font-weight: bold; }
+
+/* Quest directives */
+.coc7-dialogues-page .node-choices .extra-fields .quest-input { width: 220px; }
+.dialogue-node-view .node-choices code.quest i { font-size: 0.85em; margin-right: 2px; }

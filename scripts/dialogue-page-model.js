@@ -46,6 +46,9 @@ export class DialoguePageModel extends foundry.abstract.TypeDataModel {
             extreme: 'COC7DIALOGUES.Check.Difficulty.extreme'
           }
         }),
+        // Simple Quest directives applied on success (see quest.js):
+        // "give:UUID ; status:UUID|done ; objective:UUID|texte|done"
+        quest: new fields.StringField({ required: true, blank: true, initial: '' }),
         // Page id when the answer is wrong / the payment or the roll fails.
         failTarget: new fields.StringField({ required: true, blank: true, initial: '' })
       }), { initial: [] })
