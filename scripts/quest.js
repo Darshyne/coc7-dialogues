@@ -31,6 +31,9 @@
 import { MODULE_ID } from './constants.js';
 import { getPlayerActor } from './player.js';
 
+/** Jingle played (locally) when a quest is granted. */
+const GIVE_SOUND = `modules/${MODULE_ID}/asset/secret_nearby.ogg`;
+
 const STATUS = { progress: 0, done: 1, completed: 1, failed: 2, hidden: -1, undiscovered: -1 };
 const OBJECTIVE = { undone: 0, done: 1, checked: 1, failed: 2 };
 
@@ -134,6 +137,10 @@ async function applyOne(term) {
     foundry.utils.setProperty(data, `flags.${MODULE_ID}.questSource`, uuid);
     data.ownership = { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE };
     await log.createEmbeddedDocuments('JournalEntryPage', [data]);
+    // Discovery jingle — local to this player, on the interface channel so it
+    // follows their Interface volume slider.
+    foundry.audio.AudioHelper.play({ src: GIVE_SOUND, volume: 0.8, channel: 'interface' }, false)
+      .catch(err => console.warn(`${MODULE_ID} | quest sound failed:`, err));
     return ui.notifications.info(game.i18n.format('COC7DIALOGUES.Info.QuestGiven', { name: template.name }));
   }
 
