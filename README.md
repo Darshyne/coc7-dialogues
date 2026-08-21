@@ -151,6 +151,30 @@ enchaîner les pistes via l'événement `end` du son.
 3. Chaque joueur voit alors **ses** quêtes dans Simple Quest, le Gardien
    voit tout.
 
+## Macro de reset (test)
+
+Pour rejouer un dialogue de zéro pendant l'écriture, une macro script à
+mettre à disposition des joueurs (permission Observateur) :
+
+```js
+// RESET des dialogues pour l'utilisateur qui clique (test/debug) :
+// mémoire (variables + nœuds visités) + quêtes données par des dialogues.
+const api = game.modules.get('coc7-dialogues').api;
+await api.resetState();
+const log = api.findQuestLog();
+let removed = 0;
+if (log) {
+  const given = log.pages.filter(p => p.getFlag('coc7-dialogues', 'questSource'));
+  removed = given.length;
+  if (removed) await log.deleteEmbeddedDocuments('JournalEntryPage', given.map(p => p.id));
+}
+ui.notifications.info(`🧹 Dialogues remis à zéro pour ${game.user.name}` +
+  (removed ? ` (${removed} quête(s) retirée(s)).` : '.'));
+```
+
+Ne touche que l'utilisateur qui la lance ; l'argent dépensé n'est pas
+remboursé (réajustable via le Registre du ledger).
+
 ## Placeholders
 
 Dans les répliques comme dans les réponses :
