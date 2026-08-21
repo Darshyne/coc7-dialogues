@@ -4,7 +4,7 @@
       "coc7-dialogues": { "dialogue": "Nœud de dialogue" }
     },
     "RegionBehavior": {
-      "coc7-dialogues": { "dialogue": "Dialogue (PNJ cliquable)" }
+      "coc7-dialogues": { "dialogue": "Dialogue (PNJ cliquable)", "clickMacro": "Macro au clic" }
     }
   },
   "COC7DIALOGUES": {
@@ -16,6 +16,7 @@
       "Close": "Fermer le dialogue (Échap)"
     },
     "Warn": {
+      "NoMacro": "Cette région n'a pas de macro configurée (ou la macro a été supprimée).",
       "NoJournal": "Cette région de dialogue n'a pas de journal configuré.",
       "NoPermission": "Vous n'avez pas accès à ce dialogue — demandez au Gardien de vous donner la permission d'observer le journal.",
       "NoStartNode": "Ce journal ne contient aucune page « Nœud de dialogue ».",
@@ -32,6 +33,19 @@
         "journal": { "label": "Journal de dialogue", "hint": "Journal contenant les pages « Nœud de dialogue ». Le dialogue démarre sur la première de ces pages. Les joueurs doivent avoir la permission Observateur dessus." },
         "speaker": { "label": "Nom du PNJ", "hint": "Affiché au-dessus des répliques. Vide = nom de la région." },
         "portrait": { "label": "Portrait du PNJ", "hint": "Image détourée (PNG à fond transparent) affichée à gauche du dialogue." },
+        "highlight": {
+          "label": "Surbrillance",
+          "hint": "Comment signaler la zone cliquable aux joueurs.",
+          "choices": { "hover": "Au survol seulement", "always": "Toujours (discrète) + survol", "never": "Jamais (curseur seulement)" }
+        },
+        "color": { "label": "Couleur de surbrillance", "hint": "Vide = couleur de la région." }
+      }
+    },
+    "MacroBehavior": {
+      "Hint": "Rend la région cliquable : un clic exécute la macro choisie sur le client de l'utilisateur qui clique — même sans permission sur la macro (aucun token nécessaire). La macro s'exécute avec les droits du joueur : ce qu'il n'a pas le droit de modifier reste hors de portée du script.",
+      "FIELDS": {
+        "macro": { "label": "Macro à exécuter", "hint": "Glisser-déposer la macro (script ou chat). Elle s'exécute chez l'utilisateur qui clique, permission ou pas. Dans une macro script : scope.behavior et scope.region donnent le contexte." },
+        "label": { "label": "Libellé au survol", "hint": "Affiché au-dessus de la région au survol. Vide = nom de la région." },
         "highlight": {
           "label": "Surbrillance",
           "hint": "Comment signaler la zone cliquable aux joueurs.",

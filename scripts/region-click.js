@@ -12,8 +12,15 @@
  *   - draw our own highlight in the interface group.
  */
 
-import { BEHAVIOR_TYPE, MODULE_ID } from './constants.js';
+import { BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, MODULE_ID } from './constants.js';
 import { openDialogueFromBehavior } from './dialogue-app.js';
+import { executeClickMacro } from './macro-behavior.js';
+
+/** Clickable behavior types → click handlers. */
+const CLICK_HANDLERS = {
+  [BEHAVIOR_TYPE]: openDialogueFromBehavior,
+  [BEHAVIOR_TYPE_MACRO]: executeClickMacro
+};
 
 const CLICK_TOLERANCE_PX = 6;   // screen pixels of pointer travel still counted as a click
 const HOVER_ALPHA = 0.28;
@@ -39,21 +46,26 @@ export function registerCanvasHooks() {
 
 /**
  * All (region, behavior) pairs on the current scene that are clickable
- * for the current user.
+ * for the current user — dialogue and click-macro behaviors alike.
  * @returns {{region: RegionDocument, behavior: RegionBehavior}[]}
  */
-export function getDialogueRegions() {
+export function getClickableRegions() {
   const out = [];
   if ( !canvas?.scene ) return out;
   for ( const region of canvas.scene.regions ) {
     if ( region.hidden && !game.user.isGM ) continue;
     for ( const behavior of region.behaviors ) {
-      if ( behavior.type !== BEHAVIOR_TYPE || behavior.disabled ) continue;
+      if ( !(behavior.type in CLICK_HANDLERS) || behavior.disabled ) continue;
       out.push({ region, behavior });
-      break; // one dialogue per region
+      break; // one clickable behavior per region
     }
   }
   return out;
+}
+
+/** Dialogue-only subset of getClickableRegions (kept for API compatibility). */
+export function getDialogueRegions() {
+  return getClickableRegions().filter(e => e.behavior.type === BEHAVIOR_TYPE);
 }
 
 /* -------------------------------------------- */
@@ -96,7 +108,7 @@ function onCanvasTearDown() {
  * @returns {{region: RegionDocument, behavior: RegionBehavior}|null}
  */
 function hitTest(point) {
-  for ( const entry of getDialogueRegions() ) {
+  for ( const entry of getClickableRegions() ) {
     if ( entry.region.polygonTree.testPoint(point) ) return entry;
   }
   return null;
@@ -137,7 +149,7 @@ function onPointerUp(event) {
   const world = event.getLocalPosition(canvas.stage);
   const hit = hitTest(world);
   if ( !hit ) return;
-  openDialogueFromBehavior(hit.behavior);
+  CLICK_HANDLERS[hit.behavior.type]?.(hit.behavior);
 }
 
 function setCursor(pointer) {
@@ -159,7 +171,7 @@ function refreshStatic() {
   const g = new PIXI.Graphics();
   g.name = 'static';
   g.zIndex = 0;
-  for ( const { region, behavior } of getDialogueRegions() ) {
+  for ( const { region, behavior } of getClickableRegions() ) {
     if ( behavior.system.highlight !== 'always' ) continue;
     fillRegion(g, region, colorOf(region, behavior), ALWAYS_ALPHA, false);
   }

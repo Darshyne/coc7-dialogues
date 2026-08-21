@@ -3,9 +3,11 @@
   "type": "module",
   "title": "CoC7 Dialogues",
   "description": "Branching NPC dialogues for theatre-of-the-mind scenes: authored as journal pages of a dedicated 'Dialogue node' type, triggered by clicking a scene Region carrying a 'Dialogue' behavior, played in a full-screen overlay (NPC portrait, blurred scene, choices). Fully client-side, so players can talk to NPCs even when the Keeper is offline. Placeholders adapt the text to the investigator's name and gender.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "authors": [
-    { "name": "Darsh MJ" }
+    {
+      "name": "Darsh MJ"
+    }
   ],
   "compatibility": {
     "minimum": "13",
@@ -13,7 +15,11 @@
   },
   "relationships": {
     "systems": [
-      { "id": "CoC7", "type": "system", "compatibility": {} }
+      {
+        "id": "CoC7",
+        "type": "system",
+        "compatibility": {}
+      }
     ]
   },
   "documentTypes": {
@@ -21,7 +27,8 @@
       "dialogue": {}
     },
     "RegionBehavior": {
-      "dialogue": {}
+      "dialogue": {},
+      "clickMacro": {}
     }
   },
   "esmodules": [
@@ -31,8 +38,16 @@
     "styles/dialogues.css"
   ],
   "languages": [
-    { "lang": "fr", "name": "Français", "path": "lang/fr.json" },
-    { "lang": "en", "name": "English", "path": "lang/en.json" }
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
   ],
   "readme": "README.md"
 }

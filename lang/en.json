@@ -4,7 +4,7 @@
       "coc7-dialogues": { "dialogue": "Dialogue node" }
     },
     "RegionBehavior": {
-      "coc7-dialogues": { "dialogue": "Dialogue (clickable NPC)" }
+      "coc7-dialogues": { "dialogue": "Dialogue (clickable NPC)", "clickMacro": "Macro on click" }
     }
   },
   "COC7DIALOGUES": {
@@ -16,6 +16,7 @@
       "Close": "Close the dialogue (Esc)"
     },
     "Warn": {
+      "NoMacro": "This region has no macro configured (or the macro was deleted).",
       "NoJournal": "This dialogue region has no journal configured.",
       "NoPermission": "You can't access this dialogue — ask the Keeper for Observer permission on the journal.",
       "NoStartNode": "This journal has no “Dialogue node” page.",
@@ -32,6 +33,19 @@
         "journal": { "label": "Dialogue journal", "hint": "Journal holding the “Dialogue node” pages. The dialogue starts on the first of them. Players need Observer permission on it." },
         "speaker": { "label": "NPC name", "hint": "Shown above the lines. Empty = region name." },
         "portrait": { "label": "NPC portrait", "hint": "Cut-out image (transparent PNG) shown on the left of the dialogue." },
+        "highlight": {
+          "label": "Highlight",
+          "hint": "How to signal the clickable area to players.",
+          "choices": { "hover": "On hover only", "always": "Always (subtle) + hover", "never": "Never (cursor only)" }
+        },
+        "color": { "label": "Highlight color", "hint": "Empty = region color." }
+      }
+    },
+    "MacroBehavior": {
+      "Hint": "Makes the region clickable: a click runs the chosen macro on the clicking user's client — even without permission on the macro (no token needed). The macro runs with the player's rights: whatever they can't modify stays out of the script's reach.",
+      "FIELDS": {
+        "macro": { "label": "Macro to run", "hint": "Drag and drop the macro (script or chat). It runs on the clicking user's client, permission or not. In a script macro: scope.behavior and scope.region give the context." },
+        "label": { "label": "Hover label", "hint": "Shown above the region on hover. Empty = region name." },
         "highlight": {
           "label": "Highlight",
           "hint": "How to signal the clickable area to players.",

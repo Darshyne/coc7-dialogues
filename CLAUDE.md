@@ -47,6 +47,22 @@ pattern que `../coc7-ledger/`).
 - La config du behavior est rendue par le `RegionBehaviorConfig` core
   (auto-génération des champs `system.*` avec `hasFormSupport`) — pas de
   sheet custom pour le behavior.
+- **Second behavior « Macro au clic »** (`coc7-dialogues.clickMacro`,
+  ajouté 2026-08-21, `scripts/macro-behavior.js`) : clic dans la région →
+  exécute une macro chez l'utilisateur qui clique, **en contournant
+  volontairement la permission** (`Macro#execute` exige LIMITED ; on
+  réplique à la place la mécanique de `Macro##executeScript`/`#executeChat`
+  — AsyncFunction avec `speaker/actor/token/character/scope`, `this` =
+  macro ; `scope.behavior`/`scope.region` en bonus). La macro tourne avec
+  les droits du joueur pour toute écriture de document — ce contournement
+  ne donne aucun droit d'écriture supplémentaire, ne pas le « corriger ».
+  Détection clic/surbrillance partagée avec le dialogue : table
+  `CLICK_HANDLERS` dans `region-click.js` (`getClickableRegions()` ; un
+  seul behavior cliquable par région, le premier actif). Vérifié en jeu
+  (compte `test`, macro `default: 0`, `canExecute: false` → clic OK).
+  Rappel : tout nouveau sous-type dans `module.json` (`documentTypes`)
+  exige un **relancement du monde**, pas juste un F5 — le serveur valide
+  les types à partir du manifest chargé au lancement.
 
 - **Anti-spoil recommandé : journal Observateur + pages à « Aucun »**
   (vérifié 2026-08-21 en jeu, compte `test`, MJ hors ligne) : le journal

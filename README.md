@@ -42,6 +42,29 @@ Foundry v13 minimum, testé sur v14.
    actif, ou n'importe quel calque pour un joueur) ouvre le dialogue chez
    lui, en local.
 
+## Fonction annexe : « Macro au clic »
+
+Second comportement de région fourni par le module, indépendant des
+dialogues : un clic dans la région **exécute une macro** (script ou chat)
+sur le client de l'utilisateur qui clique — y compris pour un joueur
+**sans aucune permission sur la macro** (elle peut même rester invisible
+dans son répertoire de macros). Contrairement au comportement « Exécuter
+une macro » du cœur de Foundry, aucun token n'est nécessaire : c'est fait
+pour le théâtre de l'esprit (un levier, un gramophone, une porte à
+examiner…).
+
+Config : macro (glisser-déposer), libellé au survol (vide = nom de la
+région), surbrillance et couleur (mêmes options que le dialogue). Dans une
+macro script, `scope.behavior` et `scope.region` donnent le contexte du
+clic ; `speaker`/`actor`/`character` sont remplis comme pour une macro
+normale.
+
+À savoir : la macro s'exécute **avec les droits du joueur** qui clique —
+un script qui tente de modifier un document que le joueur n'a pas le droit
+de toucher échouera comme s'il avait lancé la macro lui-même. Prévoir les
+macros en conséquence (effets locaux : sons, messages, flags sur son
+propre user/acteur…).
+
 ## Placeholders
 
 Dans les répliques comme dans les réponses :
@@ -99,6 +122,7 @@ choisissent une réponse ; `Échap` ferme.
 
 `openDialogue(journal, {speaker, portrait, startPageId})`,
 `openDialogueFromBehavior(behavior)`, `getDialogueRegions()`,
+`getClickableRegions()`, `executeClickMacro(behavior)`,
 `applyPlaceholders(text, describeActor(actor))`, `getVars()`, `getVisited()`,
 `resetState()`, `applySet(directive)`, `checkCondition(directive, journal)`.
 

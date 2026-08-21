@@ -3,6 +3,7 @@ export const MODULE_ID = 'coc7-dialogues';
 /** Full sub-type names (module-scoped, as Foundry registers them). */
 export const PAGE_TYPE = `${MODULE_ID}.dialogue`;
 export const BEHAVIOR_TYPE = `${MODULE_ID}.dialogue`;
+export const BEHAVIOR_TYPE_MACRO = `${MODULE_ID}.clickMacro`;
 
 /** Actor/User flag keys (all state lives under flags[MODULE_ID]). */
 export const FLAG_VISITED = 'visited'; // { [pageUuid]: count }

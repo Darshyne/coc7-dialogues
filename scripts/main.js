@@ -3,11 +3,12 @@
  * Branching NPC dialogues for theatre-of-the-mind scenes. See README.md.
  */
 
-import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
+import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
 import { DialoguePageModel } from './dialogue-page-model.js';
 import { DialoguePageSheet } from './dialogue-page-sheet.js';
 import { DialogueBehaviorType } from './dialogue-behavior.js';
-import { registerCanvasHooks, getDialogueRegions } from './region-click.js';
+import { ClickMacroBehaviorType, executeClickMacro } from './macro-behavior.js';
+import { registerCanvasHooks, getDialogueRegions, getClickableRegions } from './region-click.js';
 import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-app.js';
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
 import { getVars, getVisited, resetState, applySet, checkCondition } from './state.js';
@@ -35,6 +36,11 @@ Hooks.once('init', () => {
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE] = 'fa-solid fa-comments';
   if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE] = 'COC7DIALOGUES.Behavior.Hint';
 
+  // Region behavior sub-type "Macro on click".
+  CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_MACRO] = ClickMacroBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_MACRO] = 'fa-solid fa-scroll';
+  if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE_MACRO] = 'COC7DIALOGUES.MacroBehavior.Hint';
+
   // Client settings (per user).
   game.settings.register(MODULE_ID, SETTING_BLUR, {
     name: 'COC7DIALOGUES.Settings.Blur.Name',
@@ -60,9 +66,9 @@ Hooks.once('ready', () => {
   // Public API for macros / other modules (an `export` alone isn't reachable from macros).
   game.modules.get(MODULE_ID).api = {
     openDialogue, openDialogueFromBehavior, DialogueApp,
-    getDialogueRegions,
+    getDialogueRegions, getClickableRegions, executeClickMacro,
     applyPlaceholders, describeActor, getPlayerActor, normalizeGender,
     getVars, getVisited, resetState, applySet, checkCondition,
-    PAGE_TYPE, BEHAVIOR_TYPE
+    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO
   };
 });
