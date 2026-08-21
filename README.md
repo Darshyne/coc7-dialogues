@@ -20,9 +20,19 @@ Foundry v13 minimum, testé sur v14.
    journal (dans l'ordre des pages) — badge « Nœud de départ » sur sa
    fiche. Le bouton **« Tester d'ici »** joue le dialogue à partir du nœud
    ouvert.
-2. Donner aux joueurs la permission **Observateur** sur ce journal (ils
-   pourront donc aussi lire toutes les branches dans l'onglet Journaux —
-   ranger le journal dans un dossier discret si ça gêne).
+2. Donner aux joueurs la permission **Observateur** sur ce journal, puis —
+   réglage recommandé, anti-spoil — passer **chaque page** à **« Aucun »**
+   (clic droit sur la page → Configurer la propriété, ou onglet Propriété
+   de la page). Résultat vérifié en jeu : le journal apparaît dans l'onglet
+   Journaux mais s'ouvre **vide** pour les joueurs (aucune branche, aucune
+   condition lisible), alors que le dialogue **se joue normalement** — le
+   module ne vérifie la permission qu'au niveau du journal, et Foundry
+   envoie de toute façon les pages au client, la permission par page ne
+   filtrant que l'affichage. On peut aussi laisser le nœud d'accueil en
+   « Hériter » pour servir de teaser. Limite honnête : les données étant
+   côté client, un joueur qui fouille la console F12 peut techniquement
+   tout lire — inévitable pour un module 100 % client-side sans MJ
+   connecté.
 3. **Sur la scène**, dessiner une Région (calque Régions) autour du PNJ
    décoratif, puis lui ajouter un comportement de type **« Dialogue (PNJ
    cliquable) »** : journal de dialogue (glisser-déposer), nom du PNJ,

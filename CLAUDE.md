@@ -48,6 +48,15 @@ pattern que `../coc7-ledger/`).
   (auto-génération des champs `system.*` avec `hasFormSupport`) — pas de
   sheet custom pour le behavior.
 
+- **Anti-spoil recommandé : journal Observateur + pages à « Aucun »**
+  (vérifié 2026-08-21 en jeu, compte `test`, MJ hors ligne) : le journal
+  s'ouvre vide pour les joueurs mais le dialogue se joue normalement —
+  `openDialogue` ne teste la permission qu'au niveau du JournalEntry, et
+  la navigation (`journal.pages.get`) ignore la permission par page,
+  Foundry envoyant toutes les pages au client. Documenté dans README
+  (« Mise en place » étape 2). Ne pas « corriger » ce comportement en
+  ajoutant un test de permission par page : il est volontaire.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`
