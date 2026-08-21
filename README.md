@@ -65,6 +65,67 @@ de toucher échouera comme s'il avait lancé la macro lui-même. Prévoir les
 macros en conséquence (effets locaux : sons, messages, flags sur son
 propre user/acteur…).
 
+### Exemple : jukebox à bascule (testé en jeu)
+
+Le pattern de référence pour ce genre de macro : tout se joue **en local**
+(aucune écriture de document, donc aucun problème de permission), et la
+coupure de la musique du MJ n'est que locale — l'état du document Playlist
+restant intact, `PlaylistSound#sync()` permet de la faire **reprendre** au
+re-clic. Ici sur une région « Gramophone » d'un speakeasy : premier clic,
+fondu sortant sur la musique en cours et fondu entrant sur une piste au
+hasard de la playlist ; re-clic, le jukebox se tait et la musique lancée
+globalement par le Gardien reprend (avec le fondu de 500 ms de `sync()`,
+soit un enchaînement croisé).
+
+```js
+// BASCULE jukebox — 100 % LOCAL au joueur qui clique (aucune permission
+// requise, fonctionne sans MJ connecté).
+const TARGET = 'Playlist.XXXXXXXXXXXXXXXX'; // UUID de la playlist (clic droit sur la playlist → copier l'identifiant)
+const FADE_IN = 1500;   // ms
+const FADE_OUT = 1200;  // ms
+
+// Déjà en train de jouer via cette macro ? → fondu sortant, restauration
+// de la musique globale du MJ s'il y en a une, et on s'arrête là.
+const wasPlaying = (globalThis.speakeasyMusic ?? []).some(s => s.playing);
+for (const snd of (globalThis.speakeasyMusic ?? [])) snd.stop({ fade: FADE_OUT, volume: 0 });
+globalThis.speakeasyMusic = [];
+if (wasPlaying) {
+  let restored = false;
+  for (const p of game.playlists.playing) for (const s of p.sounds) {
+    if (s.playing) { s.sync(); restored = true; }
+  }
+  return ui.notifications.info(restored
+    ? '🎷 Le gramophone se tait — la musique de la salle reprend.'
+    : '🎷 Le gramophone se tait.');
+}
+
+// Fondu sortant sur toute autre musique de playlist en cours (localement)
+for (const p of game.playlists) for (const s of p.sounds) {
+  if (s.sound?.playing) s.sound.stop({ fade: FADE_OUT, volume: 0 });
+}
+
+// Lancer la playlist cible en local (une piste au hasard, en boucle),
+// départ à volume 0 puis fondu entrant vers le volume de la piste.
+const pl = await fromUuid(TARGET);
+if (!pl) return ui.notifications.warn('Playlist introuvable.');
+const tracks = pl.sounds.contents;
+if (!tracks.length) return ui.notifications.warn('Playlist vide.');
+const t = tracks[Math.floor(Math.random() * tracks.length)];
+const snd = await foundry.audio.AudioHelper.play({ src: t.path, volume: 0, loop: t.repeat, channel: 'music' }, false);
+if (snd) {
+  globalThis.speakeasyMusic.push(snd);
+  snd.fade(t.volume, { duration: FADE_IN, from: 0 });
+}
+ui.notifications.info(`🎷 ${pl.name} — ${t.name}`);
+```
+
+Notes : la bascule se fonde sur l'état réel du son (`playing`), pas sur un
+booléen — si la piste s'est arrêtée autrement, le clic suivant relance au
+lieu de « couper dans le vide ». Le canal `music` fait suivre le curseur
+de volume Musique du joueur. Cette macro reproduit le mode *aléatoire*
+d'une playlist de pistes en boucle ; pour un mode séquentiel il faudrait
+enchaîner les pistes via l'événement `end` du son.
+
 ## Placeholders
 
 Dans les répliques comme dans les réponses :
