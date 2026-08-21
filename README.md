@@ -263,6 +263,20 @@ l'éditeur) :
     par son texte exactement comme le fait Simple Quest.
   L'UUID est **toujours celui du modèle** — la copie du joueur est
   retrouvée via un flag posé au `give`.
+- **Jet de SAN** 🧠 — format « perte réussite/perte échec » (ex. `0/1d4`) :
+  d100 contre la SAN actuelle, la formule correspondante est retirée via le
+  `setSan()` du système (bornes, règle pulp). Contrairement au jet de
+  compétence, un échec ne ferme PAS le dialogue : il bascule vers « En cas
+  d'échec » si renseigné, sinon la conversation continue (secoué, mais
+  présent). Jet + perte dans le chat et en bannière.
+- **Objets** 👜 — en condition de choix : `item:Nom` / `!item:Nom` (le
+  choix n'apparaît que si l'objet est — ou non — dans l'inventaire) ; en
+  directives (appliquées en cas de succès, séparées par `;`) : `take:Nom`
+  (retire 1 exemplaire — remettre l'objet de quête au PNJ) et
+  `give:Nom ou UUID` (reçoit une copie d'un objet du monde/compendium).
+  Noms insensibles aux accents/casse. Depuis 0.7.0 les termes de condition
+  sont séparés par des virgules UNIQUEMENT (les noms d'objets peuvent
+  contenir des espaces).
 - **En cas d'échec** — le nœud de repli commun aux mécanismes ci-dessus.
 
 Tout reste côté client : le joueur paie et lance ses dés depuis son propre

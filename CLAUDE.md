@@ -133,6 +133,17 @@ pattern que `../coc7-ledger/`).
   jeu (1ʳᵉ ouverture → « 1. Accueil », réouverture → « 0. Accueil
   (retour) »).
 
+- **Jet de SAN + objets (v0.7.0, 2026-08-21)** : champ `san` (« 0/1d4 »,
+  `check.js#rollSanLoss` — perte appliquée via `actor.setSan()` du système,
+  qui gère bornes et règle pulp ; un échec ne ferme PAS le dialogue,
+  contrairement au jet de compétence — failTarget sinon continuation) et
+  champ `items` (`take:Nom` / `give:Nom|UUID`, `scripts/items.js`) +
+  jeton de condition `item:Nom` dans `state.js`. BREAKING intentionnel
+  0.7.0 : `splitTerms` ne coupe plus sur les espaces (virgule/point-virgule
+  seulement) pour autoriser les noms d'objets à espaces. Piège de test :
+  lire `actor.system.…` juste après un update dans le même bloc peut
+  renvoyer une valeur rassie — vérifier via `_source` ou relire plus tard.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

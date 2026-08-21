@@ -66,6 +66,14 @@
                   {{selectOptions ../difficultyOptions selected=this.checkDifficulty valueAttr="value" labelAttr="label"}}
                 </select>
               </label>
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.SanHint"}}">
+                <i class="fa-solid fa-brain"></i>
+                <input type="text" name="system.choices.{{this.index}}.san" value="{{this.san}}" placeholder="0/1d4" class="san-input">
+              </label>
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.ItemsHint"}}">
+                <i class="fa-solid fa-suitcase"></i>
+                <input type="text" name="system.choices.{{this.index}}.items" value="{{this.items}}" placeholder="{{localize "COC7DIALOGUES.Page.ItemsPlaceholder"}}" class="items-input">
+              </label>
               <label data-tooltip="{{localize "COC7DIALOGUES.Page.QuestHint"}}">
                 <i class="fa-solid fa-scroll"></i>
                 <input type="text" name="system.choices.{{this.index}}.quest" value="{{this.quest}}" placeholder="{{localize "COC7DIALOGUES.Page.QuestPlaceholder"}}" class="quest-input">

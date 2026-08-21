@@ -32,6 +32,8 @@
         {{#if this.answer}}<code class="answer" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.answer.label"}}"><i class="fa-solid fa-key"></i> {{this.answer}}</code>{{/if}}
         {{#if this.cost}}<code class="cost" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.cost.label"}}"><i class="fa-solid fa-coins"></i> {{this.cost}} $</code>{{/if}}
         {{#if this.check}}<code class="check" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.check.label"}}"><i class="fa-solid fa-dice"></i> {{this.check}}{{#if this.difficultyLabel}} ({{this.difficultyLabel}}){{/if}}</code>{{/if}}
+        {{#if this.san}}<code class="san" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.san.label"}}"><i class="fa-solid fa-brain"></i> {{this.san}}</code>{{/if}}
+        {{#if this.items}}<code class="items" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.items.label"}}"><i class="fa-solid fa-suitcase"></i> {{this.items}}</code>{{/if}}
         {{#if this.quest}}<code class="quest" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.quest.label"}}"><i class="fa-solid fa-scroll"></i> {{this.quest}}</code>{{/if}}
         {{#if this.failTarget}}<span class="fail-branch"><i class="fa-solid fa-arrow-rotate-left"></i>
           {{#if this.failTargetId}}<a class="target" data-action="openPage" data-page-id="{{this.failTargetId}}">{{this.failTargetName}}</a>

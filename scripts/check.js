@@ -101,3 +101,47 @@ export async function rollDialogueCheck(actor, name, difficulty = 'regular') {
   });
   return { ok: true, success, critical, fumble, total, threshold, label: target.label };
 }
+
+/**
+ * A CoC7 Sanity roll with loss, from a "success/failure" spec like "0/1d4":
+ * 1d100 vs current SAN; the matching formula is rolled and deducted through
+ * the system's own actor.setSan() (bounds, pulp Luck rule, etc.).
+ * @param {Actor} actor
+ * @param {string} lossSpec      e.g. "0/1d4", "1/1d6", "1d2/1d10"
+ * @returns {Promise<{ok: true, success: boolean, total: number, threshold: number,
+ *                    label: string, loss: number, formula: string}
+ *                  |{ok: false, error: 'no-actor'|'unknown-check'}>}
+ */
+export async function rollSanLoss(actor, lossSpec) {
+  if ( !actor ) return { ok: false, error: 'no-actor' };
+  const target = resolveCheckTarget(actor, 'san');
+  if ( !target ) return { ok: false, error: 'unknown-check' };
+  const [okFormula, koFormula] = String(lossSpec ?? '0/0').split('/').map(s => s.trim());
+
+  const roll = new Roll('1d100');
+  await roll.evaluate();
+  const total = roll.total;
+  const fumble = total >= (target.value < 50 ? 96 : 100);
+  const success = !fumble && (total === 1 || total <= target.value);
+  const formula = (success ? okFormula : (koFormula ?? okFormula)) || '0';
+
+  let loss = 0;
+  if ( formula !== '0' ) {
+    const lossRoll = new Roll(formula);
+    await lossRoll.evaluate();
+    loss = Math.max(0, lossRoll.total);
+  }
+  if ( loss > 0 ) await actor.setSan((actor.system.attribs.san.value ?? 0) - loss);
+
+  const resultLabel = game.i18n.localize(`COC7DIALOGUES.Check.${success ? 'Success' : 'Failure'}`);
+  const lossLabel = loss > 0
+    ? game.i18n.format('COC7DIALOGUES.Check.SanLoss', { formula, loss })
+    : game.i18n.localize('COC7DIALOGUES.Check.SanNoLoss');
+  await roll.toMessage({
+    speaker: { alias: actor.name },
+    flavor: `<div class="coc7-dialogues-check ${success ? 'success' : 'failure'}">`
+      + `<strong>${foundry.utils.escapeHTML(target.label)}</strong> (${target.value})`
+      + ` : <span class="result">${resultLabel}</span> — ${lossLabel}</div>`
+  });
+  return { ok: true, success, total, threshold: target.value, label: target.label, loss, formula };
+}

@@ -12,7 +12,8 @@ import { registerCanvasHooks, getDialogueRegions, getClickableRegions } from './
 import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-app.js';
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
 import { getVars, getVisited, resetState, applySet, checkCondition } from './state.js';
-import { rollDialogueCheck, resolveCheckTarget } from './check.js';
+import { rollDialogueCheck, resolveCheckTarget, rollSanLoss } from './check.js';
+import { applyItemDirectives, findActorItem, hasItem } from './items.js';
 import { applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor } from './quest.js';
 
 // Body font of the overlay — same Google Fonts <link> technique as coc7-ledger
@@ -71,7 +72,8 @@ Hooks.once('ready', () => {
     getDialogueRegions, getClickableRegions, executeClickMacro,
     applyPlaceholders, describeActor, getPlayerActor, normalizeGender,
     getVars, getVisited, resetState, applySet, checkCondition,
-    rollDialogueCheck, resolveCheckTarget,
+    rollDialogueCheck, resolveCheckTarget, rollSanLoss,
+    applyItemDirectives, findActorItem, hasItem,
     applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor,
     PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO
   };

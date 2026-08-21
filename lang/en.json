@@ -43,7 +43,12 @@
       "QuestNoTemplate": "Quest template not found ({uuid}) — the UUID must point at a Simple Quest “Quest” page.",
       "QuestNoLog": "Cannot create your quest log — ask the Keeper to create one for you (or for journal-creation permission).",
       "QuestNotGiven": "The quest “{name}” hasn't been given to you yet.",
-      "QuestFailed": "Quest directive “{term}” failed (see console)."
+      "QuestFailed": "Quest directive “{term}” failed (see console).",
+      "NoActorItem": "No character assigned: cannot touch the inventory.",
+      "ItemBadDirective": "Invalid item directive: “{term}”.",
+      "ItemMissing": "“{name}” is not in your inventory.",
+      "ItemNoSource": "Item template not found ({name}) — world item name or UUID.",
+      "ItemFailed": "Item directive “{term}” failed (see console)."
     },
     "Settings": {
       "Blur": {
@@ -161,6 +166,12 @@
             },
             "quest": {
               "label": "Quest (Simple Quest)"
+            },
+            "san": {
+              "label": "SAN roll (loss success/failure)"
+            },
+            "items": {
+              "label": "Items"
             }
           }
         },
@@ -188,7 +199,7 @@
       "EmptyLabel": "(no text)",
       "Help": {
         "Title": "Help: placeholders, conditions, variables",
-        "Body": "<p><strong>Placeholders</strong> (in the line and the replies): <code>{name}</code> full name, <code>{firstname}</code>, <code>{lastname}</code>, <code>{title}</code> (Mister/Madam), <code>{masculine|feminine}</code> e.g. <code>{he|she}</code>, and <code>{m|f|neutral}</code> for a 3rd form when gender is unknown. Gender comes from the sheet's “Sex” field.</p><p><strong>Condition</strong> (the choice only shows if all hold, comma-separated): <code>key</code> variable set, <code>!key</code> not set, <code>visited:ID</code> / <code>!visited:ID</code> the node with page id ID was already seen.</p><p><strong>Sets</strong> (applied when the choice is clicked): <code>key</code> sets the variable, <code>!key</code> clears it. Variables and history are stored in the player's actor flags (<code>flags.coc7-dialogues</code>).</p><p><strong>Entry condition</strong> (node field): on open, the first node whose condition passes is the start node — enough to change the intro on a return visit (“Welcome back” with <code>visited:ID</code> placed before the normal intro).</p><p><strong>Expected word</strong>: the choice opens a text prompt (password…). Right answer → “Leads to”, wrong → “On failure” (empty = retry). Case and accents ignored; several answers separated by <code>|</code>.</p><p><strong>Cost</strong>: charged through CoC7 Ledger in the order Spending Level → Cash → Capital (all or nothing). Cannot pay → “On failure” (empty = nothing happens). The payment is traced in chat.</p><p><strong>Skill check</strong>: name of a sheet skill, a characteristic (<code>STR</code>, <code>DEX</code>, <code>POW</code>…), <code>Luck</code> or <code>SAN</code> + difficulty (Regular = value, Hard = half, Extreme = fifth). Rolled after any payment; 1 = critical, 96-100 (100 if value ≥ 50) = fumble. Success → “Leads to”, failure → “On failure” (empty: the NPC ends the exchange). The result shows in the dialogue and the d100 goes to chat. “Sets” only applies on success.</p><p><strong>Quest</strong> (requires Simple Quest): <code>give:UUID</code> copies the template quest into the player's quest log (auto-created “Quêtes — Name” when possible, else created by the Keeper with the player as owner); <code>status:UUID|done/failed/progress/hidden</code>; <code>objective:UUID|text|done/undone/failed</code>. The UUID is always the template page's. Several directives separated by <code>;</code>. Applied only when the choice succeeds (word, payment, roll).</p>"
+        "Body": "<p><strong>Placeholders</strong> (in the line and the replies): <code>{name}</code> full name, <code>{firstname}</code>, <code>{lastname}</code>, <code>{title}</code> (Mister/Madam), <code>{masculine|feminine}</code> e.g. <code>{he|she}</code>, and <code>{m|f|neutral}</code> for a 3rd form when gender is unknown. Gender comes from the sheet's “Sex” field.</p><p><strong>Condition</strong> (the choice only shows if all hold, comma-separated): <code>key</code> variable set, <code>!key</code> not set, <code>visited:ID</code> / <code>!visited:ID</code> the node with page id ID was already seen.</p><p><strong>Sets</strong> (applied when the choice is clicked): <code>key</code> sets the variable, <code>!key</code> clears it. Variables and history are stored in the player's actor flags (<code>flags.coc7-dialogues</code>).</p><p><strong>Entry condition</strong> (node field): on open, the first node whose condition passes is the start node — enough to change the intro on a return visit (“Welcome back” with <code>visited:ID</code> placed before the normal intro).</p><p><strong>Expected word</strong>: the choice opens a text prompt (password…). Right answer → “Leads to”, wrong → “On failure” (empty = retry). Case and accents ignored; several answers separated by <code>|</code>.</p><p><strong>Cost</strong>: charged through CoC7 Ledger in the order Spending Level → Cash → Capital (all or nothing). Cannot pay → “On failure” (empty = nothing happens). The payment is traced in chat.</p><p><strong>Skill check</strong>: name of a sheet skill, a characteristic (<code>STR</code>, <code>DEX</code>, <code>POW</code>…), <code>Luck</code> or <code>SAN</code> + difficulty (Regular = value, Hard = half, Extreme = fifth). Rolled after any payment; 1 = critical, 96-100 (100 if value ≥ 50) = fumble. Success → “Leads to”, failure → “On failure” (empty: the NPC ends the exchange). The result shows in the dialogue and the d100 goes to chat. “Sets” only applies on success.</p><p><strong>Quest</strong> (requires Simple Quest): <code>give:UUID</code> copies the template quest into the player's quest log (auto-created “Quêtes — Name” when possible, else created by the Keeper with the player as owner); <code>status:UUID|done/failed/progress/hidden</code>; <code>objective:UUID|text|done/undone/failed</code>. The UUID is always the template page's. Several directives separated by <code>;</code>. Applied only when the choice succeeds (word, payment, roll).</p><p><strong>SAN roll</strong>: <code>success loss/failure loss</code> format (e.g. <code>0/1d4</code>) — d100 vs SAN, loss applied through the system. Failure → “On failure” when set, else the conversation carries on.</p><p><strong>Items</strong>: condition <code>item:Name</code>/<code>!item:Name</code>; directives <code>take:Name</code> (remove) and <code>give:Name or UUID</code> (receive), applied on success.</p>"
       },
       "AnswerPlaceholder": "expected password (several: a | b)",
       "AnswerHint": "Expected word: when set, clicking this choice opens a text prompt. Right answer (case/accents ignored) → “Leads to”; wrong → “On failure” (or retry if empty). Several accepted answers: separate with | or comma.",
@@ -198,7 +209,10 @@
       "CheckPlaceholder": "Psychology, Fast Talk, STR, Luck…",
       "CheckHint": "CoC7 check (after any payment): name of a sheet skill, a characteristic (STR, DEX, POW…), Luck or SAN, accents ignored. Success → “Leads to”; failure → “On failure” (empty: the dialogue closes). The d100 shows in chat.",
       "QuestPlaceholder": "give:UUID ; status:UUID|done …",
-      "QuestHint": "Simple Quest directives applied on success, separated by “;”: give:UUID (grants the template quest — copied into the player's OWN quest log, status In Progress), status:UUID|done (also failed, progress, hidden), objective:UUID|objective text|done (also undone, failed). UUID = right-click the template quest page → Copy UUID."
+      "QuestHint": "Simple Quest directives applied on success, separated by “;”: give:UUID (grants the template quest — copied into the player's OWN quest log, status In Progress), status:UUID|done (also failed, progress, hidden), objective:UUID|objective text|done (also undone, failed). UUID = right-click the template quest page → Copy UUID.",
+      "SanHint": "Sanity roll with loss, “success/failure” format (e.g. 0/1d4): d100 vs current SAN, the matching formula is deducted through the CoC7 system (bounds, pulp rule). Unlike a skill check, a failed SAN roll does NOT close the dialogue: it branches to “On failure” when set, else the conversation carries on. Roll and loss show in chat.",
+      "ItemsHint": "Inventory directives applied on success, separated by “;”: take:Name (removes 1 — hand the quest item to the NPC), give:Name or UUID (adds a copy of a world/compendium item). As a choice condition: item:Name / !item:Name shows the choice only when the item is (or isn't) carried.",
+      "ItemsPlaceholder": "take:Name ; give:Name…"
     },
     "Chat": {
       "Paid": "<em>{actor}</em> pays <strong>${cost}</strong> ({npc} — dialogue)."
@@ -212,11 +226,15 @@
       "Success": "Success",
       "Failure": "Failure",
       "Critical": "Critical success!",
-      "Fumble": "Fumble!"
+      "Fumble": "Fumble!",
+      "SanLoss": "SAN loss {formula} = {loss}",
+      "SanNoLoss": "no loss"
     },
     "Info": {
       "QuestGiven": "📜 New quest: {name}",
-      "QuestUpdated": "📜 Quest updated: {name}"
+      "QuestUpdated": "📜 Quest updated: {name}",
+      "ItemTaken": "👜 Item handed over: {name}",
+      "ItemGiven": "👜 Item received: {name}"
     }
   }
 }

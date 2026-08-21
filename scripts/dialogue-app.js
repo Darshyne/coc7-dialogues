@@ -11,8 +11,9 @@ import { MODULE_ID, PAGE_TYPE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRI
 import { applyPlaceholders, describeActor, getPlayerActor } from './player.js';
 import { applySet, checkCondition, getStateOwner, markVisited } from './state.js';
 import { payFromActor } from './money.js';
-import { rollDialogueCheck } from './check.js';
+import { rollDialogueCheck, rollSanLoss } from './check.js';
 import { applyQuestDirectives } from './quest.js';
+import { applyItemDirectives } from './items.js';
 
 /** Case/accent/whitespace-insensitive comparison key for free-text answers. */
 function normalizeAnswer(s) {
@@ -270,7 +271,26 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
         return this.close(); // no failure branch wired: the NPC ends the exchange
       }
     }
+    // SAN roll with loss. Unlike the skill check, a failed SAN roll never
+    // ends the dialogue: it branches to failTarget when wired, else the
+    // conversation carries on (shaken, but talking).
+    if ( choice.san?.trim() ) {
+      const actor = getPlayerActor();
+      const res = await rollSanLoss(actor, choice.san);
+      if ( !res.ok ) {
+        ui.notifications.warn(game.i18n.format('COC7DIALOGUES.Warn.NoActorCheck', { check: 'SAN' }));
+        return this.render();
+      }
+      await this.#showCheckResult({ ...res, critical: false, fumble: false }, res.loss > 0
+        ? game.i18n.format('COC7DIALOGUES.Check.SanLoss', { formula: res.formula, loss: res.loss })
+        : null);
+      if ( !res.success && choice.failTarget ) {
+        await applySet(choice.set, this.owner);
+        return this.goTo(choice.failTarget);
+      }
+    }
     await applySet(choice.set, this.owner);
+    if ( choice.items?.trim() ) await applyItemDirectives(choice.items);
     if ( choice.quest?.trim() ) await applyQuestDirectives(choice.quest);
     if ( choice.target ) return this.goTo(choice.target);
     return this.close();
@@ -281,14 +301,15 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
    * @param {{success: boolean, critical: boolean, fumble: boolean, total: number,
    *          threshold: number, label: string}} res
    */
-  async #showCheckResult(res) {
+  async #showCheckResult(res, extra = null) {
     const nav = this.element.querySelector('.dialogue-choices, .dialogue-input');
     if ( !nav ) return;
     const resultKey = res.critical ? 'Critical' : res.fumble ? 'Fumble' : res.success ? 'Success' : 'Failure';
     const banner = document.createElement('div');
     banner.className = `dialogue-check-banner ${res.success ? 'success' : 'failure'}`;
     banner.innerHTML = `<i class="fa-solid fa-dice"></i> ${foundry.utils.escapeHTML(res.label)} — `
-      + `${res.total} / ${res.threshold} : <strong>${game.i18n.localize(`COC7DIALOGUES.Check.${resultKey}`)}</strong>`;
+      + `${res.total} / ${res.threshold} : <strong>${game.i18n.localize(`COC7DIALOGUES.Check.${resultKey}`)}</strong>`
+      + (extra ? ` <span class="extra">— ${foundry.utils.escapeHTML(extra)}</span>` : '');
     nav.replaceWith(banner);
     await new Promise(r => setTimeout(r, 1600));
   }

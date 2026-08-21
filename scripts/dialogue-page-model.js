@@ -51,6 +51,13 @@ export class DialoguePageModel extends foundry.abstract.TypeDataModel {
             extreme: 'COC7DIALOGUES.Check.Difficulty.extreme'
           }
         }),
+        // Sanity roll with loss, "success/failure" formulas (e.g. "0/1d4").
+        // Unlike `check`, a failed SAN roll does NOT block the choice: it
+        // branches to failTarget only when one is set, else continues.
+        san: new fields.StringField({ required: true, blank: true, initial: '' }),
+        // Inventory directives applied on success (see items.js):
+        // "take:Nom ; give:Nom_ou_UUID"
+        items: new fields.StringField({ required: true, blank: true, initial: '' }),
         // Simple Quest directives applied on success (see quest.js):
         // "give:UUID ; status:UUID|done ; objective:UUID|texte|done"
         quest: new fields.StringField({ required: true, blank: true, initial: '' }),

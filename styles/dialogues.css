@@ -346,3 +346,9 @@
 /* Quest directives */
 .coc7-dialogues-page .node-choices .extra-fields .quest-input { width: 220px; }
 .dialogue-node-view .node-choices code.quest i { font-size: 0.85em; margin-right: 2px; }
+
+/* SAN + items */
+.coc7-dialogues-page .node-choices .extra-fields .san-input { width: 70px; }
+.coc7-dialogues-page .node-choices .extra-fields .items-input { width: 180px; }
+#coc7-dialogues-overlay .dialogue-check-banner .extra { font-weight: normal; opacity: 0.9; }
+.dialogue-node-view .node-choices code.san i, .dialogue-node-view .node-choices code.items i { font-size: 0.85em; margin-right: 2px; }

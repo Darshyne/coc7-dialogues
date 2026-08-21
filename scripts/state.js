@@ -9,6 +9,7 @@
 
 import { MODULE_ID, FLAG_VISITED, FLAG_VARS } from './constants.js';
 import { getPlayerActor } from './player.js';
+import { findActorItem } from './items.js';
 
 /** @returns {Document} the document carrying this user's dialogue state. */
 export function getStateOwner() {
@@ -66,6 +67,8 @@ export async function applySet(directive, owner = getStateOwner()) {
  *   !name           var is not set
  *   visited:ID      node with that page id/uuid was visited (in the same journal, id is enough)
  *   !visited:ID
+ *   item:Name       the player's actor carries an item with that name
+ *   !item:Name
  * @param {string} directive
  * @param {JournalEntry} journal   used to resolve bare page ids
  * @returns {boolean}
@@ -83,6 +86,8 @@ export function checkCondition(directive, journal, owner = getStateOwner()) {
       const ref = t.slice('visited:'.length);
       const uuid = ref.includes('.') ? ref : journal?.pages.get(ref)?.uuid;
       value = uuid ? (visited[safeKey(uuid)] ?? 0) > 0 : false;
+    } else if ( t.toLowerCase().startsWith('item:') ) {
+      value = !!findActorItem(getPlayerActor(), t.slice('item:'.length));
     } else {
       value = !!vars[t];
     }
@@ -98,7 +103,9 @@ export async function resetState(owner = getStateOwner()) {
 }
 
 function splitTerms(s) {
-  return String(s ?? '').split(/[\s,;]+/).map(t => t.trim()).filter(Boolean);
+  // Comma/semicolon separated ONLY — terms may contain spaces (item:Nom
+  // avec espaces). Whitespace was dropped as a separator in 0.7.0.
+  return String(s ?? '').split(/[,;]+/).map(t => t.trim()).filter(Boolean);
 }
 
 function safeKey(uuid) {
