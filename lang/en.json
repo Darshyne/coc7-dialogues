@@ -36,7 +36,9 @@
       "MissingTarget": "This choice leads to a page that no longer exists.",
       "NoLedger": "The CoC7 Ledger module (0.6.0+) is required for paid choices — cannot pay ${cost}.",
       "NoActorMoney": "No character assigned: cannot pay ${cost}.",
-      "NotEnoughMoney": "Not enough money to pay ${cost} (spending level, cash and capital included)."
+      "NotEnoughMoney": "Not enough money to pay ${cost} (spending level, cash and capital included).",
+      "NoActorCheck": "No character assigned: cannot roll “{check}”.",
+      "UnknownCheck": "“{check}” doesn't match any skill or characteristic of your character."
     },
     "Settings": {
       "Blur": {
@@ -145,6 +147,12 @@
             },
             "failTarget": {
               "label": "On failure"
+            },
+            "check": {
+              "label": "Skill check"
+            },
+            "checkDifficulty": {
+              "label": "Difficulty"
             }
           }
         }
@@ -168,16 +176,29 @@
       "EmptyLabel": "(no text)",
       "Help": {
         "Title": "Help: placeholders, conditions, variables",
-        "Body": "<p><strong>Placeholders</strong> (in the line and the replies): <code>{name}</code> full name, <code>{firstname}</code>, <code>{lastname}</code>, <code>{title}</code> (Mister/Madam), <code>{masculine|feminine}</code> e.g. <code>{he|she}</code>, and <code>{m|f|neutral}</code> for a 3rd form when gender is unknown. Gender comes from the sheet's “Sex” field.</p><p><strong>Condition</strong> (the choice only shows if all hold, comma-separated): <code>key</code> variable set, <code>!key</code> not set, <code>visited:ID</code> / <code>!visited:ID</code> the node with page id ID was already seen.</p><p><strong>Sets</strong> (applied when the choice is clicked): <code>key</code> sets the variable, <code>!key</code> clears it. Variables and history are stored in the player's actor flags (<code>flags.coc7-dialogues</code>).</p><p><strong>Expected word</strong>: the choice opens a text prompt (password…). Right answer → “Leads to”, wrong → “On failure” (empty = retry). Case and accents ignored; several answers separated by <code>|</code>.</p><p><strong>Cost</strong>: charged through CoC7 Ledger in the order Spending Level → Cash → Capital (all or nothing). Cannot pay → “On failure” (empty = nothing happens). The payment is traced in chat.</p>"
+        "Body": "<p><strong>Placeholders</strong> (in the line and the replies): <code>{name}</code> full name, <code>{firstname}</code>, <code>{lastname}</code>, <code>{title}</code> (Mister/Madam), <code>{masculine|feminine}</code> e.g. <code>{he|she}</code>, and <code>{m|f|neutral}</code> for a 3rd form when gender is unknown. Gender comes from the sheet's “Sex” field.</p><p><strong>Condition</strong> (the choice only shows if all hold, comma-separated): <code>key</code> variable set, <code>!key</code> not set, <code>visited:ID</code> / <code>!visited:ID</code> the node with page id ID was already seen.</p><p><strong>Sets</strong> (applied when the choice is clicked): <code>key</code> sets the variable, <code>!key</code> clears it. Variables and history are stored in the player's actor flags (<code>flags.coc7-dialogues</code>).</p><p><strong>Expected word</strong>: the choice opens a text prompt (password…). Right answer → “Leads to”, wrong → “On failure” (empty = retry). Case and accents ignored; several answers separated by <code>|</code>.</p><p><strong>Cost</strong>: charged through CoC7 Ledger in the order Spending Level → Cash → Capital (all or nothing). Cannot pay → “On failure” (empty = nothing happens). The payment is traced in chat.</p><p><strong>Skill check</strong>: name of a sheet skill, a characteristic (<code>STR</code>, <code>DEX</code>, <code>POW</code>…), <code>Luck</code> or <code>SAN</code> + difficulty (Regular = value, Hard = half, Extreme = fifth). Rolled after any payment; 1 = critical, 96-100 (100 if value ≥ 50) = fumble. Success → “Leads to”, failure → “On failure” (empty: the NPC ends the exchange). The result shows in the dialogue and the d100 goes to chat. “Sets” only applies on success.</p>"
       },
       "AnswerPlaceholder": "expected password (several: a | b)",
       "AnswerHint": "Expected word: when set, clicking this choice opens a text prompt. Right answer (case/accents ignored) → “Leads to”; wrong → “On failure” (or retry if empty). Several accepted answers: separate with | or comma.",
       "CostHint": "Cost in dollars, charged through CoC7 Ledger: Spending Level, then Cash, then Capital. Not enough money → “On failure” (or the choice does nothing). 0 = free.",
-      "FailTargetHint": "Node reached when the word is wrong or the player cannot pay. Empty: wrong answer = retry, failed payment = nothing happens.",
-      "NoFailTarget": "— (stay put) —"
+      "FailTargetHint": "Node reached when the word is wrong, the player cannot pay, or the roll fails. Empty: wrong answer = retry, failed payment = nothing, failed roll = the dialogue closes.",
+      "NoFailTarget": "— (stay put) —",
+      "CheckPlaceholder": "Psychology, Fast Talk, STR, Luck…",
+      "CheckHint": "CoC7 check (after any payment): name of a sheet skill, a characteristic (STR, DEX, POW…), Luck or SAN, accents ignored. Success → “Leads to”; failure → “On failure” (empty: the dialogue closes). The d100 shows in chat."
     },
     "Chat": {
       "Paid": "<em>{actor}</em> pays <strong>${cost}</strong> ({npc} — dialogue)."
+    },
+    "Check": {
+      "Difficulty": {
+        "regular": "Regular",
+        "hard": "Hard",
+        "extreme": "Extreme"
+      },
+      "Success": "Success",
+      "Failure": "Failure",
+      "Critical": "Critical success!",
+      "Fumble": "Fumble!"
     }
   }
 }

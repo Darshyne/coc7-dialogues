@@ -69,6 +69,7 @@ export class DialoguePageSheet extends Base {
         targetName: c.target ? (target?.name ?? game.i18n.localize('COC7DIALOGUES.Page.MissingTarget')) : game.i18n.localize('COC7DIALOGUES.Page.EndTarget'),
         targetMissing: !!c.target && !target,
         targetId: target?.id ?? '',
+        difficultyLabel: (c.check && c.checkDifficulty !== 'regular') ? game.i18n.localize(`COC7DIALOGUES.Check.Difficulty.${c.checkDifficulty}`) : '',
         failTargetName: failTarget?.name ?? (c.failTarget ? game.i18n.localize('COC7DIALOGUES.Page.MissingTarget') : ''),
         failTargetMissing: !!c.failTarget && !failTarget,
         failTargetId: failTarget?.id ?? ''
@@ -79,9 +80,13 @@ export class DialoguePageSheet extends Base {
       { value: '', label: game.i18n.localize('COC7DIALOGUES.Page.NoFailTarget') },
       ...nodes.map(p => ({ value: p.id, label: p.name }))
     ];
+    const difficultyOptions = ['regular', 'hard', 'extreme'].map(d => (
+      { value: d, label: game.i18n.localize(`COC7DIALOGUES.Check.Difficulty.${d}`) }
+    ));
 
     Object.assign(context, {
       failTargetOptions,
+      difficultyOptions,
       systemFields: sys.schema.fields,
       system: sys,
       source: page._source,
@@ -119,7 +124,7 @@ export class DialoguePageSheet extends Base {
 
   static async #onAddChoice() {
     const choices = foundry.utils.deepClone(this.page.system._source.choices ?? []);
-    choices.push({ label: '', target: '', condition: '', set: '', answer: '', cost: 0, failTarget: '' });
+    choices.push({ label: '', target: '', condition: '', set: '', answer: '', cost: 0, check: '', checkDifficulty: 'regular', failTarget: '' });
     await this.page.update({ 'system.choices': choices });
   }
 

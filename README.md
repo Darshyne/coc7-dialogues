@@ -160,9 +160,9 @@ virgules) :
 Un nœud **sans aucun choix** (ou dont tous les choix sont masqués par
 leurs conditions) affiche un bouton « Prendre congé ».
 
-## Mot de passe et argent (par choix)
+## Mot de passe, argent et jets de compétence (par choix)
 
-Chaque choix a trois champs avancés supplémentaires (sous-ligne dans
+Chaque choix a des champs avancés supplémentaires (sous-ligne dans
 l'éditeur) :
 
 - **Mot attendu** — si rempli, cliquer le choix ouvre une **saisie de
@@ -181,16 +181,32 @@ l'éditeur) :
   paiement laisse une trace dans le chat (« *Untel* paie **N $** … »). Sans
   le ledger actif, les choix payants refusent proprement. « Définit » n'est
   appliqué que si le paiement (et/ou le mot) réussit.
-- **En cas d'échec** — le nœud de repli commun aux deux mécanismes.
+- **Jet de compétence** 🎲 — le nom d'une compétence de la fiche (tel
+  qu'il y apparaît : « Psychology » sur une fiche anglaise, « Psychologie »
+  sur une française — accents et casse ignorés), d'une caractéristique
+  (`FOR`/`STR`, `DEX`, `POU`/`POW`…), de la `Chance` ou de la `SAN`, plus
+  une **difficulté** (Normale = valeur, Difficile = moitié, Extrême =
+  cinquième). Le module lance un vrai d100 Foundry (carte de chat, animé
+  par Dice So Nice) : 1 = critique, 96-100 (100 si valeur ≥ 50) =
+  maladresse. Le résultat s'affiche en bannière dans le dialogue
+  (« Psychology — 2 / 45 : Réussite ») puis : réussite → « Mène à »,
+  échec → « En cas d'échec » — ou **fermeture du dialogue** si ce champ est
+  vide (pas de re-tentative en spammant le choix). Le jet a lieu *après* le
+  paiement éventuel (on paie pour tenter). Nom introuvable sur la fiche →
+  avertissement, rien ne se passe.
+- **En cas d'échec** — le nœud de repli commun aux trois mécanismes.
 
-Tout reste côté client : le joueur paie depuis son propre acteur (flags du
-ledger qu'il possède), aucune permission ni MJ nécessaires.
+Tout reste côté client : le joueur paie et lance ses dés depuis son propre
+acteur, aucune permission ni MJ nécessaires. Le jet est rendu par le
+module lui-même (d100 contre seuil), pas par la fenêtre de jet du système
+CoC7 — donc pas de dés bonus/malus ni de relance forcée (push) dans les
+dialogues, par choix.
 
 ## Où vivent les données
 
 - Le contenu (nœuds, choix) : dans les pages de journal, champ `system`
   (`text`, `speaker`, `portrait`,
-  `choices[]{label,target,condition,set,answer,cost,failTarget}`).
+  `choices[]{label,target,condition,set,answer,cost,check,checkDifficulty,failTarget}`).
 - La config du PNJ : dans le `RegionBehavior` de type
   `coc7-dialogues.dialogue` (`system.journal` UUID, `speaker`, `portrait`,
   `highlight`, `color`).
@@ -216,8 +232,6 @@ choisissent une réponse ; `Échap` ferme.
 
 ## Limites connues / pistes V2
 
-- Pas encore de jets de compétence dans les choix (ex. « [Persuasion] … »
-  qui branche sur succès/échec) — prévu.
 - Le dialogue est local à l'utilisateur qui clique ; pas de mode « le
   Gardien projette le dialogue à tous ».
 - Un seul dialogue par région (le premier comportement « Dialogue » actif).

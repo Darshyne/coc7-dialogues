@@ -36,7 +36,17 @@ export class DialoguePageModel extends foundry.abstract.TypeDataModel {
         answer: new fields.StringField({ required: true, blank: true, initial: '' }),
         // Money to pay via coc7-ledger (Spending → Cash → Capital); 0 = free.
         cost: new fields.NumberField({ required: true, initial: 0, min: 0, nullable: false }),
-        // Page id when the answer is wrong / the player can't (or won't) pay.
+        // CoC7 check: skill/characteristic name (see check.js); empty = no roll.
+        check: new fields.StringField({ required: true, blank: true, initial: '' }),
+        checkDifficulty: new fields.StringField({
+          required: true, blank: false, initial: 'regular',
+          choices: {
+            regular: 'COC7DIALOGUES.Check.Difficulty.regular',
+            hard: 'COC7DIALOGUES.Check.Difficulty.hard',
+            extreme: 'COC7DIALOGUES.Check.Difficulty.extreme'
+          }
+        }),
+        // Page id when the answer is wrong / the payment or the roll fails.
         failTarget: new fields.StringField({ required: true, blank: true, initial: '' })
       }), { initial: [] })
     };

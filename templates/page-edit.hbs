@@ -58,6 +58,13 @@
                 <i class="fa-solid fa-coins"></i>
                 <input type="number" name="system.choices.{{this.index}}.cost" value="{{this.cost}}" min="0" step="any" class="cost-input"> $
               </label>
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.CheckHint"}}">
+                <i class="fa-solid fa-dice"></i>
+                <input type="text" name="system.choices.{{this.index}}.check" value="{{this.check}}" placeholder="{{localize "COC7DIALOGUES.Page.CheckPlaceholder"}}" class="check-input">
+                <select name="system.choices.{{this.index}}.checkDifficulty" class="check-difficulty">
+                  {{selectOptions ../difficultyOptions selected=this.checkDifficulty valueAttr="value" labelAttr="label"}}
+                </select>
+              </label>
               <label data-tooltip="{{localize "COC7DIALOGUES.Page.FailTargetHint"}}">
                 <i class="fa-solid fa-arrow-rotate-left"></i>
                 <select name="system.choices.{{this.index}}.failTarget" {{#if this.failTargetMissing}}class="missing"{{/if}}>

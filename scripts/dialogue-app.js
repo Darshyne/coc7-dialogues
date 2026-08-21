@@ -11,6 +11,7 @@ import { MODULE_ID, PAGE_TYPE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRI
 import { applyPlaceholders, describeActor, getPlayerActor } from './player.js';
 import { applySet, checkCondition, getStateOwner, markVisited } from './state.js';
 import { payFromActor } from './money.js';
+import { rollDialogueCheck } from './check.js';
 
 /** Case/accent/whitespace-insensitive comparison key for free-text answers. */
 function normalizeAnswer(s) {
@@ -129,7 +130,8 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
         label: applyPlaceholders(c.label, this.who),
         key: choices.length + 1,
         cost: c.cost > 0 ? c.cost : null,
-        hasAnswer: !!c.answer?.trim()
+        hasAnswer: !!c.answer?.trim(),
+        check: c.check?.trim() || null
       });
     });
 
@@ -245,9 +247,41 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
         speaker: { alias: actor.name }
       }).catch(err => console.error(`${MODULE_ID} |`, err));
     }
+    // CoC7 check, after the payment (you pay to attempt).
+    if ( choice.check?.trim() ) {
+      const actor = getPlayerActor();
+      const res = await rollDialogueCheck(actor, choice.check, choice.checkDifficulty);
+      if ( !res.ok ) {
+        const key = res.error === 'no-actor' ? 'NoActorCheck' : 'UnknownCheck';
+        ui.notifications.warn(game.i18n.format(`COC7DIALOGUES.Warn.${key}`, { check: choice.check }));
+        return this.render();
+      }
+      await this.#showCheckResult(res);
+      if ( !res.success ) {
+        if ( choice.failTarget ) return this.goTo(choice.failTarget);
+        return this.close(); // no failure branch wired: the NPC ends the exchange
+      }
+    }
     await applySet(choice.set, this.owner);
     if ( choice.target ) return this.goTo(choice.target);
     return this.close();
+  }
+
+  /**
+   * Briefly display the roll outcome inside the panel before branching.
+   * @param {{success: boolean, critical: boolean, fumble: boolean, total: number,
+   *          threshold: number, label: string}} res
+   */
+  async #showCheckResult(res) {
+    const nav = this.element.querySelector('.dialogue-choices, .dialogue-input');
+    if ( !nav ) return;
+    const resultKey = res.critical ? 'Critical' : res.fumble ? 'Fumble' : res.success ? 'Success' : 'Failure';
+    const banner = document.createElement('div');
+    banner.className = `dialogue-check-banner ${res.success ? 'success' : 'failure'}`;
+    banner.innerHTML = `<i class="fa-solid fa-dice"></i> ${foundry.utils.escapeHTML(res.label)} — `
+      + `${res.total} / ${res.threshold} : <strong>${game.i18n.localize(`COC7DIALOGUES.Check.${resultKey}`)}</strong>`;
+    nav.replaceWith(banner);
+    await new Promise(r => setTimeout(r, 1600));
   }
 
   static async #onSubmitAnswer() {

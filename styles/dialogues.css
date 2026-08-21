@@ -312,3 +312,33 @@
 .dialogue-node-view .node-choices code.cost i { font-size: 0.85em; margin-right: 2px; }
 .dialogue-node-view .node-choices .fail-branch { margin-left: 6px; font-size: 0.85em; opacity: 0.85; }
 .dialogue-node-view .node-choices .fail-branch i { margin-right: 3px; opacity: 0.6; }
+
+/* -------------------------------------------------------------------------- */
+/* Skill checks in choices                                                     */
+/* -------------------------------------------------------------------------- */
+
+#coc7-dialogues-overlay button.dialogue-choice .check-tag {
+  flex: 0 0 auto; margin-left: 8px; padding: 1px 8px;
+  border: 1px solid rgba(214, 186, 128, 0.45); border-radius: 10px;
+  color: #d6ba80; font-size: 0.85em; white-space: nowrap;
+}
+#coc7-dialogues-overlay button.dialogue-choice .check-tag i { font-size: 0.85em; margin-right: 3px; }
+
+#coc7-dialogues-overlay .dialogue-check-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: 4px;
+  font-size: 1.1rem;
+  animation: coc7d-fade-in 200ms ease-out;
+}
+#coc7-dialogues-overlay .dialogue-check-banner.success {
+  background: rgba(60, 140, 80, 0.22); border: 1px solid rgba(90, 190, 110, 0.6); color: #c9eecf;
+}
+#coc7-dialogues-overlay .dialogue-check-banner.failure {
+  background: rgba(140, 50, 45, 0.25); border: 1px solid rgba(200, 80, 70, 0.6); color: #f2c9c4;
+}
+
+.coc7-dialogues-page .node-choices .extra-fields .check-input { width: 150px; }
+.coc7-dialogues-page .node-choices .extra-fields .check-difficulty { width: 100px; }
+
+.coc7-dialogues-check.success .result { color: #2e7d32; font-weight: bold; }
+.coc7-dialogues-check.failure .result { color: #b03a2e; font-weight: bold; }

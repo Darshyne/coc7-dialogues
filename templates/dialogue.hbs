@@ -21,6 +21,7 @@
         <button type="button" class="dialogue-choice" data-action="choose" data-index="{{this.index}}" data-key="{{this.key}}">
           <span class="key">{{this.key}}</span><span class="label">{{this.label}}</span>
           {{#if this.hasAnswer}}<i class="fa-solid fa-key marker" aria-hidden="true"></i>{{/if}}
+          {{#if this.check}}<span class="check-tag"><i class="fa-solid fa-dice"></i> {{this.check}}</span>{{/if}}
           {{#if this.cost}}<span class="cost">{{this.cost}} $</span>{{/if}}
         </button>
       {{/each}}

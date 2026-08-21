@@ -12,6 +12,7 @@ import { registerCanvasHooks, getDialogueRegions, getClickableRegions } from './
 import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-app.js';
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
 import { getVars, getVisited, resetState, applySet, checkCondition } from './state.js';
+import { rollDialogueCheck, resolveCheckTarget } from './check.js';
 
 // Body font of the overlay — same Google Fonts <link> technique as coc7-ledger
 // / CoC7 Arkham Journal (falls back to Signika/Georgia offline).
@@ -69,6 +70,7 @@ Hooks.once('ready', () => {
     getDialogueRegions, getClickableRegions, executeClickMacro,
     applyPlaceholders, describeActor, getPlayerActor, normalizeGender,
     getVars, getVisited, resetState, applySet, checkCondition,
+    rollDialogueCheck, resolveCheckTarget,
     PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO
   };
 });

@@ -32,8 +32,20 @@ pattern que `../coc7-ledger/`).
   dessine sa propre surbrillance dans `canvas.interface`. Le MJ ne
   déclenche que depuis le calque Tokens (pour ne pas voler les clics des
   outils).
-- **Jets de compétence CoC7 dans les choix : V2, pas maintenant.** La
-  structure `choices[]` est prévue pour y ajouter un champ jet plus tard.
+- **Jets de compétence CoC7 dans les choix (v0.4.0, 2026-08-21)** : champs
+  `check` (nom de compétence de la fiche / caractéristique FOR-DEX-POU… /
+  Chance / SAN, insensible aux accents — `scripts/check.js`) +
+  `checkDifficulty` (regular/hard/extreme → valeur, /2, /5). Le d100 est
+  lancé PAR LE MODULE (Roll Foundry natif → carte de chat + Dice So Nice),
+  pas par CoC7Check : le système distribué est bundlé (classe inaccessible)
+  et ses déclencheurs publics (`actor.skillCheck` → CoC7RollNormalize) ne
+  renvoient jamais le résultat. 1 = critique, 96-100 (100 si valeur ≥ 50) =
+  maladresse. Ordre dans un choix : mot attendu → paiement → jet ; échec de
+  jet → `failTarget`, ou FERMETURE du dialogue si vide (anti re-tentative).
+  Bannière de résultat inline (1,6 s) avant navigation. Le nom doit être
+  celui de la FICHE (fiche anglaise = noms anglais). Vérifié en jeu avec
+  `CONFIG.Dice.randomUniform` forcé (astuce de test : c'est la source
+  d'aléa des Roll ; mapping inversé, u≈0.99 → petit d100).
 - **Mot de passe + argent dans les choix (v0.3.0, 2026-08-21)** : trois
   champs par choix — `answer` (mot(s) attendu(s), saisie de texte dans
   l'overlay, comparaison casse/accents/espaces-insensible via
