@@ -144,6 +144,14 @@ pattern que `../coc7-ledger/`).
   lire `actor.system.…` juste après un update dans le même bloc peut
   renvoyer une valeur rassie — vérifier via `_source` ou relire plus tard.
 
+- **Jet raté = définitif (v0.7.1, 2026-08-21, demande explicite du MJ)** :
+  un échec de `check` pose la var interne `_jet_<pageId>_<index>` et le
+  choix est filtré de l'affichage tant qu'elle existe (resetState la purge
+  avec le reste). Caveat : la clé utilise l'INDEX du choix — réordonner les
+  choix d'un nœud après coup orpheline les marques. Ne s'applique qu'aux
+  jets de compétence (pas au mot de passe — retry immédiat voulu —, pas au
+  paiement — on peut revenir plus riche —, pas à la SAN — pas un portail).
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

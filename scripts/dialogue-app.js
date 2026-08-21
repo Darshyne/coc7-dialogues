@@ -9,7 +9,7 @@
 
 import { MODULE_ID, PAGE_TYPE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
 import { applyPlaceholders, describeActor, getPlayerActor } from './player.js';
-import { applySet, checkCondition, getStateOwner, markVisited } from './state.js';
+import { applySet, checkCondition, getStateOwner, getVars, markVisited } from './state.js';
 import { payFromActor } from './money.js';
 import { rollDialogueCheck, rollSanLoss } from './check.js';
 import { applyQuestDirectives } from './quest.js';
@@ -132,8 +132,12 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const text = applyPlaceholders(enriched, this.who);
 
     const choices = [];
+    const vars = getVars(this.owner);
     (sys.choices ?? []).forEach((c, index) => {
       if ( !checkCondition(c.condition, this.journal, this.owner) ) return;
+      // A failed skill check is definitive: the choice is never offered again
+      // (cleared by resetState, like any var).
+      if ( c.check?.trim() && vars[this.#failedCheckKey(index)] ) return;
       choices.push({
         index,
         label: applyPlaceholders(c.label, this.who),
@@ -220,6 +224,14 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     await this.render();
   }
 
+  /**
+   * Var name marking a definitively failed check on choice `index` of the
+   * current node. Lives with the other vars so resetState clears it too.
+   */
+  #failedCheckKey(index) {
+    return `_jet_${this.page.id}_${index}`;
+  }
+
   static async #onChoose(event, target) {
     const index = Number(target.dataset.index);
     const choice = this.page.system.choices?.[index];
@@ -230,7 +242,7 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
       return this.render();
     }
     target.disabled = true;
-    return this.#resolveChoice(choice);
+    return this.#resolveChoice(choice, index);
   }
 
   /**
@@ -239,7 +251,7 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
    * else stays on the node.
    * @param {object} choice
    */
-  async #resolveChoice(choice) {
+  async #resolveChoice(choice, index) {
     this.#pendingChoice = null;
     if ( choice.cost > 0 ) {
       const actor = getPlayerActor();
@@ -264,6 +276,10 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const key = res.error === 'no-actor' ? 'NoActorCheck' : 'UnknownCheck';
         ui.notifications.warn(game.i18n.format(`COC7DIALOGUES.Warn.${key}`, { check: choice.check }));
         return this.render();
+      }
+      if ( !res.success ) {
+        // Definitive: this choice will never be offered again (resetState undoes it).
+        await applySet(this.#failedCheckKey(index), this.owner);
       }
       await this.#showCheckResult(res);
       if ( !res.success ) {
@@ -318,10 +334,11 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const choice = this.page.system.choices?.[this.#pendingChoice];
     const input = this.element.querySelector('.dialogue-input input');
     if ( !choice || !input ) return;
+    const pendingIndex = this.#pendingChoice;
     const given = normalizeAnswer(input.value);
     if ( !given ) return; // empty: just keep waiting
     const accepted = choice.answer.split(/[|,;]/).map(normalizeAnswer).filter(Boolean);
-    if ( accepted.includes(given) ) return this.#resolveChoice(choice);
+    if ( accepted.includes(given) ) return this.#resolveChoice(choice, pendingIndex);
     // Wrong answer: branch if the author wired a failure node, else shake and retry.
     if ( choice.failTarget ) return this.goTo(choice.failTarget);
     input.value = '';

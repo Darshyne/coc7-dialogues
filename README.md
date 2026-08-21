@@ -248,8 +248,11 @@ l'éditeur) :
   (« Psychology — 2 / 45 : Réussite ») puis : réussite → « Mène à »,
   échec → « En cas d'échec » — ou **fermeture du dialogue** si ce champ est
   vide (pas de re-tentative en spammant le choix). Le jet a lieu *après* le
-  paiement éventuel (on paie pour tenter). Nom introuvable sur la fiche →
-  avertissement, rien ne se passe.
+  paiement éventuel (on paie pour tenter). **Un jet raté est définitif** :
+  le choix n'est plus jamais proposé à ce joueur (marqué par une variable
+  interne `_jet_…`, effacée par `resetState()` / la macro de reset comme le
+  reste de la mémoire). Nom introuvable sur la fiche → avertissement, rien
+  ne se passe.
 - **Quête (Simple Quest)** 📜 — directives appliquées en cas de succès du
   choix, séparées par `;` :
   - `give:UUID` — donne la quête au joueur : la page de quête **modèle**
