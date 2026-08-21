@@ -130,10 +130,14 @@ enchaîner les pistes via l'événement `end` du son.
 
 1. Le Gardien écrit ses **quêtes modèles** (pages « Quest ») dans un
    journal dédié — par ex. « Modèles de quêtes (dialogues) » dans le
-   dossier Quests de Simple Quest — en permission **Observateur**, pages à
-   « Aucun » (même pattern anti-spoil que les dialogues : les données
-   restent lisibles par le module, invisibles dans l'interface). Les
-   objectifs sont les puces de liste du texte de la page.
+   dossier Quests de Simple Quest — laissé en permission **« Aucun »**
+   (contrairement aux journaux de dialogue, aucune permission n'est
+   nécessaire : les directives lisent les données du monde déjà présentes
+   côté client, et le journal reste totalement invisible pour les joueurs,
+   y compris dans la section « Undiscovered » de Simple Quest — vérifié en
+   jeu). Les objectifs sont les puces de liste du texte de la page.
+   Attention à ne pas laisser d'exception de permission par joueur sur ces
+   pages : « Hériter » sur un journal Observateur les rendrait visibles.
 2. Chaque joueur a besoin d'un **journal de quêtes dont il est
    propriétaire** — c'est ce qui permet au dialogue d'écrire dedans sans
    MJ connecté (Simple Quest fait passer les joueurs non-propriétaires par
