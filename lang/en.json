@@ -48,7 +48,8 @@
       "ItemBadDirective": "Invalid item directive: “{term}”.",
       "ItemMissing": "“{name}” is not in your inventory.",
       "ItemNoSource": "Item template not found ({name}) — world item name or UUID.",
-      "ItemFailed": "Item directive “{term}” failed (see console)."
+      "ItemFailed": "Item directive “{term}” failed (see console).",
+      "ResyncGMOnly": "Keeper only."
     },
     "Settings": {
       "Blur": {
@@ -234,7 +235,9 @@
       "QuestGiven": "📜 New quest: {name}",
       "QuestUpdated": "📜 Quest updated: {name}",
       "ItemTaken": "👜 Item handed over: {name}",
-      "ItemGiven": "👜 Item received: {name}"
+      "ItemGiven": "👜 Item received: {name}",
+      "ResyncDone": "🎷 Music resynced for the whole table — the Keeper's playlist resumes.",
+      "ResyncSilence": "🎷 Local music cut for the whole table (no Keeper playlist playing)."
     }
   }
 }

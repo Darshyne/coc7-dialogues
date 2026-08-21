@@ -64,7 +64,8 @@
       "ItemBadDirective": "Directive d'objet invalide : « {term} ».",
       "ItemMissing": "« {name} » n'est pas dans votre inventaire.",
       "ItemNoSource": "Objet modèle introuvable ({name}) — nom d'un objet du monde ou UUID.",
-      "ItemFailed": "La directive d'objet « {term} » a échoué (voir console)."
+      "ItemFailed": "La directive d'objet « {term} » a échoué (voir console).",
+      "ResyncGMOnly": "Réservé au Gardien."
     },
     "Settings": {
       "Blur": {
@@ -234,7 +235,9 @@
       "QuestGiven": "📜 Nouvelle quête : {name}",
       "QuestUpdated": "📜 Quête mise à jour : {name}",
       "ItemTaken": "👜 Objet remis : {name}",
-      "ItemGiven": "👜 Objet reçu : {name}"
+      "ItemGiven": "👜 Objet reçu : {name}",
+      "ResyncDone": "🎷 Musique resynchronisée pour toute la table — la playlist du Gardien reprend.",
+      "ResyncSilence": "🎷 Musique locale coupée pour toute la table (aucune playlist du Gardien en cours)."
     }
   }
 }

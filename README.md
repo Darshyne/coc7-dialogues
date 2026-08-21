@@ -151,6 +151,20 @@ enchaîner les pistes via l'événement `end` du son.
 3. Chaque joueur voit alors **ses** quêtes dans Simple Quest, le Gardien
    voit tout.
 
+## Resynchroniser la musique de toute la table (Gardien)
+
+Le jukebox (macro « Macro au clic ») est local à chaque joueur — pour le
+couper **chez tout le monde** et faire reprendre la playlist du Gardien,
+le module expose (v0.8.0, seul usage du socket) :
+
+```js
+game.modules.get('coc7-dialogues').api.resyncMusicForEveryone();
+```
+
+Chaque client coupe en fondu tout son du canal Musique non géré par une
+playlist, puis resynchronise les playlists que les documents déclarent en
+lecture. Réservé au Gardien (vérifié à la réception).
+
 ## Macro de reset (test)
 
 Pour rejouer un dialogue de zéro pendant l'écriture, une macro script à

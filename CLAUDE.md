@@ -152,6 +152,17 @@ pattern que `../coc7-ledger/`).
   jets de compétence (pas au mot de passe — retry immédiat voulu —, pas au
   paiement — on peut revenir plus riche —, pas à la SAN — pas un portail).
 
+- **Socket (v0.8.0, 2026-08-21)** : PREMIÈRE entorse au zéro-socket, un
+  seul usage — `resyncMusicForEveryone()` (MJ) diffuse `resyncMusic` sur
+  `module.coc7-dialogues` (`scripts/sync-music.js`) : chaque client coupe
+  en fondu les sons du canal Musique NON gérés par une playlist (test
+  d'appartenance via l'ensemble des `PlaylistSound.sound`), vide
+  `globalThis.speakeasyMusic` (désarme l'enchaînement du jukebox) et
+  `sync()` les playlists document-playing. Émetteur vérifié GM à la
+  réception ; les sockets de module n'échoient pas à l'émetteur → le MJ
+  exécute aussi localement. `"socket": true` dans le manifest → exige un
+  relancement du monde.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

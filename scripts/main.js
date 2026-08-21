@@ -14,6 +14,7 @@ import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } fro
 import { getVars, getVisited, resetState, applySet, checkCondition } from './state.js';
 import { rollDialogueCheck, resolveCheckTarget, rollSanLoss } from './check.js';
 import { applyItemDirectives, findActorItem, hasItem } from './items.js';
+import { registerMusicSocket, resyncLocalMusic, resyncMusicForEveryone } from './sync-music.js';
 import { applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor } from './quest.js';
 
 // Body font of the overlay — same Google Fonts <link> technique as coc7-ledger
@@ -66,6 +67,7 @@ Hooks.once('init', () => {
 });
 
 Hooks.once('ready', () => {
+  registerMusicSocket();
   // Public API for macros / other modules (an `export` alone isn't reachable from macros).
   game.modules.get(MODULE_ID).api = {
     openDialogue, openDialogueFromBehavior, DialogueApp,
@@ -74,6 +76,7 @@ Hooks.once('ready', () => {
     getVars, getVisited, resetState, applySet, checkCondition,
     rollDialogueCheck, resolveCheckTarget, rollSanLoss,
     applyItemDirectives, findActorItem, hasItem,
+    resyncMusicForEveryone, resyncLocalMusic,
     applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor,
     PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO
   };
