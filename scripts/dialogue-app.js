@@ -10,6 +10,13 @@
 import { MODULE_ID, PAGE_TYPE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
 import { applyPlaceholders, describeActor, getPlayerActor } from './player.js';
 import { applySet, checkCondition, getStateOwner, markVisited } from './state.js';
+import { payFromActor } from './money.js';
+
+/** Case/accent/whitespace-insensitive comparison key for free-text answers. */
+function normalizeAnswer(s) {
+  const noAccents = String(s ?? '').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return noAccents.replace(/\s+/g, ' ');
+}
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -87,7 +94,9 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       choose: DialogueApp.#onChoose,
       end: DialogueApp.#onEnd,
-      skip: DialogueApp.#onSkip
+      skip: DialogueApp.#onSkip,
+      submitAnswer: DialogueApp.#onSubmitAnswer,
+      cancelAnswer: DialogueApp.#onCancelAnswer
     }
   };
 
@@ -99,6 +108,10 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
   #keyHandler = event => this.#handleKey(event);
   /** Typewriter state. */
   #typing = null;
+  /** Index of the choice awaiting free-text input, or null. */
+  #pendingChoice = null;
+  /** Last page uuid whose visit was recorded (guards re-renders). */
+  #markedUuid = null;
 
   /* -------------------------------------------- */
 
@@ -111,17 +124,26 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const choices = [];
     (sys.choices ?? []).forEach((c, index) => {
       if ( !checkCondition(c.condition, this.journal, this.owner) ) return;
-      choices.push({ index, label: applyPlaceholders(c.label, this.who), key: choices.length + 1 });
+      choices.push({
+        index,
+        label: applyPlaceholders(c.label, this.who),
+        key: choices.length + 1,
+        cost: c.cost > 0 ? c.cost : null,
+        hasAnswer: !!c.answer?.trim()
+      });
     });
 
+    const pending = this.#pendingChoice !== null ? sys.choices?.[this.#pendingChoice] : null;
     return {
       speaker: sys.speaker || this.defaultSpeaker,
       portrait: sys.portrait || this.defaultPortrait,
       text,
       choices,
       noChoices: choices.length === 0,
+      inputMode: pending ? { index: this.#pendingChoice, label: applyPlaceholders(pending.label, this.who) } : null,
       blur: game.settings.get(MODULE_ID, SETTING_BLUR),
-      typewriter: game.settings.get(MODULE_ID, SETTING_TYPEWRITER)
+      // No typewriter replay when we merely switch to/from the input row.
+      typewriter: game.settings.get(MODULE_ID, SETTING_TYPEWRITER) && (this.page.uuid !== this.#markedUuid)
     };
   }
 
@@ -135,9 +157,29 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
     this.element.classList.toggle('no-blur', !context.blur);
-    // Record the visit (fire and forget — the flag write must never block the UI).
-    markVisited(this.page.uuid, this.owner).catch(err => console.error(`${MODULE_ID} |`, err));
+    // Record the visit once per node, not on every re-render (input mode
+    // toggles re-render the same node). Fire and forget — the flag write
+    // must never block the UI.
+    if ( this.page.uuid !== this.#markedUuid ) {
+      markVisited(this.page.uuid, this.owner).catch(err => console.error(`${MODULE_ID} |`, err));
+    }
     if ( context.typewriter ) this.#startTypewriter();
+    this.#markedUuid = this.page.uuid;
+    const input = this.element.querySelector('.dialogue-input input');
+    if ( input ) {
+      input.focus();
+      input.addEventListener('keydown', event => {
+        event.stopPropagation();
+        if ( event.key === 'Enter' ) {
+          event.preventDefault();
+          this.element.querySelector('[data-action="submitAnswer"]')?.click();
+        }
+        else if ( event.key === 'Escape' ) {
+          event.preventDefault();
+          this.element.querySelector('[data-action="cancelAnswer"]')?.click();
+        }
+      });
+    }
   }
 
   async _onClose(options) {
@@ -162,6 +204,7 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
       return this.close();
     }
     this.page = next;
+    this.#pendingChoice = null;
     this.#stopTypewriter(false);
     await this.render();
   }
@@ -170,10 +213,63 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const index = Number(target.dataset.index);
     const choice = this.page.system.choices?.[index];
     if ( !choice ) return;
+    // Free-text answer expected? Switch to the input row first.
+    if ( choice.answer?.trim() ) {
+      this.#pendingChoice = index;
+      return this.render();
+    }
     target.disabled = true;
+    return this.#resolveChoice(choice);
+  }
+
+  /**
+   * Everything that happens once a choice is truly taken: payment, vars,
+   * navigation. The failure branch (can't pay) goes to failTarget when set,
+   * else stays on the node.
+   * @param {object} choice
+   */
+  async #resolveChoice(choice) {
+    this.#pendingChoice = null;
+    if ( choice.cost > 0 ) {
+      const actor = getPlayerActor();
+      const paid = await payFromActor(actor, choice.cost);
+      if ( !paid.ok ) {
+        const key = { 'no-ledger': 'NoLedger', 'no-actor': 'NoActorMoney', 'insufficient-funds': 'NotEnoughMoney' }[paid.error];
+        ui.notifications.warn(game.i18n.format(`COC7DIALOGUES.Warn.${key}`, { cost: choice.cost }));
+        if ( paid.error === 'insufficient-funds' && choice.failTarget ) return this.goTo(choice.failTarget);
+        return this.render();
+      }
+      // Leave a trace in chat so the Keeper can audit money moves later.
+      foundry.documents.ChatMessage.implementation.create({
+        content: game.i18n.format('COC7DIALOGUES.Chat.Paid', { actor: actor.name, cost: choice.cost, npc: this.page.system.speaker || this.defaultSpeaker }),
+        speaker: { alias: actor.name }
+      }).catch(err => console.error(`${MODULE_ID} |`, err));
+    }
     await applySet(choice.set, this.owner);
     if ( choice.target ) return this.goTo(choice.target);
     return this.close();
+  }
+
+  static async #onSubmitAnswer() {
+    const choice = this.page.system.choices?.[this.#pendingChoice];
+    const input = this.element.querySelector('.dialogue-input input');
+    if ( !choice || !input ) return;
+    const given = normalizeAnswer(input.value);
+    if ( !given ) return; // empty: just keep waiting
+    const accepted = choice.answer.split(/[|,;]/).map(normalizeAnswer).filter(Boolean);
+    if ( accepted.includes(given) ) return this.#resolveChoice(choice);
+    // Wrong answer: branch if the author wired a failure node, else shake and retry.
+    if ( choice.failTarget ) return this.goTo(choice.failTarget);
+    input.value = '';
+    input.classList.remove('wrong');
+    void input.offsetWidth; // restart the CSS animation
+    input.classList.add('wrong');
+    input.focus();
+  }
+
+  static async #onCancelAnswer() {
+    this.#pendingChoice = null;
+    return this.render();
   }
 
   static async #onEnd() {

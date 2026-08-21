@@ -33,8 +33,28 @@ pattern que `../coc7-ledger/`).
   déclenche que depuis le calque Tokens (pour ne pas voler les clics des
   outils).
 - **Jets de compétence CoC7 dans les choix : V2, pas maintenant.** La
-  structure `choices[]{label,target,condition,set}` est prévue pour y
-  ajouter un champ jet plus tard.
+  structure `choices[]` est prévue pour y ajouter un champ jet plus tard.
+- **Mot de passe + argent dans les choix (v0.3.0, 2026-08-21)** : trois
+  champs par choix — `answer` (mot(s) attendu(s), saisie de texte dans
+  l'overlay, comparaison casse/accents/espaces-insensible via
+  `normalizeAnswer`, alternatives séparées par `|`), `cost` (prélevé via
+  `coc7-ledger` `api.money` **0.6.0+** — `getSpendingRemaining` /
+  `setSpendingRemaining` y ont été ajoutés pour nous — cascade Dépenses
+  courantes → Espèces → Capital dans `scripts/money.js#payFromActor`,
+  tout ou rien, trace chat), `failTarget` (nœud de repli commun : mot faux
+  ou paiement impossible ; vide = retry pour le mot, no-op pour l'argent).
+  `set` ne s'applique qu'en cas de succès. Vérifié en jeu (compte `test`,
+  Charline : 5 $ pris sur Dépenses courantes ; 50 $ → 45 dépenses + 5
+  Capital via `sellCapital` ; refus 999 999 $ → rien débité, bascule
+  failTarget). Piège : `#markedUuid` dans `dialogue-app.js` évite de
+  recompter une visite / rejouer la machine à écrire quand on re-render le
+  même nœud (bascule mode saisie) — ne pas simplifier.
+- **Après toute modif du data model d'un sous-type existant** : les clients
+  qui tournent avec l'ancien code NETTOIENT les nouveaux champs `system.*`
+  à l'écriture (vécu 2026-08-21 : update MCP exécuté par le client MJ non
+  rechargé → `answer`/`cost`/`failTarget` silencieusement effacés). Faire
+  recharger tous les clients (F5) avant d'écrire des données utilisant le
+  nouveau schéma ; nouveau sous-type entier → relancement du monde.
 - **État en flags d'acteur** (`flags.coc7-dialogues.visited|vars`), sur
   l'acteur du joueur s'il en est propriétaire sinon sur son User — jamais
   en world settings, pour rester lisible par le connecteur MCP (même

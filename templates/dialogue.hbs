@@ -6,10 +6,22 @@
     <button type="button" class="dialogue-close" data-action="end" data-tooltip="{{localize "COC7DIALOGUES.UI.Close"}}" aria-label="{{localize "COC7DIALOGUES.UI.Close"}}"><i class="fa-solid fa-xmark"></i></button>
     <header class="dialogue-speaker">{{speaker}}</header>
     <div class="dialogue-text" data-action="skip">{{{text}}}</div>
+    {{#if inputMode}}
+    <div class="dialogue-input">
+      <p class="input-context">{{inputMode.label}}</p>
+      <div class="input-row">
+        <input type="text" name="dialogue-answer" placeholder="{{localize "COC7DIALOGUES.UI.AnswerPlaceholder"}}" autocomplete="off" spellcheck="false">
+        <button type="button" data-action="submitAnswer"><i class="fa-solid fa-check"></i> {{localize "COC7DIALOGUES.UI.AnswerSubmit"}}</button>
+        <button type="button" data-action="cancelAnswer" data-tooltip="{{localize "COC7DIALOGUES.UI.AnswerCancel"}}" aria-label="{{localize "COC7DIALOGUES.UI.AnswerCancel"}}"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    {{else}}
     <nav class="dialogue-choices">
       {{#each choices}}
         <button type="button" class="dialogue-choice" data-action="choose" data-index="{{this.index}}" data-key="{{this.key}}">
           <span class="key">{{this.key}}</span><span class="label">{{this.label}}</span>
+          {{#if this.hasAnswer}}<i class="fa-solid fa-key marker" aria-hidden="true"></i>{{/if}}
+          {{#if this.cost}}<span class="cost">{{this.cost}} $</span>{{/if}}
         </button>
       {{/each}}
       {{#if noChoices}}
@@ -18,5 +30,6 @@
         </button>
       {{/if}}
     </nav>
+    {{/if}}
   </section>
 </div>

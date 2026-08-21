@@ -13,14 +13,23 @@
     "Title": { "M": "Monsieur", "F": "Madame" },
     "UI": {
       "End": "Prendre congé",
-      "Close": "Fermer le dialogue (Échap)"
+      "Close": "Fermer le dialogue (Échap)",
+      "AnswerPlaceholder": "Votre réponse…",
+      "AnswerSubmit": "Répondre",
+      "AnswerCancel": "Se raviser (Échap)"
+    },
+    "Chat": {
+      "Paid": "<em>{actor}</em> paie <strong>{cost} $</strong> ({npc} — dialogue)."
     },
     "Warn": {
       "NoMacro": "Cette région n'a pas de macro configurée (ou la macro a été supprimée).",
       "NoJournal": "Cette région de dialogue n'a pas de journal configuré.",
       "NoPermission": "Vous n'avez pas accès à ce dialogue — demandez au Gardien de vous donner la permission d'observer le journal.",
       "NoStartNode": "Ce journal ne contient aucune page « Nœud de dialogue ».",
-      "MissingTarget": "Ce choix mène à une page qui n'existe plus."
+      "MissingTarget": "Ce choix mène à une page qui n'existe plus.",
+      "NoLedger": "Le module CoC7 Ledger (0.6.0+) est requis pour les choix payants — impossible de payer {cost} $.",
+      "NoActorMoney": "Aucun personnage assigné : impossible de payer {cost} $.",
+      "NotEnoughMoney": "Pas assez d'argent pour payer {cost} $ (dépenses courantes, espèces et capital compris)."
     },
     "Settings": {
       "Blur": { "Name": "Flouter la scène", "Hint": "Floute la scène derrière la fenêtre de dialogue." },
@@ -65,7 +74,10 @@
             "label": { "label": "Réponse de l'investigateur" },
             "target": { "label": "Mène à" },
             "condition": { "label": "Condition" },
-            "set": { "label": "Définit" }
+            "set": { "label": "Définit" },
+            "answer": { "label": "Mot attendu" },
+            "cost": { "label": "Coût" },
+            "failTarget": { "label": "En cas d'échec" }
           }
         }
       },
@@ -83,12 +95,17 @@
       "MoveUp": "Monter",
       "MoveDown": "Descendre",
       "LabelPlaceholder": "« De quoi s'agit-il ? »",
+      "AnswerPlaceholder": "mot de passe attendu (plusieurs : a | b)",
+      "AnswerHint": "Mot attendu : si rempli, cliquer ce choix ouvre une saisie de texte. Bonne réponse (majuscules/accents ignorés) → « Mène à » ; mauvaise → « En cas d'échec » (ou nouvelle tentative si vide). Plusieurs réponses acceptées : les séparer par | ou virgule.",
+      "CostHint": "Coût en dollars, prélevé via CoC7 Ledger : Dépenses courantes, puis Espèces, puis Capital. Pas assez d'argent → « En cas d'échec » (ou le choix ne fait rien). 0 = gratuit.",
+      "FailTargetHint": "Nœud atteint si le mot est faux ou si le joueur ne peut pas payer. Vide : mauvaise réponse = nouvelle tentative, paiement impossible = rien ne se passe.",
+      "NoFailTarget": "— (rester sur place) —",
       "EndTarget": "— Fin du dialogue —",
       "MissingTarget": "(page supprimée)",
       "EmptyLabel": "(sans texte)",
       "Help": {
         "Title": "Aide : placeholders, conditions, variables",
-        "Body": "<p><strong>Placeholders</strong> (dans la réplique et les réponses) : <code>{nom}</code> nom complet, <code>{prenom}</code>, <code>{nomdefamille}</code>, <code>{titre}</code> (Monsieur/Madame), <code>{masculin|féminin}</code> p. ex. <code>{il|elle}</code>, <code>{cher|chère}</code>, et <code>{m|f|neutre}</code> pour une 3<sup>e</sup> forme quand le genre est inconnu. Le genre vient du champ « Sexe » de la fiche.</p><p><strong>Condition</strong> (le choix n'apparaît que si tout est vrai, séparer par des virgules) : <code>clef</code> la variable est définie, <code>!clef</code> non définie, <code>visited:ID</code> / <code>!visited:ID</code> le nœud d'identifiant ID a déjà été vu (ID = identifiant de la page, visible dans son en-tête).</p><p><strong>Définit</strong> (appliqué quand le choix est cliqué) : <code>clef</code> définit la variable, <code>!clef</code> la retire. Les variables et l'historique sont stockés dans les flags de l'acteur du joueur (<code>flags.coc7-dialogues</code>).</p>"
+        "Body": "<p><strong>Placeholders</strong> (dans la réplique et les réponses) : <code>{nom}</code> nom complet, <code>{prenom}</code>, <code>{nomdefamille}</code>, <code>{titre}</code> (Monsieur/Madame), <code>{masculin|féminin}</code> p. ex. <code>{il|elle}</code>, <code>{cher|chère}</code>, et <code>{m|f|neutre}</code> pour une 3<sup>e</sup> forme quand le genre est inconnu. Le genre vient du champ « Sexe » de la fiche.</p><p><strong>Condition</strong> (le choix n'apparaît que si tout est vrai, séparer par des virgules) : <code>clef</code> la variable est définie, <code>!clef</code> non définie, <code>visited:ID</code> / <code>!visited:ID</code> le nœud d'identifiant ID a déjà été vu (ID = identifiant de la page, visible dans son en-tête).</p><p><strong>Définit</strong> (appliqué quand le choix est cliqué) : <code>clef</code> définit la variable, <code>!clef</code> la retire. Les variables et l'historique sont stockés dans les flags de l'acteur du joueur (<code>flags.coc7-dialogues</code>).</p><p><strong>Mot attendu</strong> : le choix ouvre une saisie de texte (mot de passe…). Bonne réponse → « Mène à », mauvaise → « En cas d'échec » (vide = nouvelle tentative). Majuscules et accents ignorés ; plusieurs réponses possibles séparées par <code>|</code>.</p><p><strong>Coût</strong> : prélevé via CoC7 Ledger dans l'ordre Dépenses courantes → Espèces → Capital (tout ou rien). Impossible de payer → « En cas d'échec » (vide = rien ne se passe). Le paiement est tracé dans le chat.</p>"
       }
     }
   }

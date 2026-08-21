@@ -1,71 +1,151 @@
 {
   "TYPES": {
     "JournalEntryPage": {
-      "coc7-dialogues": { "dialogue": "Dialogue node" }
+      "coc7-dialogues": {
+        "dialogue": "Dialogue node"
+      }
     },
     "RegionBehavior": {
-      "coc7-dialogues": { "dialogue": "Dialogue (clickable NPC)", "clickMacro": "Macro on click" }
+      "coc7-dialogues": {
+        "dialogue": "Dialogue (clickable NPC)",
+        "clickMacro": "Macro on click"
+      }
     }
   },
   "COC7DIALOGUES": {
     "SheetLabel": "Dialogue node",
-    "Fallback": { "Name": "Investigator" },
-    "Title": { "M": "Mister", "F": "Madam" },
+    "Fallback": {
+      "Name": "Investigator"
+    },
+    "Title": {
+      "M": "Mister",
+      "F": "Madam"
+    },
     "UI": {
       "End": "Take your leave",
-      "Close": "Close the dialogue (Esc)"
+      "Close": "Close the dialogue (Esc)",
+      "AnswerPlaceholder": "Your answer…",
+      "AnswerSubmit": "Answer",
+      "AnswerCancel": "Think better of it (Esc)"
     },
     "Warn": {
       "NoMacro": "This region has no macro configured (or the macro was deleted).",
       "NoJournal": "This dialogue region has no journal configured.",
       "NoPermission": "You can't access this dialogue — ask the Keeper for Observer permission on the journal.",
       "NoStartNode": "This journal has no “Dialogue node” page.",
-      "MissingTarget": "This choice leads to a page that no longer exists."
+      "MissingTarget": "This choice leads to a page that no longer exists.",
+      "NoLedger": "The CoC7 Ledger module (0.6.0+) is required for paid choices — cannot pay ${cost}.",
+      "NoActorMoney": "No character assigned: cannot pay ${cost}.",
+      "NotEnoughMoney": "Not enough money to pay ${cost} (spending level, cash and capital included)."
     },
     "Settings": {
-      "Blur": { "Name": "Blur the scene", "Hint": "Blurs the scene behind the dialogue overlay." },
-      "Typewriter": { "Name": "Typewriter effect", "Hint": "Reveals lines letter by letter (Space/Enter or click to show everything)." },
-      "TypewriterSpeed": { "Name": "Typing speed", "Hint": "Characters per second." }
+      "Blur": {
+        "Name": "Blur the scene",
+        "Hint": "Blurs the scene behind the dialogue overlay."
+      },
+      "Typewriter": {
+        "Name": "Typewriter effect",
+        "Hint": "Reveals lines letter by letter (Space/Enter or click to show everything)."
+      },
+      "TypewriterSpeed": {
+        "Name": "Typing speed",
+        "Hint": "Characters per second."
+      }
     },
     "Behavior": {
       "Hint": "Makes the region clickable: a click opens the dialogue of the chosen journal (no token needed — meant for theatre-of-the-mind scenes).",
       "FIELDS": {
-        "journal": { "label": "Dialogue journal", "hint": "Journal holding the “Dialogue node” pages. The dialogue starts on the first of them. Players need Observer permission on it." },
-        "speaker": { "label": "NPC name", "hint": "Shown above the lines. Empty = region name." },
-        "portrait": { "label": "NPC portrait", "hint": "Cut-out image (transparent PNG) shown on the left of the dialogue." },
+        "journal": {
+          "label": "Dialogue journal",
+          "hint": "Journal holding the “Dialogue node” pages. The dialogue starts on the first of them. Players need Observer permission on it."
+        },
+        "speaker": {
+          "label": "NPC name",
+          "hint": "Shown above the lines. Empty = region name."
+        },
+        "portrait": {
+          "label": "NPC portrait",
+          "hint": "Cut-out image (transparent PNG) shown on the left of the dialogue."
+        },
         "highlight": {
           "label": "Highlight",
           "hint": "How to signal the clickable area to players.",
-          "choices": { "hover": "On hover only", "always": "Always (subtle) + hover", "never": "Never (cursor only)" }
+          "choices": {
+            "hover": "On hover only",
+            "always": "Always (subtle) + hover",
+            "never": "Never (cursor only)"
+          }
         },
-        "color": { "label": "Highlight color", "hint": "Empty = region color." }
+        "color": {
+          "label": "Highlight color",
+          "hint": "Empty = region color."
+        }
       }
     },
     "MacroBehavior": {
       "Hint": "Makes the region clickable: a click runs the chosen macro on the clicking user's client — even without permission on the macro (no token needed). The macro runs with the player's rights: whatever they can't modify stays out of the script's reach.",
       "FIELDS": {
-        "macro": { "label": "Macro to run", "hint": "Drag and drop the macro (script or chat). It runs on the clicking user's client, permission or not. In a script macro: scope.behavior and scope.region give the context." },
-        "label": { "label": "Hover label", "hint": "Shown above the region on hover. Empty = region name." },
+        "macro": {
+          "label": "Macro to run",
+          "hint": "Drag and drop the macro (script or chat). It runs on the clicking user's client, permission or not. In a script macro: scope.behavior and scope.region give the context."
+        },
+        "label": {
+          "label": "Hover label",
+          "hint": "Shown above the region on hover. Empty = region name."
+        },
         "highlight": {
           "label": "Highlight",
           "hint": "How to signal the clickable area to players.",
-          "choices": { "hover": "On hover only", "always": "Always (subtle) + hover", "never": "Never (cursor only)" }
+          "choices": {
+            "hover": "On hover only",
+            "always": "Always (subtle) + hover",
+            "never": "Never (cursor only)"
+          }
         },
-        "color": { "label": "Highlight color", "hint": "Empty = region color." }
+        "color": {
+          "label": "Highlight color",
+          "hint": "Empty = region color."
+        }
       }
     },
     "Page": {
       "FIELDS": {
-        "text": { "label": "NPC line", "hint": "Placeholders: {name}, {firstname}, {title}, {he|she}, {sir|madam|friend}…" },
-        "speaker": { "label": "NPC name (this node)", "hint": "Empty = name configured on the region." },
-        "portrait": { "label": "Portrait (this node)", "hint": "Empty = portrait configured on the region. Handy for a change of expression." },
+        "text": {
+          "label": "NPC line",
+          "hint": "Placeholders: {name}, {firstname}, {title}, {he|she}, {sir|madam|friend}…"
+        },
+        "speaker": {
+          "label": "NPC name (this node)",
+          "hint": "Empty = name configured on the region."
+        },
+        "portrait": {
+          "label": "Portrait (this node)",
+          "hint": "Empty = portrait configured on the region. Handy for a change of expression."
+        },
         "choices": {
           "label": "Choices",
           "element": {
-            "label": { "label": "Investigator's reply" },
-            "target": { "label": "Leads to" },
-            "condition": { "label": "Condition" },
-            "set": { "label": "Sets" }
+            "label": {
+              "label": "Investigator's reply"
+            },
+            "target": {
+              "label": "Leads to"
+            },
+            "condition": {
+              "label": "Condition"
+            },
+            "set": {
+              "label": "Sets"
+            },
+            "answer": {
+              "label": "Expected word"
+            },
+            "cost": {
+              "label": "Cost"
+            },
+            "failTarget": {
+              "label": "On failure"
+            }
           }
         }
       },
@@ -88,8 +168,16 @@
       "EmptyLabel": "(no text)",
       "Help": {
         "Title": "Help: placeholders, conditions, variables",
-        "Body": "<p><strong>Placeholders</strong> (in the line and the replies): <code>{name}</code> full name, <code>{firstname}</code>, <code>{lastname}</code>, <code>{title}</code> (Mister/Madam), <code>{masculine|feminine}</code> e.g. <code>{he|she}</code>, and <code>{m|f|neutral}</code> for a 3rd form when gender is unknown. Gender comes from the sheet's “Sex” field.</p><p><strong>Condition</strong> (the choice only shows if all hold, comma-separated): <code>key</code> variable set, <code>!key</code> not set, <code>visited:ID</code> / <code>!visited:ID</code> the node with page id ID was already seen.</p><p><strong>Sets</strong> (applied when the choice is clicked): <code>key</code> sets the variable, <code>!key</code> clears it. Variables and history are stored in the player's actor flags (<code>flags.coc7-dialogues</code>).</p>"
-      }
+        "Body": "<p><strong>Placeholders</strong> (in the line and the replies): <code>{name}</code> full name, <code>{firstname}</code>, <code>{lastname}</code>, <code>{title}</code> (Mister/Madam), <code>{masculine|feminine}</code> e.g. <code>{he|she}</code>, and <code>{m|f|neutral}</code> for a 3rd form when gender is unknown. Gender comes from the sheet's “Sex” field.</p><p><strong>Condition</strong> (the choice only shows if all hold, comma-separated): <code>key</code> variable set, <code>!key</code> not set, <code>visited:ID</code> / <code>!visited:ID</code> the node with page id ID was already seen.</p><p><strong>Sets</strong> (applied when the choice is clicked): <code>key</code> sets the variable, <code>!key</code> clears it. Variables and history are stored in the player's actor flags (<code>flags.coc7-dialogues</code>).</p><p><strong>Expected word</strong>: the choice opens a text prompt (password…). Right answer → “Leads to”, wrong → “On failure” (empty = retry). Case and accents ignored; several answers separated by <code>|</code>.</p><p><strong>Cost</strong>: charged through CoC7 Ledger in the order Spending Level → Cash → Capital (all or nothing). Cannot pay → “On failure” (empty = nothing happens). The payment is traced in chat.</p>"
+      },
+      "AnswerPlaceholder": "expected password (several: a | b)",
+      "AnswerHint": "Expected word: when set, clicking this choice opens a text prompt. Right answer (case/accents ignored) → “Leads to”; wrong → “On failure” (or retry if empty). Several accepted answers: separate with | or comma.",
+      "CostHint": "Cost in dollars, charged through CoC7 Ledger: Spending Level, then Cash, then Capital. Not enough money → “On failure” (or the choice does nothing). 0 = free.",
+      "FailTargetHint": "Node reached when the word is wrong or the player cannot pay. Empty: wrong answer = retry, failed payment = nothing happens.",
+      "NoFailTarget": "— (stay put) —"
+    },
+    "Chat": {
+      "Paid": "<em>{actor}</em> pays <strong>${cost}</strong> ({npc} — dialogue)."
     }
   }
 }

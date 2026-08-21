@@ -28,6 +28,11 @@
         {{/if}}
         {{#if this.condition}}<code class="cond" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.condition.label"}}">? {{this.condition}}</code>{{/if}}
         {{#if this.set}}<code class="set" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.set.label"}}">= {{this.set}}</code>{{/if}}
+        {{#if this.answer}}<code class="answer" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.answer.label"}}"><i class="fa-solid fa-key"></i> {{this.answer}}</code>{{/if}}
+        {{#if this.cost}}<code class="cost" data-tooltip="{{localize "COC7DIALOGUES.Page.FIELDS.choices.element.cost.label"}}"><i class="fa-solid fa-coins"></i> {{this.cost}} $</code>{{/if}}
+        {{#if this.failTarget}}<span class="fail-branch"><i class="fa-solid fa-arrow-rotate-left"></i>
+          {{#if this.failTargetId}}<a class="target" data-action="openPage" data-page-id="{{this.failTargetId}}">{{this.failTargetName}}</a>
+          {{else}}<span class="target missing">{{this.failTargetName}}</span>{{/if}}</span>{{/if}}
       </li>
       {{else}}
       <li class="end-node"><i class="fa-solid fa-flag-checkered"></i> {{localize "COC7DIALOGUES.Page.NoChoicesView"}}</li>

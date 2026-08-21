@@ -254,3 +254,61 @@
 .dialogue-node-view .node-choices .target.missing { color: var(--color-level-error, #b22); }
 .dialogue-node-view .node-choices code { margin-left: 6px; font-size: 0.85em; opacity: 0.85; }
 .dialogue-node-view .end-node { list-style: none; margin-left: -1.6em; font-style: italic; opacity: 0.75; }
+
+/* -------------------------------------------------------------------------- */
+/* Free-text answer input (password choices) in the overlay                    */
+/* -------------------------------------------------------------------------- */
+
+#coc7-dialogues-overlay .dialogue-input { display: flex; flex-direction: column; gap: 8px; }
+#coc7-dialogues-overlay .dialogue-input .input-context {
+  margin: 0; font-style: italic; opacity: 0.8; font-size: 1rem;
+}
+#coc7-dialogues-overlay .dialogue-input .input-row { display: flex; gap: 8px; align-items: center; }
+#coc7-dialogues-overlay .dialogue-input input {
+  flex: 1 1 auto; height: 38px; padding: 0 12px;
+  font-family: inherit; font-size: 1.05rem;
+  background: rgba(0, 0, 0, 0.35); color: #ede4d1;
+  border: 1px solid rgba(214, 186, 128, 0.45); border-radius: 4px;
+}
+#coc7-dialogues-overlay .dialogue-input input:focus {
+  outline: none; border-color: #d6ba80; box-shadow: 0 0 6px rgba(214, 186, 128, 0.4);
+}
+#coc7-dialogues-overlay .dialogue-input input.wrong { animation: coc7d-shake 350ms; border-color: #c0392b; }
+@keyframes coc7d-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-7px); }
+  40%, 80% { transform: translateX(7px); }
+}
+#coc7-dialogues-overlay .dialogue-input button {
+  flex: 0 0 auto; width: auto; height: 38px; padding: 0 14px;
+  font-family: inherit;
+  background: rgba(214, 186, 128, 0.15) !important; color: #ede4d1 !important;
+  border: 1px solid rgba(214, 186, 128, 0.45) !important; border-radius: 4px;
+}
+#coc7-dialogues-overlay .dialogue-input button:hover { background: rgba(214, 186, 128, 0.3) !important; }
+
+/* Cost / password markers on choice buttons */
+#coc7-dialogues-overlay button.dialogue-choice .marker { flex: 0 0 auto; color: #d6ba80; opacity: 0.8; font-size: 0.85em; }
+#coc7-dialogues-overlay button.dialogue-choice .cost {
+  flex: 0 0 auto; margin-left: 8px; padding: 1px 8px;
+  border: 1px solid rgba(214, 186, 128, 0.45); border-radius: 10px;
+  color: #d6ba80; font-size: 0.85em; white-space: nowrap;
+}
+
+/* Editor: advanced sub-row per choice */
+.coc7-dialogues-page .node-choices tr.choice-extra td { padding: 0 4px 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.15); }
+.coc7-dialogues-page .node-choices .extra-fields { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.coc7-dialogues-page .node-choices .extra-fields label {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: var(--font-size-12); opacity: 0.9;
+}
+.coc7-dialogues-page .node-choices .extra-fields label i { opacity: 0.6; }
+.coc7-dialogues-page .node-choices .extra-fields input[type="text"] { width: 180px; }
+.coc7-dialogues-page .node-choices .extra-fields .cost-input { width: 70px; }
+.coc7-dialogues-page .node-choices .extra-fields select { width: 160px; }
+
+/* Journal view: extra badges */
+.dialogue-node-view .node-choices code.answer i,
+.dialogue-node-view .node-choices code.cost i { font-size: 0.85em; margin-right: 2px; }
+.dialogue-node-view .node-choices .fail-branch { margin-left: 6px; font-size: 0.85em; opacity: 0.85; }
+.dialogue-node-view .node-choices .fail-branch i { margin-right: 3px; opacity: 0.6; }

@@ -46,6 +46,27 @@
             <a data-action="removeChoice" data-tooltip="{{localize "COC7DIALOGUES.Page.RemoveChoice"}}"><i class="fa-solid fa-trash"></i></a>
           </td>
         </tr>
+        <tr class="choice-extra" data-index="{{this.index}}">
+          <td></td>
+          <td colspan="5">
+            <div class="extra-fields">
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.AnswerHint"}}">
+                <i class="fa-solid fa-key"></i>
+                <input type="text" name="system.choices.{{this.index}}.answer" value="{{this.answer}}" placeholder="{{localize "COC7DIALOGUES.Page.AnswerPlaceholder"}}">
+              </label>
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.CostHint"}}">
+                <i class="fa-solid fa-coins"></i>
+                <input type="number" name="system.choices.{{this.index}}.cost" value="{{this.cost}}" min="0" step="any" class="cost-input"> $
+              </label>
+              <label data-tooltip="{{localize "COC7DIALOGUES.Page.FailTargetHint"}}">
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+                <select name="system.choices.{{this.index}}.failTarget" {{#if this.failTargetMissing}}class="missing"{{/if}}>
+                  {{selectOptions ../failTargetOptions selected=this.failTarget valueAttr="value" labelAttr="label"}}
+                </select>
+              </label>
+            </div>
+          </td>
+        </tr>
         {{/each}}
       </tbody>
     </table>

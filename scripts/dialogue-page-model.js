@@ -29,7 +29,15 @@ export class DialoguePageModel extends foundry.abstract.TypeDataModel {
         // Visibility condition (see state.js#checkCondition).
         condition: new fields.StringField({ required: true, blank: true, initial: '' }),
         // Vars to set/unset when chosen (see state.js#applySet).
-        set: new fields.StringField({ required: true, blank: true, initial: '' })
+        set: new fields.StringField({ required: true, blank: true, initial: '' }),
+        // Expected free-text answer(s), | or , separated (password node).
+        // Non-empty = clicking opens a text prompt; right answer → target,
+        // wrong answer → failTarget (or stays put).
+        answer: new fields.StringField({ required: true, blank: true, initial: '' }),
+        // Money to pay via coc7-ledger (Spending → Cash → Capital); 0 = free.
+        cost: new fields.NumberField({ required: true, initial: 0, min: 0, nullable: false }),
+        // Page id when the answer is wrong / the player can't (or won't) pay.
+        failTarget: new fields.StringField({ required: true, blank: true, initial: '' })
       }), { initial: [] })
     };
   }

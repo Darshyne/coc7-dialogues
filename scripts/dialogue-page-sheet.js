@@ -63,15 +63,25 @@ export class DialoguePageSheet extends Base {
 
     const choices = (sys.choices ?? []).map((c, index) => {
       const target = c.target ? journal.pages.get(c.target) : null;
+      const failTarget = c.failTarget ? journal.pages.get(c.failTarget) : null;
       return {
         ...c, index, key: index + 1,
         targetName: c.target ? (target?.name ?? game.i18n.localize('COC7DIALOGUES.Page.MissingTarget')) : game.i18n.localize('COC7DIALOGUES.Page.EndTarget'),
         targetMissing: !!c.target && !target,
-        targetId: target?.id ?? ''
+        targetId: target?.id ?? '',
+        failTargetName: failTarget?.name ?? (c.failTarget ? game.i18n.localize('COC7DIALOGUES.Page.MissingTarget') : ''),
+        failTargetMissing: !!c.failTarget && !failTarget,
+        failTargetId: failTarget?.id ?? ''
       };
     });
 
+    const failTargetOptions = [
+      { value: '', label: game.i18n.localize('COC7DIALOGUES.Page.NoFailTarget') },
+      ...nodes.map(p => ({ value: p.id, label: p.name }))
+    ];
+
     Object.assign(context, {
+      failTargetOptions,
       systemFields: sys.schema.fields,
       system: sys,
       source: page._source,
@@ -109,7 +119,7 @@ export class DialoguePageSheet extends Base {
 
   static async #onAddChoice() {
     const choices = foundry.utils.deepClone(this.page.system._source.choices ?? []);
-    choices.push({ label: '', target: '', condition: '', set: '' });
+    choices.push({ label: '', target: '', condition: '', set: '', answer: '', cost: 0, failTarget: '' });
     await this.page.update({ 'system.choices': choices });
   }
 

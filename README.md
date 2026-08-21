@@ -160,10 +160,37 @@ virgules) :
 Un nœud **sans aucun choix** (ou dont tous les choix sont masqués par
 leurs conditions) affiche un bouton « Prendre congé ».
 
+## Mot de passe et argent (par choix)
+
+Chaque choix a trois champs avancés supplémentaires (sous-ligne dans
+l'éditeur) :
+
+- **Mot attendu** — si rempli, cliquer le choix ouvre une **saisie de
+  texte** dans l'overlay (« Votre réponse… ») au lieu de brancher
+  directement : le PNJ demande un mot de passe, un nom, un indice…
+  Comparaison sans casse, sans accents, espaces normalisés ; plusieurs
+  réponses acceptées en les séparant par `|` (ou virgule). Bonne réponse →
+  « Mène à » ; mauvaise → « En cas d'échec », ou nouvelle tentative
+  (secousse de l'input) si ce champ est vide. Une icône clé signale ces
+  choix au joueur ; Entrée valide, Échap se ravise.
+- **Coût** (en $) — prélevé via **CoC7 Ledger** (0.6.0+ requis, relation
+  `recommends` du manifest) dans l'ordre **Dépenses courantes → Espèces →
+  Capital**, tout ou rien : si les trois réunis ne couvrent pas le prix,
+  rien n'est débité et le choix bascule vers « En cas d'échec » (ou ne fait
+  rien si vide). Le montant s'affiche en badge sur le bouton, et chaque
+  paiement laisse une trace dans le chat (« *Untel* paie **N $** … »). Sans
+  le ledger actif, les choix payants refusent proprement. « Définit » n'est
+  appliqué que si le paiement (et/ou le mot) réussit.
+- **En cas d'échec** — le nœud de repli commun aux deux mécanismes.
+
+Tout reste côté client : le joueur paie depuis son propre acteur (flags du
+ledger qu'il possède), aucune permission ni MJ nécessaires.
+
 ## Où vivent les données
 
 - Le contenu (nœuds, choix) : dans les pages de journal, champ `system`
-  (`text`, `speaker`, `portrait`, `choices[]{label,target,condition,set}`).
+  (`text`, `speaker`, `portrait`,
+  `choices[]{label,target,condition,set,answer,cost,failTarget}`).
 - La config du PNJ : dans le `RegionBehavior` de type
   `coc7-dialogues.dialogue` (`system.journal` UUID, `speaker`, `portrait`,
   `highlight`, `color`).
