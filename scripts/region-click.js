@@ -190,6 +190,7 @@ function refreshStatic() {
   const g = new PIXI.Graphics();
   g.name = 'static';
   g.zIndex = 0;
+  g.eventMode = 'none'; // decorative: must never shadow the hit layer (PIXI stops at the first hit, even a non-interactive one)
   for ( const { region, behavior } of getClickableRegions() ) {
     if ( behavior.system.highlight !== 'always' ) continue;
     fillRegion(g, region, colorOf(region, behavior), ALWAYS_ALPHA, false);
@@ -211,6 +212,7 @@ function drawHover() {
   const wrap = new PIXI.Container();
   wrap.name = 'hover';
   wrap.zIndex = 1;
+  wrap.eventMode = 'none'; // decorative, see refreshStatic
   const g = new PIXI.Graphics();
   const color = colorOf(region, behavior);
   fillRegion(g, region, color, HOVER_ALPHA, true);

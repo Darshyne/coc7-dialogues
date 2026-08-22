@@ -18,7 +18,8 @@ export class ToSceneBehaviorType extends foundry.data.regionBehaviors.RegionBeha
 
   static defineSchema() {
     return {
-      scene: new fields.DocumentUUIDField({ type: 'Scene', required: true, blank: false, nullable: true, initial: null }),
+      // NOT 'scene': RegionBehaviorType already defines a 'scene' getter (the parent Scene) that would shadow the field.
+      targetScene: new fields.DocumentUUIDField({ type: 'Scene', required: true, blank: false, nullable: true, initial: null }),
       label: new fields.StringField({ required: true, blank: true, initial: '' }),
       activateForAll: new fields.BooleanField({ initial: false }),
       highlight: new fields.StringField({
@@ -39,7 +40,7 @@ export class ToSceneBehaviorType extends foundry.data.regionBehaviors.RegionBeha
   /** Hover label: explicit label, else the target scene's name, else the region's. */
   get displayName() {
     if ( this.label ) return this.label;
-    const scene = this.scene ? fromUuidSync(this.scene) : null;
+    const scene = this.targetScene ? fromUuidSync(this.targetScene) : null;
     return scene?.name ?? this.region?.name ?? '';
   }
 }
@@ -49,7 +50,7 @@ export class ToSceneBehaviorType extends foundry.data.regionBehaviors.RegionBeha
  * @param {RegionBehavior} behavior
  */
 export async function executeToScene(behavior) {
-  const uuid = behavior.system.scene;
+  const uuid = behavior.system.targetScene;
   const scene = uuid ? await fromUuid(uuid) : null;
   if ( !scene || scene.documentName !== 'Scene' ) {
     return ui.notifications.warn(game.i18n.localize('COC7DIALOGUES.Warn.NoScene'));

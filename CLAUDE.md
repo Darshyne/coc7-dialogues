@@ -187,6 +187,22 @@ pattern que `../coc7-ledger/`).
   `activateForAll` (MJ → `scene.activate()`). Même table `CLICK_HANDLERS`.
   Nouveau sous-type → relancement du monde.
 
+- **Curseur : les graphiques décoratifs DOIVENT être `eventMode='none'`**
+  (v0.9.2). Dans `EventBoundary.hitTestRecursive` de PIXI 7, un enfant
+  NON interactif testé sous un parent interactif renvoie `[]` (non nul) →
+  la recherche S'ARRÊTE là : tout objet dessiné au-dessus du calque « hit »
+  (halo de survol, surbrillance permanente) masquait la détection dès le
+  2ᵉ mouvement de souris — d'où « jamais de main » en live alors que mon
+  test (lecture après le 1er mouvement) passait. Vérifié ensuite avec
+  3 mouvements DOM successifs. Tester le curseur = dispatcher de VRAIS
+  `PointerEvent('pointermove')` sur `canvas.app.view` après un
+  `canvas.app.renderer.render(canvas.app.stage)` (pane caché = pas de
+  frames = transforms figées).
+- **Nom de champ `scene` interdit dans un RegionBehaviorType** (v0.9.2) :
+  la classe de base a un getter `scene` (Scene parente) qui masque le
+  champ → `system.scene` renvoyait la scène courante. Idem `region`,
+  `behavior`. Le behavior « Vers une scène » utilise `targetScene`.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

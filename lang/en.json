@@ -244,10 +244,6 @@
     "SceneBehavior": {
       "Hint": "Makes the region clickable: a click takes the clicking user to the chosen scene (no token needed — a door, a staircase, a city map…). Players can reach it even if the scene isn't in the navigation bar.",
       "FIELDS": {
-        "scene": {
-          "label": "Destination scene",
-          "hint": "Drag and drop the scene."
-        },
         "label": {
           "label": "Hover label",
           "hint": "Empty = destination scene name."
@@ -268,6 +264,10 @@
         "color": {
           "label": "Highlight color",
           "hint": "Empty = region color."
+        },
+        "targetScene": {
+          "label": "Destination scene",
+          "hint": "Drag and drop the scene."
         }
       }
     }
