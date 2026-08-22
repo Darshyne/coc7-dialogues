@@ -179,6 +179,14 @@ pattern que `../coc7-ledger/`).
   Interface » de behaviors cliquables sans token (vers une scène, son,
   document, toggles, JS events) — `coc7/apps/chaosium-canvas-interface*.js`.
 
+- **Troisième behavior « Vers une scène (clic) »** (`coc7-dialogues.toScene`,
+  v0.9.0, 2026-08-21, `scripts/scene-behavior.js`) : `scene.view()` chez
+  le cliqueur (comme le « To Scene » de la famille Chaosium Canvas
+  Interface du système CoC7, que le MJ utilise déjà mais qui n'a ni
+  surbrillance ni libellé — c'est la raison d'être de celui-ci), option
+  `activateForAll` (MJ → `scene.activate()`). Même table `CLICK_HANDLERS`.
+  Nouveau sous-type → relancement du monde.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

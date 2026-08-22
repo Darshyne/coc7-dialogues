@@ -8,7 +8,8 @@
     "RegionBehavior": {
       "coc7-dialogues": {
         "dialogue": "Dialogue (PNJ cliquable)",
-        "clickMacro": "Macro au clic"
+        "clickMacro": "Macro au clic",
+        "toScene": "Vers une scène (clic)"
       }
     }
   },
@@ -65,7 +66,8 @@
       "ItemMissing": "« {name} » n'est pas dans votre inventaire.",
       "ItemNoSource": "Objet modèle introuvable ({name}) — nom d'un objet du monde ou UUID.",
       "ItemFailed": "La directive d'objet « {term} » a échoué (voir console).",
-      "ResyncGMOnly": "Réservé au Gardien."
+      "ResyncGMOnly": "Réservé au Gardien.",
+      "NoScene": "Cette région n'a pas de scène configurée (ou la scène a été supprimée)."
     },
     "Settings": {
       "Blur": {
@@ -238,6 +240,36 @@
       "ItemGiven": "👜 Objet reçu : {name}",
       "ResyncDone": "🎷 Musique resynchronisée pour toute la table — la playlist du Gardien reprend.",
       "ResyncSilence": "🎷 Musique locale coupée pour toute la table (aucune playlist du Gardien en cours)."
+    },
+    "SceneBehavior": {
+      "Hint": "Rend la région cliquable : un clic emmène l'utilisateur qui clique sur la scène choisie (aucun token nécessaire — porte, escalier, plan de la ville…). Les joueurs y accèdent même si la scène n'est pas dans la barre de navigation.",
+      "FIELDS": {
+        "scene": {
+          "label": "Scène de destination",
+          "hint": "Glisser-déposer la scène."
+        },
+        "label": {
+          "label": "Libellé au survol",
+          "hint": "Vide = nom de la scène de destination."
+        },
+        "activateForAll": {
+          "label": "Activer pour toute la table (Gardien)",
+          "hint": "Quand c'est le Gardien qui clique : active la scène pour tous les joueurs au lieu de la voir seul. Sans effet pour un joueur."
+        },
+        "highlight": {
+          "label": "Surbrillance",
+          "hint": "Comment signaler la zone cliquable aux joueurs.",
+          "choices": {
+            "hover": "Au survol seulement",
+            "always": "Toujours (discrète) + survol",
+            "never": "Jamais (curseur seulement)"
+          }
+        },
+        "color": {
+          "label": "Couleur de surbrillance",
+          "hint": "Vide = couleur de la région."
+        }
+      }
     }
   }
 }

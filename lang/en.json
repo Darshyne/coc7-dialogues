@@ -8,7 +8,8 @@
     "RegionBehavior": {
       "coc7-dialogues": {
         "dialogue": "Dialogue (clickable NPC)",
-        "clickMacro": "Macro on click"
+        "clickMacro": "Macro on click",
+        "toScene": "To scene (click)"
       }
     }
   },
@@ -49,7 +50,8 @@
       "ItemMissing": "“{name}” is not in your inventory.",
       "ItemNoSource": "Item template not found ({name}) — world item name or UUID.",
       "ItemFailed": "Item directive “{term}” failed (see console).",
-      "ResyncGMOnly": "Keeper only."
+      "ResyncGMOnly": "Keeper only.",
+      "NoScene": "This region has no scene configured (or the scene was deleted)."
     },
     "Settings": {
       "Blur": {
@@ -238,6 +240,36 @@
       "ItemGiven": "👜 Item received: {name}",
       "ResyncDone": "🎷 Music resynced for the whole table — the Keeper's playlist resumes.",
       "ResyncSilence": "🎷 Local music cut for the whole table (no Keeper playlist playing)."
+    },
+    "SceneBehavior": {
+      "Hint": "Makes the region clickable: a click takes the clicking user to the chosen scene (no token needed — a door, a staircase, a city map…). Players can reach it even if the scene isn't in the navigation bar.",
+      "FIELDS": {
+        "scene": {
+          "label": "Destination scene",
+          "hint": "Drag and drop the scene."
+        },
+        "label": {
+          "label": "Hover label",
+          "hint": "Empty = destination scene name."
+        },
+        "activateForAll": {
+          "label": "Activate for the whole table (Keeper)",
+          "hint": "When the Keeper clicks: activates the scene for every player instead of viewing it alone. No effect for a player."
+        },
+        "highlight": {
+          "label": "Highlight",
+          "hint": "How to signal the clickable area to players.",
+          "choices": {
+            "hover": "On hover only",
+            "always": "Always (subtle) + hover",
+            "never": "Never (cursor only)"
+          }
+        },
+        "color": {
+          "label": "Highlight color",
+          "hint": "Empty = region color."
+        }
+      }
     }
   }
 }

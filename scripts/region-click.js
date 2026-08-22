@@ -12,14 +12,16 @@
  *   - draw our own highlight in the interface group.
  */
 
-import { BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, MODULE_ID } from './constants.js';
+import { BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, MODULE_ID } from './constants.js';
 import { openDialogueFromBehavior } from './dialogue-app.js';
 import { executeClickMacro } from './macro-behavior.js';
+import { executeToScene } from './scene-behavior.js';
 
 /** Clickable behavior types → click handlers. */
 const CLICK_HANDLERS = {
   [BEHAVIOR_TYPE]: openDialogueFromBehavior,
-  [BEHAVIOR_TYPE_MACRO]: executeClickMacro
+  [BEHAVIOR_TYPE_MACRO]: executeClickMacro,
+  [BEHAVIOR_TYPE_SCENE]: executeToScene
 };
 
 const CLICK_TOLERANCE_PX = 6;   // screen pixels of pointer travel still counted as a click

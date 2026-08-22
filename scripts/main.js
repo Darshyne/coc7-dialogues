@@ -3,11 +3,12 @@
  * Branching NPC dialogues for theatre-of-the-mind scenes. See README.md.
  */
 
-import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
+import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
 import { DialoguePageModel } from './dialogue-page-model.js';
 import { DialoguePageSheet } from './dialogue-page-sheet.js';
 import { DialogueBehaviorType } from './dialogue-behavior.js';
 import { ClickMacroBehaviorType, executeClickMacro } from './macro-behavior.js';
+import { ToSceneBehaviorType, executeToScene } from './scene-behavior.js';
 import { registerCanvasHooks, getDialogueRegions, getClickableRegions } from './region-click.js';
 import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-app.js';
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
@@ -40,6 +41,11 @@ Hooks.once('init', () => {
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE] = 'fa-solid fa-comments';
   if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE] = 'COC7DIALOGUES.Behavior.Hint';
 
+  // Region behavior sub-type "To scene".
+  CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_SCENE] = ToSceneBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_SCENE] = 'fa-solid fa-map';
+  if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE_SCENE] = 'COC7DIALOGUES.SceneBehavior.Hint';
+
   // Region behavior sub-type "Macro on click".
   CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_MACRO] = ClickMacroBehaviorType;
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_MACRO] = 'fa-solid fa-scroll';
@@ -71,13 +77,13 @@ Hooks.once('ready', () => {
   // Public API for macros / other modules (an `export` alone isn't reachable from macros).
   game.modules.get(MODULE_ID).api = {
     openDialogue, openDialogueFromBehavior, DialogueApp,
-    getDialogueRegions, getClickableRegions, executeClickMacro,
+    getDialogueRegions, getClickableRegions, executeClickMacro, executeToScene,
     applyPlaceholders, describeActor, getPlayerActor, normalizeGender,
     getVars, getVisited, resetState, applySet, checkCondition,
     rollDialogueCheck, resolveCheckTarget, rollSanLoss,
     applyItemDirectives, findActorItem, hasItem,
     resyncMusicForEveryone, resyncLocalMusic,
     applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor,
-    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO
+    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE
   };
 });

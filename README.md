@@ -65,6 +65,21 @@ de toucher échouera comme s'il avait lancé la macro lui-même. Prévoir les
 macros en conséquence (effets locaux : sons, messages, flags sur son
 propre user/acteur…).
 
+## Fonction annexe : « Vers une scène (clic) »
+
+Troisième comportement de région : un clic emmène **l'utilisateur qui
+clique** sur la scène choisie — sans token, joueurs compris, même si la
+scène n'est pas dans leur barre de navigation (une porte, un escalier, le
+plan de la ville…). Le système CoC7 fournit déjà un behavior équivalent
+(« Chaosium Canvas Interface → To Scene ») ; celui-ci apporte ce qui lui
+manque côté interface : la **surbrillance** (survol / toujours / jamais),
+le **libellé au survol** (vide = nom de la scène) et le curseur main,
+partagés avec les deux autres behaviors du module.
+
+Option Gardien : « Activer pour toute la table » — quand c'est le Gardien
+qui clique, la scène est activée pour tous au lieu d'être vue seul (sans
+effet pour un joueur).
+
 ### Exemple : jukebox à bascule (testé en jeu)
 
 Le pattern de référence pour ce genre de macro : tout se joue **en local**

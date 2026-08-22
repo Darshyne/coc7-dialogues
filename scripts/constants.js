@@ -4,6 +4,7 @@ export const MODULE_ID = 'coc7-dialogues';
 export const PAGE_TYPE = `${MODULE_ID}.dialogue`;
 export const BEHAVIOR_TYPE = `${MODULE_ID}.dialogue`;
 export const BEHAVIOR_TYPE_MACRO = `${MODULE_ID}.clickMacro`;
+export const BEHAVIOR_TYPE_SCENE = `${MODULE_ID}.toScene`;
 
 /** Actor/User flag keys (all state lives under flags[MODULE_ID]). */
 export const FLAG_VISITED = 'visited'; // { [pageUuid]: count }
