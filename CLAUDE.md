@@ -240,6 +240,19 @@ pattern que `../coc7-ledger/`).
   avant de recompiler. `LOCK`/`LOG` gitignorés, `.ldb`/`.log`/`CURRENT`/
   `MANIFEST` suivis. Nouveau pack dans le manifest → relancement du monde.
 
+- **Tuile → région de dialogue (v0.12.0, `scripts/tile-to-region.js`)** :
+  tracé alpha (masque ≤ 256 px, seuil 48, Moore neighbour sur le plus gros
+  blob 4-connexe, Douglas-Peucker ε 1.25) projeté en coordonnées scène via
+  `mesh.worldTransform` puis `canvas.stage.worldTransform.applyInverse`
+  (point local du sprite = pixel texture − ancre × taille texture) — ne PAS
+  réimplémenter le fit/anchor/scale de Foundry. V14 : `tile.x/y` est le
+  point d'ANCRE (`texture.anchorX/Y`), pas le coin haut-gauche (repli
+  rectangulaire `tileFootprint` en tient compte, math reprise de
+  Baileywiki Better Levels `tile-config.mjs`). Canvas « tainted » (image
+  cross-origin sans CORS, ex. certains assets Forge) → `getImageData`
+  lève → repli rectangle. Bouton HUD via `renderTileHUD` (html =
+  HTMLElement en V13+, colonne `.col.right`).
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

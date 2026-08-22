@@ -54,7 +54,9 @@
       "ResyncGMOnly": "Keeper only.",
       "NoScene": "This region has no scene configured (or the scene was deleted).",
       "NoPlaylist": "No playlist configured (or the playlist was deleted).",
-      "EmptyPlaylist": "This playlist is empty."
+      "EmptyPlaylist": "This playlist is empty.",
+      "TileGMOnly": "Keeper only.",
+      "TileNotOnCanvas": "Select a tile on the viewed scene."
     },
     "Settings": {
       "Blur": {
@@ -245,7 +247,9 @@
       "ResyncSilence": "🎷 Local music cut for the whole table (no Keeper playlist playing).",
       "JukeboxOn": "🎷 Jukebox: {playlist} — {track}",
       "JukeboxOff": "🎷 Jukebox off.",
-      "JukeboxOffResumed": "🎷 Jukebox off — the Keeper's music resumes."
+      "JukeboxOffResumed": "🎷 Jukebox off — the Keeper's music resumes.",
+      "TileRegionTraced": "Region “{name}” created: traced outline ({n} points), Dialogue behavior attached, portrait = tile image.",
+      "TileRegionRect": "Region “{name}” created on the tile's footprint (image not readable for tracing), Dialogue behavior attached."
     },
     "SceneBehavior": {
       "Hint": "Makes the region clickable: a click takes the clicking user to the chosen scene (no token needed — a door, a staircase, a city map…). Players can reach it even if the scene isn't in the navigation bar.",
@@ -312,6 +316,19 @@
           }
         }
       }
+    },
+    "TileRegion": {
+      "Title": "Tile → dialogue region",
+      "Create": "Create region",
+      "Journal": "Dialogue journal",
+      "NoJournal": "— configure later —",
+      "Speaker": "NPC name",
+      "SpeakerAuto": "(derived from each tile's file name)",
+      "Highlight": "Highlight",
+      "Trace": "Trace the outline (image alpha)",
+      "Hint": "Creates a region shaped like the tile's visible pixels, attaches “ARK — Dialogue” and reuses the tile image as portrait. Untick tracing for a rectangular region.",
+      "HudTooltip": "ARK — Create a dialogue region from this tile",
+      "DefaultName": "NPC"
     }
   }
 }

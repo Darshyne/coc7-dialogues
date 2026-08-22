@@ -71,6 +71,21 @@ Source : `build/src/macros/macros.json`, compilé par
 `build/build-packs.mjs` (voir ce fichier ; Foundry ne doit pas tenir le
 pack ouvert pendant la compilation).
 
+## Outil d'auteur : tuile → région de dialogue (v0.12.0)
+
+Pose ton PNJ détouré comme **tuile** sur la scène, sélectionne-la, puis
+clique le bouton 💬 du HUD de tuile (ou la macro « ARK — Tuile → région de
+dialogue ») : le module **trace le contour visible** de l'image (alpha),
+crée une région de cette forme exacte, lui attache **ARK — Dialogue** et
+reprend l'image de la tuile comme **portrait** du PNJ. La petite fenêtre
+demande le journal de dialogue (facultatif — la config du behavior s'ouvre
+ensuite), le nom du PNJ (déduit du nom de fichier) et la surbrillance.
+Ancre, échelle, miroir, rotation et mode d'ajustement de la tuile sont
+respectés (la projection passe par la transformation réelle du mesh).
+Si l'image n'est pas lisible (vidéo, image distante sans CORS), repli sur
+l'emprise rectangulaire, comme le fait Baileywiki Better Levels. Plusieurs
+tuiles sélectionnées = une région chacune, nommées d'après leur fichier.
+
 ## Fonction annexe : « Macro au clic »
 
 Second comportement de région fourni par le module, indépendant des
