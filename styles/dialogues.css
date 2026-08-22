@@ -47,6 +47,12 @@
   max-height: min(78vh, 720px);
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.7));
   animation: coc7d-slide-up 320ms ease-out;
+  /* no frame/shadow: core styles figure img (1px border + 0 0 4px box-shadow) */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
+  padding: 0;
 }
 #coc7-dialogues-overlay .dialogue-portrait img {
   display: block;
@@ -56,7 +62,11 @@
   height: auto;
   object-fit: contain;
   object-position: bottom center;
-  border: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
+  padding: 0;
 }
 @keyframes coc7d-slide-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 
