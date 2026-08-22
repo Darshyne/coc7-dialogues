@@ -32,6 +32,7 @@ let container = null;          // PIXI.Container in canvas.interface
 let hovered = null;            // { region: RegionDocument, behavior: RegionBehavior } | null
 let downAt = null;             // { x, y, target } screen coords at pointerdown
 let mouseHandlerRegistered = false;
+let cursorTicker = null;      // per-frame cursor enforcement while hovering (see enforceCursor)
 
 /* -------------------------------------------- */
 /*  Public                                      */
@@ -95,6 +96,7 @@ function onCanvasReady() {
 }
 
 function onCanvasTearDown() {
+  enforceCursor(false);
   hovered = null;
   downAt = null;
   container = null; // destroyed with the interface group
@@ -126,6 +128,7 @@ function onMouseMove(worldPos) {
   if ( same ) return;
   hovered = hit;
   drawHover();
+  enforceCursor(!!hit);
 }
 
 function onPointerDown(event) {
@@ -150,6 +153,39 @@ function onPointerUp(event) {
   const hit = hitTest(world);
   if ( !hit ) return;
   CLICK_HANDLERS[hit.behavior.type]?.(hit.behavior);
+}
+
+/**
+ * Belt and braces for the pointer cursor. The hit layer below lets PIXI
+ * pick "pointer" natively — but the CoC7 system's own Chaosium Canvas
+ * Interface handler (clickable-events.js) resets `#board.style.cursor = ''`
+ * on EVERY mousemove that isn't over one of ITS regions, and PIXI, which
+ * caches the mode it last applied, never re-applies it. So while one of our
+ * regions is hovered (and no button is held) we re-assert the style each
+ * frame: a string compare per tick, invisible flicker.
+ */
+function enforceCursor(active) {
+  if ( cursorTicker ) { canvas.app?.ticker?.remove(cursorTicker); cursorTicker = null; }
+  const view = canvas.app?.view;
+  if ( !view ) return;
+  if ( !active ) {
+    const events = canvas.app.renderer.events;
+    events.currentCursor = null;           // let PIXI re-evaluate on the next move
+    view.style.cursor = cursorStyle('default');
+    return;
+  }
+  cursorTicker = () => {
+    if ( !hovered || downAt ) return;      // dragging/panning: leave Foundry's grab cursors alone
+    const want = cursorStyle('pointer');
+    if ( view.style.cursor !== want ) view.style.cursor = want;
+  };
+  canvas.app.ticker.add(cursorTicker);
+}
+
+/** Foundry's custom-cursor style for a PIXI cursor mode (falls back to the CSS keyword). */
+function cursorStyle(mode) {
+  const style = canvas.app?.renderer?.events?.cursorStyles?.[mode];
+  return typeof style === 'string' ? style : mode;
 }
 
 /**

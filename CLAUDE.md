@@ -203,6 +203,18 @@ pattern que `../coc7-ledger/`).
   champ → `system.scene` renvoyait la scène courante. Idem `region`,
   `behavior`. Le behavior « Vers une scène » utilise `targetScene`.
 
+- **Le système CoC7 efface le curseur à chaque mousemove** (v0.9.3, diagnostiqué
+  sur le client MJ du MJ : `containsPoint` true, transforms identiques,
+  `view.style.cursor === ''`). `coc7/apps/clickable-events.js` pose
+  `#board.style.cursor = ''` sur `document.body` mousemove quand la souris
+  n'est pas sur une de SES régions ; PIXI (cache `currentCursor`) ne
+  réapplique pas. D'où : main au clic (changement d'état → réécriture) et en
+  mode édition (CoC7 ne tourne que sur le calque Tokens), jamais au survol.
+  Remède : `enforceCursor()` — ticker par frame qui réaffirme
+  `cursorStyles.pointer` tant qu'une de nos régions est survolée (pas
+  pendant un drag), et remet `default` + `currentCursor = null` en sortie.
+  La couche « hit » PIXI reste utile (clic, premier mouvement).
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`
