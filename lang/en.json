@@ -300,6 +300,16 @@
         "color": {
           "label": "Highlight color",
           "hint": "Empty = region color."
+        },
+        "mode": {
+          "label": "Playback mode",
+          "hint": "Overrides the playlist's own mode for this region.",
+          "choices": {
+            "playlist": "Playlist's own",
+            "sequential": "Sequential (looping)",
+            "shuffle": "Shuffle",
+            "simultaneous": "Simultaneous"
+          }
         }
       }
     }

@@ -49,6 +49,16 @@ export class JukeboxBehaviorType extends foundry.data.regionBehaviors.RegionBeha
     return {
       playlist: new fields.DocumentUUIDField({ type: 'Playlist', required: true, blank: false, nullable: true, initial: null }),
       label: new fields.StringField({ required: true, blank: true, initial: '' }),
+      // Playback mode override; 'playlist' = honor the playlist's own mode.
+      mode: new fields.StringField({
+        required: true, blank: false, initial: 'playlist',
+        choices: {
+          playlist: 'COC7DIALOGUES.JukeboxBehavior.FIELDS.mode.choices.playlist',
+          sequential: 'COC7DIALOGUES.JukeboxBehavior.FIELDS.mode.choices.sequential',
+          shuffle: 'COC7DIALOGUES.JukeboxBehavior.FIELDS.mode.choices.shuffle',
+          simultaneous: 'COC7DIALOGUES.JukeboxBehavior.FIELDS.mode.choices.simultaneous'
+        }
+      }),
       highlight: new fields.StringField({
         required: true, blank: false, initial: 'hover',
         choices: {
@@ -74,7 +84,8 @@ export class JukeboxBehaviorType extends foundry.data.regionBehaviors.RegionBeha
 export async function executeJukebox(behavior) {
   const uuid = behavior.system.playlist;
   if ( !uuid ) return ui.notifications.warn(game.i18n.localize('COC7DIALOGUES.Warn.NoPlaylist'));
-  return toggle(uuid);
+  const mode = behavior.system.mode === 'playlist' ? null : behavior.system.mode;
+  return toggle(uuid, { mode });
 }
 
 /* -------------------------------------------- */
@@ -102,7 +113,7 @@ export function status() {
  * Start (or restart) the jukebox on a playlist.
  * @param {string|Playlist} playlistOrUuid
  */
-export async function start(playlistOrUuid) {
+export async function start(playlistOrUuid, { mode = null } = {}) {
   const playlist = typeof playlistOrUuid === 'string' ? await fromUuid(playlistOrUuid) : playlistOrUuid;
   if ( !playlist || playlist.documentName !== 'Playlist' ) {
     return ui.notifications.warn(game.i18n.localize('COC7DIALOGUES.Warn.NoPlaylist'));
@@ -118,10 +129,12 @@ export async function start(playlistOrUuid) {
   }
 
   const token = Symbol('jukebox');
-  state = { playlist, sounds: new Set(), order: tracks, index: -1, token };
-
   const M = CONST.PLAYLIST_MODES;
-  if ( playlist.mode === M.SIMULTANEOUS ) {
+  const modeMap = { sequential: M.SEQUENTIAL, shuffle: M.SHUFFLE, simultaneous: M.SIMULTANEOUS };
+  const effectiveMode = modeMap[mode] ?? playlist.mode;
+  state = { playlist, sounds: new Set(), order: tracks, index: -1, token, mode: effectiveMode };
+
+  if ( effectiveMode === M.SIMULTANEOUS ) {
     for ( const t of tracks ) await playTrack(t, token, tracks.indexOf(t));
   } else {
     await playNext(token, null);
@@ -134,9 +147,9 @@ export async function start(playlistOrUuid) {
 async function playNext(token, prev) {
   if ( !state || state.token !== token ) return;
   const M = CONST.PLAYLIST_MODES;
-  const { order, playlist } = state;
+  const { order } = state;
   let next;
-  if ( playlist.mode === M.SHUFFLE ) {
+  if ( state.mode === M.SHUFFLE ) {
     const pool = order.length > 1 ? order.filter(t => t !== prev) : order;
     next = pool[Math.floor(Math.random() * pool.length)];
   } else {
@@ -155,7 +168,7 @@ async function playTrack(track, token, index) {
   state.sounds.add(snd);
   state.index = index;
   snd.fade(track.volume, { duration: FADE_IN, from: 0 });
-  if ( !track.repeat && state.playlist.mode !== CONST.PLAYLIST_MODES.SIMULTANEOUS ) {
+  if ( !track.repeat && state.mode !== CONST.PLAYLIST_MODES.SIMULTANEOUS ) {
     snd.addEventListener('end', () => {
       if ( state?.token === token && state.sounds.has(snd) ) {
         state.sounds.delete(snd);
@@ -196,9 +209,9 @@ async function stopLocal({ resync }) {
 }
 
 /** Toggle: stop if this playlist (or any) is playing, else start it. */
-export async function toggle(playlistOrUuid) {
+export async function toggle(playlistOrUuid, options = {}) {
   if ( isPlaying() ) return stop();
-  return start(playlistOrUuid);
+  return start(playlistOrUuid, options);
 }
 
 /* -------------------------------------------- */

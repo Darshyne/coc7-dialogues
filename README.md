@@ -93,7 +93,10 @@ donc sans permission et sans Gardien. Règles :
 - le jukebox joue sur le **canal Interface** : chaque joueur le règle avec
   son curseur Interface, indépendamment de la musique du Gardien ;
 - le mode de la playlist est respecté (séquentiel en boucle, aléatoire sans
-  répétition immédiate, simultané), ainsi que la boucle par piste ;
+  répétition immédiate, simultané), ainsi que la boucle par piste — et la
+  région peut le **surcharger** (champ « Mode de lecture » : celui de la
+  playlist / séquentiel / aléatoire / simultané), pratique pour réutiliser
+  une même playlist avec une ambiance différente selon le lieu ;
 - l'arrêt (re-clic, macro, ou **activation d'une scène par le Gardien**,
   qui coupe tous les jukebox de la table) resynchronise la musique que les
   documents déclarent en lecture — celle du Gardien reprend ;

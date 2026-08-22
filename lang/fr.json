@@ -300,6 +300,16 @@
         "color": {
           "label": "Couleur de surbrillance",
           "hint": "Vide = couleur de la région."
+        },
+        "mode": {
+          "label": "Mode de lecture",
+          "hint": "Surcharge le mode de la playlist pour cette région.",
+          "choices": {
+            "playlist": "Celui de la playlist",
+            "sequential": "Séquentiel (en boucle)",
+            "shuffle": "Aléatoire",
+            "simultaneous": "Simultané"
+          }
         }
       }
     }
