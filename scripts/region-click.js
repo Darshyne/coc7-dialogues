@@ -23,8 +23,8 @@ const CLICK_HANDLERS = {
 };
 
 const CLICK_TOLERANCE_PX = 6;   // screen pixels of pointer travel still counted as a click
-const HOVER_ALPHA = 0.28;
-const ALWAYS_ALPHA = 0.12;
+const HOVER_ALPHA = 0.16;     // discreet tints — the region must read as a hint, not a slab
+const ALWAYS_ALPHA = 0.06;
 
 let container = null;          // PIXI.Container in canvas.interface
 let hovered = null;            // { region: RegionDocument, behavior: RegionBehavior } | null
@@ -76,7 +76,7 @@ function onCanvasReady() {
   container = canvas.interface.addChild(new PIXI.Container());
   container.name = `${MODULE_ID}-highlights`;
   container.zIndex = 1000;
-  container.eventMode = 'none';
+  container.eventMode = 'passive';   // children decide; the hit layer below is interactive
   container.sortableChildren = true;
   if ( typeof canvas.interface.sortChildren === 'function' ) canvas.interface.sortChildren();
 
@@ -96,7 +96,6 @@ function onCanvasTearDown() {
   hovered = null;
   downAt = null;
   container = null; // destroyed with the interface group
-  setCursor(false);
 }
 
 /* -------------------------------------------- */
@@ -124,7 +123,6 @@ function onMouseMove(worldPos) {
   const same = hit?.region === hovered?.region;
   if ( same ) return;
   hovered = hit;
-  setCursor(!!hit);
   drawHover();
 }
 
@@ -152,10 +150,29 @@ function onPointerUp(event) {
   CLICK_HANDLERS[hit.behavior.type]?.(hit.behavior);
 }
 
-function setCursor(pointer) {
-  const view = canvas.app?.view;
-  if ( !view ) return;
-  view.style.cursor = pointer ? 'pointer' : '';
+/**
+ * Cursor handling is delegated to PIXI: an invisible, interactive Graphics
+ * per clickable region carries cursor = "pointer" (exactly how core's own
+ * Region placeable does it). Setting view.style.cursor by hand does not
+ * work — PIXI's EventSystem rewrites the cursor on every pointer move from
+ * the hit object's `cursor` property, and empty canvas has none.
+ */
+function rebuildHitLayer() {
+  if ( !container ) return;
+  for ( const child of [...container.children] ) {
+    if ( child.name === 'hit' ) child.destroy({ children: true });
+  }
+  for ( const { region } of getClickableRegions() ) {
+    const g = new PIXI.Graphics();
+    g.name = 'hit';
+    g.zIndex = -1;
+    g.eventMode = 'static';
+    g.cursor = 'pointer';
+    g.beginFill(0xffffff, 0.001); // invisible but hit-testable
+    for ( const poly of region.polygons ) g.drawPolygon(poly);
+    g.endFill();
+    container.addChild(g);
+  }
 }
 
 /* -------------------------------------------- */
@@ -176,6 +193,7 @@ function refreshStatic() {
     fillRegion(g, region, colorOf(region, behavior), ALWAYS_ALPHA, false);
   }
   container.addChild(g);
+  rebuildHitLayer();
   drawHover();
 }
 

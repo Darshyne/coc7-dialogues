@@ -163,6 +163,22 @@ pattern que `../coc7-ledger/`).
   exécute aussi localement. `"socket": true` dans le manifest → exige un
   relancement du monde.
 
+- **Curseur main sur les régions cliquables (v0.8.1)** : NE PAS écrire
+  `view.style.cursor` (ni `#board.style.cursor` comme le fait CoC7 dans
+  `clickable-events.js`) — PIXI `EventSystem.setCursor` (redéfini par
+  Foundry `#configureCursors` pour les curseurs custom `var(--cursor-*)`)
+  réécrit le curseur d'après la propriété `cursor` de l'objet survolé.
+  Solution native : `rebuildHitLayer()` pose par région un `PIXI.Graphics`
+  invisible (fill alpha 0.001) `eventMode='static'`, `cursor='pointer'`
+  dans notre conteneur (`eventMode='passive'`) — c'est exactement ce que
+  fait le placeable Region du cœur. Piège de test : le pane navigateur
+  caché ne rend pas de frames → transforms PIXI jamais mises à jour →
+  `hitTest` échoue ; forcer `container.updateTransform()` avant de tester.
+  Teintes : ALWAYS_ALPHA 0.06 / HOVER_ALPHA 0.16 (demande du MJ).
+  Référence : le système CoC7 a sa propre famille « Chaosium Canvas
+  Interface » de behaviors cliquables sans token (vers une scène, son,
+  document, toggles, JS events) — `coc7/apps/chaosium-canvas-interface*.js`.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`
