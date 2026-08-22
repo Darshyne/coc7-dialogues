@@ -9,6 +9,16 @@ parler aux PNJ **même quand le Gardien n'est pas connecté**.
 
 Foundry v13 minimum, testé sur v14.
 
+**Installation** : dans Foundry (ou The Forge), « Installer un module » →
+URL de manifest :
+
+```
+https://github.com/Darshyne/coc7-dialogues/releases/latest/download/module.json
+```
+
+Les mises à jour sont ensuite proposées automatiquement (chaque tag
+`vX.Y.Z` du dépôt publie une release). Licence MIT.
+
 ## Mise en place (Gardien)
 
 1. **Écrire le dialogue** dans un journal : créer des pages de type

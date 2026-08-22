@@ -9,8 +9,11 @@ choix à droite). 100 % côté client, zéro socket, zéro dépendance : les
 joueurs dialoguent sans MJ connecté. `README.md` = doc utilisateur et
 modèle de données, le lire en premier.
 
-Créé le 2026-08-18. Repo : `Darshyne/coc7-dialogues` (privé). Test local :
-junction `F:\Foundry V14\Data\modules\coc7-dialogues` → ce dossier (même
+Créé le 2026-08-18. Repo : `Darshyne/coc7-dialogues` (**public** depuis
+le 2026-08-21 — releases GitHub sur tag `vX.Y.Z` via
+`.github/workflows/release.yml`, consommées par The Forge via l'URL de
+manifest ; le zip manuel `git archive` n'est plus nécessaire). Test local :
+junction `<Foundry Data>/modules/coc7-dialogues` → ce dossier (même
 pattern que `../coc7-ledger/`).
 
 ## Décisions structurantes (validées avec le MJ le 2026-08-18)
@@ -56,7 +59,7 @@ pattern que `../coc7-ledger/`).
   tout ou rien, trace chat), `failTarget` (nœud de repli commun : mot faux
   ou paiement impossible ; vide = retry pour le mot, no-op pour l'argent).
   `set` ne s'applique qu'en cas de succès. Vérifié en jeu (compte `test`,
-  Charline : 5 $ pris sur Dépenses courantes ; 50 $ → 45 dépenses + 5
+  le PJ de test : 5 $ pris sur Dépenses courantes ; 50 $ → 45 dépenses + 5
   Capital via `sellCapital` ; refus 999 999 $ → rien débité, bascule
   failTarget). Piège : `#markedUuid` dans `dialogue-app.js` évite de
   recompter une visite / rejouer la machine à écrire quand on re-render le
@@ -122,7 +125,7 @@ pattern que `../coc7-ledger/`).
   sous-dossier Quests). Vérifié en jeu (compte test : refus propre sans
   journal possédé, give idempotent, objectif coché au bon slug, statuts).
   Monde de test : modèle « La cave du Green Ocean » dans « Modèles de
-  quêtes (dialogues) », log « Quêtes — Charline meyer ».
+  quêtes (dialogues) », log « Quêtes — le PJ de test ».
 
 - **Condition d'entrée par nœud (v0.6.0, 2026-08-21)** : champ
   `system.condition` sur la PAGE (pas le choix) — `firstDialoguePage()`
