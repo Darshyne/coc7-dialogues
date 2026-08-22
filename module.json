@@ -3,7 +3,7 @@
   "type": "module",
   "title": "CoC7 Dialogues",
   "description": "Branching NPC dialogues for theatre-of-the-mind scenes: authored as journal pages of a dedicated 'Dialogue node' type, triggered by clicking a scene Region carrying a 'Dialogue' behavior, played in a full-screen overlay (NPC portrait, blurred scene, choices). Fully client-side, so players can talk to NPCs even when the Keeper is offline. Placeholders adapt the text to the investigator's name and gender.",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "authors": [
     {
       "name": "Darsh MJ"
@@ -68,5 +68,13 @@
     }
   ],
   "readme": "README.md",
-  "socket": true
+  "socket": true,
+  "packs": [
+    {
+      "name": "macros",
+      "label": "ARK — Macros (dialogues & jukebox)",
+      "path": "packs/macros",
+      "type": "Macro"
+    }
+  ]
 }

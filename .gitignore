@@ -3,3 +3,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 .claude/
+build/node_modules/
+build/.tmp-src/
+packs/**/LOCK
+packs/**/LOG
+packs/**/LOG.old

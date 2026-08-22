@@ -42,6 +42,25 @@ Foundry v13 minimum, testé sur v14.
    actif, ou n'importe quel calque pour un joueur) ouvre le dialogue chez
    lui, en local.
 
+## Compendium de macros livré (v0.11.0)
+
+Le module embarque un compendium **« ARK — Macros (dialogues & jukebox) »**
+(onglet Compendiums) à importer dans le monde :
+
+- **ARK — Jukebox : choisir une playlist** (joueurs) — bascule le jukebox
+  local : s'il joue, le coupe ; sinon propose une playlist et un mode.
+- **ARK — Jukebox : qui écoute quoi ? (MJ)** — chuchote au Gardien la liste
+  des joueurs connectés avec un jukebox en cours (playlist, piste).
+- **ARK — Tous à la playlist du MJ (MJ)** — coupe tous les jukebox de la
+  table et fait reprendre la musique du Gardien.
+- **ARK — Dialogues : reset (test)** — remet à zéro la mémoire de dialogues
+  et les quêtes données pour l'utilisateur qui clique.
+
+Les macros joueurs sont importées avec la permission Observateur par défaut.
+Source : `build/src/macros/macros.json`, compilé par
+`build/build-packs.mjs` (voir ce fichier ; Foundry ne doit pas tenir le
+pack ouvert pendant la compilation).
+
 ## Fonction annexe : « Macro au clic »
 
 Second comportement de région fourni par le module, indépendant des

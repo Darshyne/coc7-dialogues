@@ -227,6 +227,16 @@ pattern que `../coc7-ledger/`).
   avant le balayage générique. Roadmap V2 : widget d'interface
   (multi-playlists, boutons, volume, radio).
 
+- **Compendium `packs/macros` (v0.11.0)** : LevelDB **généré — ne pas
+  éditer à la main** — depuis `build/src/macros/macros.json` (tableau de
+  Macro, `_id` de 16 alphanumériques exactement, vérifié par le script) via
+  `build/build-packs.mjs` (`@foundryvtt/foundryvtt-cli`, `npm install`
+  une fois dans `build/`, `node build-packs.mjs`) — même pattern que
+  coc7-fame-and-train. Un monde lancé avec le pack déclaré tient le LOCK
+  LevelDB : fermer Foundry (ou s'assurer qu'aucun monde n'a le module)
+  avant de recompiler. `LOCK`/`LOG` gitignorés, `.ldb`/`.log`/`CURRENT`/
+  `MANIFEST` suivis. Nouveau pack dans le manifest → relancement du monde.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

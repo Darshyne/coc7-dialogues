@@ -1,0 +1,12 @@
+{
+  "name": "coc7-dialogues-build",
+  "private": true,
+  "type": "module",
+  "description": "Compiles packs/macros (LevelDB) from build/src/macros/macros.json — see build-packs.mjs.",
+  "scripts": {
+    "build": "node build-packs.mjs"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "3.0.4"
+  }
+}
