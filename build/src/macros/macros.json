@@ -4,12 +4,14 @@
     "name": "ARK — Jukebox : choisir une playlist",
     "type": "script",
     "scope": "global",
-    "img": "icons/tools/instruments/gramophone-brown.webp",
+    "img": "modules/coc7-dialogues/asset/radio1920.png",
     "author": null,
     "command": "// Joueur ou MJ : bascule le jukebox local. S'il joue → on le coupe (la musique\n// du Gardien reprend) ; sinon on choisit une playlist et un mode.\nconst J = game.modules.get('coc7-dialogues')?.api?.jukebox;\nif (!J) return ui.notifications.warn('coc7-dialogues 0.10.0+ requis.');\nif (J.isPlaying()) return J.stop();\nconst playlists = game.playlists.contents.filter(p => p.sounds.size);\nif (!playlists.length) return ui.notifications.warn('Aucune playlist disponible.');\nconst opts = playlists.map(p => `<option value=\"${p.uuid}\">${p.name}</option>`).join('');\nconst content = `<div class=\"form-group\"><label>Playlist</label><select name=\"pl\">${opts}</select></div>\n<div class=\"form-group\"><label>Mode</label><select name=\"mode\"><option value=\"\">Celui de la playlist</option><option value=\"shuffle\">Aléatoire</option><option value=\"sequential\">Séquentiel</option><option value=\"simultaneous\">Simultané</option></select></div>`;\nconst choice = await foundry.applications.api.DialogV2.prompt({\n  window: { title: 'Jukebox' }, content,\n  ok: { label: 'Lancer', icon: 'fa-solid fa-play', callback: (ev, btn) => ({ uuid: btn.form.elements.pl.value, mode: btn.form.elements.mode.value || null }) }\n});\nif (choice?.uuid) J.start(choice.uuid, { mode: choice.mode });",
     "folder": null,
     "sort": 100000,
-    "ownership": { "default": 2 },
+    "ownership": {
+      "default": 2
+    },
     "flags": {}
   },
   {
@@ -17,12 +19,14 @@
     "name": "ARK — Jukebox : qui écoute quoi ? (MJ)",
     "type": "script",
     "scope": "global",
-    "img": "icons/tools/instruments/bell-brass.webp",
+    "img": "modules/coc7-dialogues/asset/radio1920.png",
     "author": null,
     "command": "// MJ : liste les joueurs connectés qui ont un jukebox en cours.\nconst J = game.modules.get('coc7-dialogues')?.api?.jukebox;\nif (!J) return ui.notifications.warn('coc7-dialogues 0.10.0+ requis.');\nconst l = J.listActive();\nif (!l.length) return ui.notifications.info('🎷 Aucun jukebox en cours.');\nconst rows = l.map(e => `<li><strong>${e.characterName ?? e.userName}</strong> — ${e.playlist} (${e.track ?? '…'})</li>`).join('');\nChatMessage.create({ content: `<p>🎷 Jukebox en cours :</p><ul>${rows}</ul>`, whisper: game.users.filter(u => u.isGM).map(u => u.id) });",
     "folder": null,
     "sort": 200000,
-    "ownership": { "default": 0 },
+    "ownership": {
+      "default": 0
+    },
     "flags": {}
   },
   {
@@ -30,12 +34,14 @@
     "name": "ARK — Tous à la playlist du MJ (MJ)",
     "type": "script",
     "scope": "global",
-    "img": "icons/tools/instruments/bell-brass.webp",
+    "img": "modules/coc7-dialogues/asset/radio1920.png",
     "author": null,
     "command": "// MJ : coupe tous les jukebox (et toute musique locale) chez tous les joueurs\n// et fait reprendre la playlist du Gardien en cours, partout.\nconst api = game.modules.get('coc7-dialogues')?.api;\nif (!api?.resyncMusicForEveryone) return ui.notifications.warn('coc7-dialogues 0.8.0+ requis (monde relancé depuis la mise à jour).');\napi.resyncMusicForEveryone();",
     "folder": null,
     "sort": 300000,
-    "ownership": { "default": 0 },
+    "ownership": {
+      "default": 0
+    },
     "flags": {}
   },
   {
@@ -48,7 +54,9 @@
     "command": "// RESET des dialogues pour l'utilisateur qui clique (test/debug) :\n// - efface sa mémoire de dialogues (variables + nœuds visités, jets ratés)\n// - retire de SON journal de quêtes les quêtes données par des dialogues\nconst api = game.modules.get('coc7-dialogues')?.api;\nif (!api) return ui.notifications.warn('coc7-dialogues requis.');\nawait api.resetState();\nconst log = api.findQuestLog();\nlet removed = 0;\nif (log) {\n  const given = log.pages.filter(p => p.getFlag('coc7-dialogues', 'questSource'));\n  removed = given.length;\n  if (removed) await log.deleteEmbeddedDocuments('JournalEntryPage', given.map(p => p.id));\n}\nui.notifications.info(`🧹 Dialogues remis à zéro pour ${game.user.name}` + (removed ? ` (${removed} quête(s) retirée(s)).` : '.'));",
     "folder": null,
     "sort": 400000,
-    "ownership": { "default": 2 },
+    "ownership": {
+      "default": 2
+    },
     "flags": {}
   }
 ]
