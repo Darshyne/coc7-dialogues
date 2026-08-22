@@ -7,9 +7,9 @@
     },
     "RegionBehavior": {
       "coc7-dialogues": {
-        "dialogue": "Dialogue (PNJ cliquable)",
-        "clickMacro": "Macro au clic",
-        "toScene": "Vers une scène (clic)"
+        "dialogue": "ARK — Dialogue (PNJ cliquable)",
+        "clickMacro": "ARK — Macro au clic",
+        "toScene": "ARK — Vers une scène (clic)"
       }
     }
   },

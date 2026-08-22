@@ -7,9 +7,9 @@
     },
     "RegionBehavior": {
       "coc7-dialogues": {
-        "dialogue": "Dialogue (clickable NPC)",
-        "clickMacro": "Macro on click",
-        "toScene": "To scene (click)"
+        "dialogue": "ARK — Dialogue (clickable NPC)",
+        "clickMacro": "ARK — Macro on click",
+        "toScene": "ARK — To scene (click)"
       }
     }
   },
