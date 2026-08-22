@@ -3,12 +3,13 @@
  * Branching NPC dialogues for theatre-of-the-mind scenes. See README.md.
  */
 
-import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
+import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_JUKEBOX, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
 import { DialoguePageModel } from './dialogue-page-model.js';
 import { DialoguePageSheet } from './dialogue-page-sheet.js';
 import { DialogueBehaviorType } from './dialogue-behavior.js';
 import { ClickMacroBehaviorType, executeClickMacro } from './macro-behavior.js';
 import { ToSceneBehaviorType, executeToScene } from './scene-behavior.js';
+import * as jukebox from './jukebox.js';
 import { registerCanvasHooks, getDialogueRegions, getClickableRegions } from './region-click.js';
 import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-app.js';
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
@@ -45,6 +46,12 @@ Hooks.once('init', () => {
   CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_SCENE] = ToSceneBehaviorType;
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_SCENE] = 'fa-solid fa-map';
   if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE_SCENE] = 'COC7DIALOGUES.SceneBehavior.Hint';
+
+  // Region behavior sub-type "Jukebox".
+  CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_JUKEBOX] = jukebox.JukeboxBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_JUKEBOX] = 'fa-solid fa-record-vinyl';
+  if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE_JUKEBOX] = 'COC7DIALOGUES.JukeboxBehavior.Hint';
+  jukebox.registerJukeboxHooks();
 
   // Region behavior sub-type "Macro on click".
   CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_MACRO] = ClickMacroBehaviorType;
@@ -83,7 +90,8 @@ Hooks.once('ready', () => {
     rollDialogueCheck, resolveCheckTarget, rollSanLoss,
     applyItemDirectives, findActorItem, hasItem,
     resyncMusicForEveryone, resyncLocalMusic,
+    jukebox: { start: jukebox.start, stop: jukebox.stop, toggle: jukebox.toggle, isPlaying: jukebox.isPlaying, status: jukebox.status, listActive: jukebox.listActive },
     applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor,
-    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE
+    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_JUKEBOX
   };
 });

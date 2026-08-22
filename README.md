@@ -80,7 +80,42 @@ Option Gardien : « Activer pour toute la table » — quand c'est le Gardien
 qui clique, la scène est activée pour tous au lieu d'être vue seul (sans
 effet pour un joueur).
 
-### Exemple : jukebox à bascule (testé en jeu)
+## Fonction annexe : « Jukebox » (v0.10.0)
+
+Quatrième comportement de région, **ARK — Jukebox** : un clic lance (ou
+coupe, re-clic) chez l'utilisateur qui clique un lecteur local sur la
+playlist choisie (glisser-déposer), sans toucher au document Playlist —
+donc sans permission et sans Gardien. Règles :
+
+- démarrer le jukebox coupe en fondu la musique de la table **sur le canal
+  Musique uniquement** — les sons d'environnement et d'interface
+  continuent ;
+- le jukebox joue sur le **canal Interface** : chaque joueur le règle avec
+  son curseur Interface, indépendamment de la musique du Gardien ;
+- le mode de la playlist est respecté (séquentiel en boucle, aléatoire sans
+  répétition immédiate, simultané), ainsi que la boucle par piste ;
+- l'arrêt (re-clic, macro, ou **activation d'une scène par le Gardien**,
+  qui coupe tous les jukebox de la table) resynchronise la musique que les
+  documents déclarent en lecture — celle du Gardien reprend ;
+- l'état est publié dans les flags du joueur (`flags.coc7-dialogues.jukebox`),
+  effacé à l'arrêt et au rechargement.
+
+API (`game.modules.get('coc7-dialogues').api.jukebox`) : `start(playlistOuUuid)`,
+`stop()`, `toggle(playlistOuUuid)`, `isPlaying()`, `status()`,
+`listActive()`. Macros Gardien typiques :
+
+```js
+// Qui écoute quoi ?
+const l = game.modules.get('coc7-dialogues').api.jukebox.listActive();
+ui.notifications.info(l.length ? l.map(e => `${e.characterName ?? e.userName} : ${e.playlist} — ${e.track}`).join(' | ') : 'Aucun jukebox en cours.');
+```
+
+```js
+// Tout couper et revenir à la musique du Gardien, pour toute la table
+game.modules.get('coc7-dialogues').api.resyncMusicForEveryone();
+```
+
+### Exemple historique : jukebox à bascule en macro (avant v0.10.0)
 
 Le pattern de référence pour ce genre de macro : tout se joue **en local**
 (aucune écriture de document, donc aucun problème de permission), et la

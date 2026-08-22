@@ -9,7 +9,8 @@
       "coc7-dialogues": {
         "dialogue": "ARK — Dialogue (clickable NPC)",
         "clickMacro": "ARK — Macro on click",
-        "toScene": "ARK — To scene (click)"
+        "toScene": "ARK — To scene (click)",
+        "jukebox": "ARK — Jukebox"
       }
     }
   },
@@ -51,7 +52,9 @@
       "ItemNoSource": "Item template not found ({name}) — world item name or UUID.",
       "ItemFailed": "Item directive “{term}” failed (see console).",
       "ResyncGMOnly": "Keeper only.",
-      "NoScene": "This region has no scene configured (or the scene was deleted)."
+      "NoScene": "This region has no scene configured (or the scene was deleted).",
+      "NoPlaylist": "No playlist configured (or the playlist was deleted).",
+      "EmptyPlaylist": "This playlist is empty."
     },
     "Settings": {
       "Blur": {
@@ -239,7 +242,10 @@
       "ItemTaken": "👜 Item handed over: {name}",
       "ItemGiven": "👜 Item received: {name}",
       "ResyncDone": "🎷 Music resynced for the whole table — the Keeper's playlist resumes.",
-      "ResyncSilence": "🎷 Local music cut for the whole table (no Keeper playlist playing)."
+      "ResyncSilence": "🎷 Local music cut for the whole table (no Keeper playlist playing).",
+      "JukeboxOn": "🎷 Jukebox: {playlist} — {track}",
+      "JukeboxOff": "🎷 Jukebox off.",
+      "JukeboxOffResumed": "🎷 Jukebox off — the Keeper's music resumes."
     },
     "SceneBehavior": {
       "Hint": "Makes the region clickable: a click takes the clicking user to the chosen scene (no token needed — a door, a staircase, a city map…). Players can reach it even if the scene isn't in the navigation bar.",
@@ -268,6 +274,32 @@
         "targetScene": {
           "label": "Destination scene",
           "hint": "Drag and drop the scene."
+        }
+      }
+    },
+    "JukeboxBehavior": {
+      "Hint": "Makes the region clickable: a click starts (or stops) a local jukebox on the chosen playlist for the clicking user. It cuts their music (Music channel only — not environment nor interface) and plays on the Interface channel, adjustable with their Interface slider. No Keeper needed; the Keeper can see who listens to what and cut everything.",
+      "FIELDS": {
+        "playlist": {
+          "label": "Playlist",
+          "hint": "Drag and drop the playlist. Its mode (sequential, shuffle, simultaneous) and per-track loops are honored."
+        },
+        "label": {
+          "label": "Hover label",
+          "hint": "Empty = playlist name."
+        },
+        "highlight": {
+          "label": "Highlight",
+          "hint": "How to signal the clickable area to players.",
+          "choices": {
+            "hover": "On hover only",
+            "always": "Always (subtle) + hover",
+            "never": "Never (cursor only)"
+          }
+        },
+        "color": {
+          "label": "Highlight color",
+          "hint": "Empty = region color."
         }
       }
     }

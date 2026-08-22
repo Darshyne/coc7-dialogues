@@ -12,6 +12,7 @@
  */
 
 import { MODULE_ID } from './constants.js';
+import { stop as stopJukebox } from './jukebox.js';
 
 const SOCKET = `module.${MODULE_ID}`;
 
@@ -32,6 +33,7 @@ export function registerMusicSocket() {
  * @param {number} [options.fade=1200]
  */
 export function resyncLocalMusic({ fade = 1200 } = {}) {
+  stopJukebox({ resync: false, silent: true }); // module jukebox (interface channel) first
   const managed = new Set();
   for ( const p of game.playlists ) for ( const s of p.sounds ) { if ( s.sound ) managed.add(s.sound); }
   for ( const snd of game.audio.playing.values() ) {

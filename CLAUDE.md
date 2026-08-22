@@ -215,6 +215,18 @@ pattern que `../coc7-ledger/`).
   pendant un drag), et remet `default` + `currentCursor = null` en sortie.
   La couche « hit » PIXI reste utile (clic, premier mouvement).
 
+- **Jukebox intégré (v0.10.0, 2026-08-21, `scripts/jukebox.js`)** : remplace
+  le pattern macro `globalThis.speakeasyMusic`. 4ᵉ behavior
+  `coc7-dialogues.jukebox` (champ `playlist`, clic = toggle). Spécifs du
+  MJ : coupe le canal MUSIQUE seulement (`sound.channel || playlist.channel`
+  === 'music'), joue sur le canal INTERFACE (curseur joueur), respecte
+  mode/boucles de la playlist, état publié en flag User `jukebox`
+  (`listActive()` pour le MJ ; nettoyé au ready car l'audio ne survit pas à
+  un reload), `updateScene` avec `active: true` → stop partout,
+  `resyncLocalMusic` (socket MJ) appelle `stop({resync:false, silent})`
+  avant le balayage générique. Roadmap V2 : widget d'interface
+  (multi-playlists, boutons, volume, radio).
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`
