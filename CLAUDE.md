@@ -243,9 +243,17 @@ pattern que `../coc7-ledger/`).
 - **Tuile → région de dialogue (v0.12.0, `scripts/tile-to-region.js`)** :
   tracé alpha (masque ≤ 256 px, seuil 48, Moore neighbour sur le plus gros
   blob 4-connexe, Douglas-Peucker ε 1.25) projeté en coordonnées scène via
-  `mesh.worldTransform` puis `canvas.stage.worldTransform.applyInverse`
-  (point local du sprite = pixel texture − ancre × taille texture) — ne PAS
-  réimplémenter le fit/anchor/scale de Foundry. V14 : `tile.x/y` est le
+  la transformation LOCALE du mesh (`mesh.transform.localTransform` après
+  `updateLocalTransform()` ; le groupe primaire est à l'origine donc
+  local = scène ; point local du sprite = pixel texture − ancre × taille
+  texture) — ne PAS réimplémenter le fit/anchor/scale de Foundry, et ne
+  pas repasser par `worldTransform` (rassie tant qu'aucune frame n'est
+  rendue). Piège vérifié 2026-08-22 : position/échelle/rotation du mesh
+  sont posées par les renderFlags du placeable, vidés sur le TICKER — une
+  tuile tout juste créée (ou un pane caché) a un mesh encore à l'origine →
+  polygone en pixels texture ; d'où `tile.object.applyRenderFlags()` avant
+  lecture. Vérifié en jeu (radio 600×321 tournée 15°, ancre 0.5) : 70
+  points, centre dans la région, coin transparent hors région. V14 : `tile.x/y` est le
   point d'ANCRE (`texture.anchorX/Y`), pas le coin haut-gauche (repli
   rectangulaire `tileFootprint` en tient compte, math reprise de
   Baileywiki Better Levels `tile-config.mjs`). Canvas « tainted » (image
