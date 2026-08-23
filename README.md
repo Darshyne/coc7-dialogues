@@ -71,20 +71,35 @@ Source : `build/src/macros/macros.json`, compilé par
 `build/build-packs.mjs` (voir ce fichier ; Foundry ne doit pas tenir le
 pack ouvert pendant la compilation).
 
-## Outil d'auteur : tuile → région de dialogue (v0.12.0)
+## Outil d'auteur : tuile → région cliquable (v0.12.0, généralisé en 0.13.0)
 
 Pose ton PNJ détouré comme **tuile** sur la scène, sélectionne-la, puis
-clique le bouton 💬 du HUD de tuile (ou la macro « ARK — Tuile → région de
-dialogue ») : le module **trace le contour visible** de l'image (alpha),
-crée une région de cette forme exacte, lui attache **ARK — Dialogue** et
-reprend l'image de la tuile comme **portrait** du PNJ. La petite fenêtre
-demande le journal de dialogue (facultatif — la config du behavior s'ouvre
-ensuite), le nom du PNJ (déduit du nom de fichier) et la surbrillance.
+clique le bouton ⬠ du HUD de tuile (ou la macro « ARK — Tuile → région
+cliquable ») : le module **trace le contour visible** de l'image (alpha),
+crée une région de cette forme exacte et lui attache le behavior choisi
+dans la petite fenêtre : **ARK — Dialogue** (l'image de la tuile devient le
+**portrait** du PNJ), **ARK — Vers une scène** (une porte, un escalier…)
+ou **ARK — Ouvrir un document** (une affiche, une lettre…). La fenêtre
+demande la cible (facultative — la config du behavior s'ouvre ensuite), le
+nom (déduit du nom de fichier) et la surbrillance.
 Ancre, échelle, miroir, rotation et mode d'ajustement de la tuile sont
 respectés (la projection passe par la transformation réelle du mesh).
 Si l'image n'est pas lisible (vidéo, image distante sans CORS), repli sur
 l'emprise rectangulaire, comme le fait Baileywiki Better Levels. Plusieurs
 tuiles sélectionnées = une région chacune, nommées d'après leur fichier.
+
+## Fonction annexe : « Ouvrir un document (clic) » (v0.13.0)
+
+Behavior **ARK — Ouvrir un document (clic)** : un clic dans la région ouvre
+un journal, ou une page précise, chez l'utilisateur qui clique. Si le
+joueur n'a pas encore le droit de voir le document, le module demande au
+**Gardien connecté** (socket) de lui accorder la permission **Observateur**
+— sur le journal, et sur la page si elle a ses propres droits — puis ouvre
+le document. C'est volontairement définitif et par joueur : l'indice trouvé
+reste dans son journal. Sans Gardien en ligne, le joueur reçoit un message
+clair (« réessayez quand le Gardien est là »). L'option « Donner la
+permission » peut être décochée pour n'ouvrir que ce que le joueur voit
+déjà. Le Gardien qui clique ouvre simplement le document.
 
 ## Fonction annexe : « Macro au clic »
 

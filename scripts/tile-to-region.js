@@ -1,7 +1,8 @@
 /**
- * Authoring helper: turn a (cut-out) NPC Tile into a clickable Dialogue
- * Region in one go — region shaped like the tile, "ARK — Dialogue" behavior
- * attached, the tile's image reused as the dialogue portrait.
+ * Authoring helper: turn a (cut-out) Tile into a clickable Region in one
+ * go — region shaped like the tile, one of the module's click behaviors
+ * attached (Dialogue: the tile's image reused as portrait; To scene; Open
+ * document).
  *
  * Shape: the visible (alpha) outline of the tile's image is traced
  * (Moore neighbour tracing on a downscaled alpha mask, then Douglas-Peucker
@@ -12,11 +13,11 @@
  * fall back to the tile's rectangular footprint (rotated if need be), the
  * way Baileywiki Better Levels does.
  *
- * Entry points: api.tileToDialogueRegion(tileDoc, options), a button in the
- * Tile HUD, and the compendium macro "ARK — Tuile → région de dialogue".
+ * Entry points: api.tileToRegion(tileDoc, options) / api.promptTileToRegion,
+ * a button in the Tile HUD, and the compendium macro "ARK — Tuile → région".
  */
 
-import { MODULE_ID, BEHAVIOR_TYPE, PAGE_TYPE } from './constants.js';
+import { MODULE_ID, BEHAVIOR_TYPE, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_DOC, PAGE_TYPE } from './constants.js';
 
 const MASK_MAX = 256;        // longest side of the alpha mask used for tracing
 const ALPHA_THRESHOLD = 48;  // 0-255: pixels above count as "visible"
@@ -26,21 +27,34 @@ const SIMPLIFY_EPS = 1.25;   // Douglas-Peucker tolerance, in mask pixels
 /*  Public                                      */
 /* -------------------------------------------- */
 
+/** Behaviors the tile tool can attach, with their per-kind defaults. */
+export const TILE_BEHAVIORS = {
+  dialogue: { type: BEHAVIOR_TYPE, icon: 'fa-comments' },
+  toScene: { type: BEHAVIOR_TYPE_SCENE, icon: 'fa-map' },
+  openDocument: { type: BEHAVIOR_TYPE_DOC, icon: 'fa-book-open' }
+};
+
 /**
+ * Turn a tile into a clickable Region of the same shape carrying one of the
+ * module's click behaviors.
  * @param {TileDocument} tile
  * @param {object} [options]
- * @param {string|null} [options.journal]   JournalEntry uuid (may be set later in the behavior)
- * @param {string} [options.speaker]        NPC name (default: prettified image file name)
- * @param {string} [options.highlight]      hover | always | never
- * @param {boolean} [options.trace=true]    trace the alpha outline (false = footprint rectangle)
- * @param {boolean} [options.openSheet=true] open the behavior config afterwards
+ * @param {string} [options.behavior='dialogue']  dialogue | toScene | openDocument
+ * @param {object} [options.system]              extra `system.*` data for the behavior
+ * @param {string} [options.name]                region name (default: prettified image file name)
+ * @param {string} [options.highlight]           hover | always | never
+ * @param {boolean} [options.trace=true]         trace the alpha outline (false = footprint rectangle)
+ * @param {boolean} [options.openSheet=true]     open the behavior config afterwards
  * @returns {Promise<RegionDocument|null>}
  */
-export async function tileToDialogueRegion(tile, { journal = null, speaker = '', highlight = 'hover', trace = true, openSheet = true } = {}) {
+export async function tileToRegion(tile, { behavior = 'dialogue', system = {}, name = '', highlight = 'hover', trace = true, openSheet = true } = {}) {
   if ( !game.user.isGM ) return ui.notifications.warn(game.i18n.localize('COC7DIALOGUES.Warn.TileGMOnly'));
   if ( !tile?.object || tile.parent !== canvas.scene ) {
     return ui.notifications.warn(game.i18n.localize('COC7DIALOGUES.Warn.TileNotOnCanvas'));
   }
+  const kind = TILE_BEHAVIORS[behavior];
+  if ( !kind ) throw new Error(`${MODULE_ID} | unknown tile behavior "${behavior}"`);
+
   let points = null, traced = false;
   if ( trace ) {
     try { points = await traceTileOutline(tile); traced = !!points; }
@@ -48,39 +62,64 @@ export async function tileToDialogueRegion(tile, { journal = null, speaker = '',
   }
   points ??= tileFootprint(tile);
 
-  const name = speaker || prettyName(tile.texture?.src);
+  name ||= prettyName(tile.texture?.src);
   const [region] = await canvas.scene.createEmbeddedDocuments('Region', [{
     name,
     color: '#d6ba80',
     visibility: CONST.REGION_VISIBILITY.LAYER,
     shapes: [{ type: 'polygon', points }]
   }]);
-  const [behavior] = await region.createEmbeddedDocuments('RegionBehavior', [{
-    name: game.i18n.localize('TYPES.RegionBehavior.coc7-dialogues.dialogue'),
-    type: BEHAVIOR_TYPE,
-    system: { journal, speaker: name, portrait: tile.texture?.src ?? '', highlight }
+  const sys = { highlight, ...system };
+  if ( behavior === 'dialogue' ) {
+    sys.speaker ??= name;
+    sys.portrait ??= tile.texture?.src ?? '';
+  }
+  const [doc] = await region.createEmbeddedDocuments('RegionBehavior', [{
+    name: game.i18n.localize(`TYPES.RegionBehavior.${kind.type}`),
+    type: kind.type,
+    system: sys
   }]);
-  ui.notifications.info(game.i18n.format(traced ? 'COC7DIALOGUES.Info.TileRegionTraced' : 'COC7DIALOGUES.Info.TileRegionRect', { name, n: points.length / 2 }));
-  if ( openSheet ) behavior.sheet.render({ force: true });
+  ui.notifications.info(game.i18n.format(traced ? 'COC7DIALOGUES.Info.TileRegionTraced' : 'COC7DIALOGUES.Info.TileRegionRect', {
+    name, n: points.length / 2, behavior: game.i18n.localize(`TYPES.RegionBehavior.${kind.type}`)
+  }));
+  if ( openSheet ) doc.sheet.render({ force: true });
   return region;
 }
 
+/** Dialogue shortcut (kept for API/macro compatibility). */
+export function tileToDialogueRegion(tile, { journal = null, speaker = '', ...rest } = {}) {
+  return tileToRegion(tile, { ...rest, behavior: 'dialogue', name: speaker, system: { journal } });
+}
+
 /**
- * Ask journal / name / highlight, then convert. Used by the HUD button and
- * the macro.
+ * Ask behavior kind / target / name / highlight, then convert. Used by the
+ * HUD button and the macro.
  * @param {TileDocument[]} tiles
+ * @param {string} [defaultBehavior='dialogue']
  */
-export async function promptTileToDialogueRegion(tiles) {
+export async function promptTileToRegion(tiles, defaultBehavior = 'dialogue') {
   tiles = tiles.filter(t => t?.object);
   if ( !tiles.length ) return ui.notifications.warn(game.i18n.localize('COC7DIALOGUES.Warn.TileNotOnCanvas'));
-  const journals = game.journal.filter(j => j.pages.some(p => p.type === PAGE_TYPE))
-    .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
   const L = k => game.i18n.localize(`COC7DIALOGUES.TileRegion.${k}`);
-  const jOpts = [`<option value="">${L('NoJournal')}</option>`, ...journals.map(j => `<option value="${j.uuid}">${foundry.utils.escapeHTML(j.name)}</option>`)].join('');
+  const esc = foundry.utils.escapeHTML;
+  const byName = (a, b) => a.name.localeCompare(b.name, game.i18n.lang);
+  const opt = (docs, first) => [first, ...docs.map(d => `<option value="${d.uuid}">${esc(d.name)}</option>`)].join('');
+
+  const dialogueJournals = game.journal.filter(j => j.pages.some(p => p.type === PAGE_TYPE)).sort(byName);
+  const scenes = game.scenes.contents.filter(s => s !== canvas.scene).sort(byName);
+  const journals = game.journal.contents.sort(byName);
   const defaultName = tiles.length === 1 ? prettyName(tiles[0].texture?.src) : '';
+
+  const behaviorOpts = Object.entries(TILE_BEHAVIORS).map(([k, v]) =>
+    `<option value="${k}" ${k === defaultBehavior ? 'selected' : ''}>${esc(game.i18n.localize(`TYPES.RegionBehavior.${v.type}`))}</option>`).join('');
   const content = `
-    <div class="form-group"><label>${L('Journal')}</label><select name="journal">${jOpts}</select></div>
-    <div class="form-group"><label>${L('Speaker')}</label><input type="text" name="speaker" value="${foundry.utils.escapeHTML(defaultName)}" ${tiles.length > 1 ? 'placeholder="' + L('SpeakerAuto') + '"' : ''}></div>
+    <div class="form-group"><label>${L('Behavior')}</label><select name="behavior">${behaviorOpts}</select></div>
+    <div class="form-group" data-for="dialogue"><label>${L('Journal')}</label><select name="journal">${opt(dialogueJournals, `<option value="">${L('NoJournal')}</option>`)}</select></div>
+    <div class="form-group" data-for="toScene"><label>${L('Scene')}</label><select name="targetScene">${opt(scenes, `<option value="">${L('NoScene')}</option>`)}</select></div>
+    <div class="form-group" data-for="openDocument"><label>${L('Document')}</label><select name="document">${opt(journals, `<option value="">${L('NoDocument')}</option>`)}</select></div>
+    <div class="form-group" data-for="openDocument"><label>${L('DocumentUuid')}</label><input type="text" name="documentUuid" placeholder="JournalEntry.xxx.JournalEntryPage.yyy"></div>
+    <div class="form-group" data-for="openDocument"><label>${L('Grant')}</label><input type="checkbox" name="grant" checked></div>
+    <div class="form-group"><label>${L('Name')}</label><input type="text" name="name" value="${esc(defaultName)}" ${tiles.length > 1 ? 'placeholder="' + L('SpeakerAuto') + '"' : ''}></div>
     <div class="form-group"><label>${L('Highlight')}</label><select name="highlight">
       <option value="hover">${game.i18n.localize('COC7DIALOGUES.Behavior.FIELDS.highlight.choices.hover')}</option>
       <option value="always">${game.i18n.localize('COC7DIALOGUES.Behavior.FIELDS.highlight.choices.always')}</option>
@@ -88,26 +127,45 @@ export async function promptTileToDialogueRegion(tiles) {
     </select></div>
     <div class="form-group"><label>${L('Trace')}</label><input type="checkbox" name="trace" checked></div>
     <p class="hint">${L('Hint')}</p>`;
+
   const choice = await foundry.applications.api.DialogV2.prompt({
-    window: { title: L('Title'), icon: 'fa-solid fa-comments' },
+    window: { title: L('Title'), icon: 'fa-solid fa-draw-polygon' },
     content,
+    render: (ev, dialog) => {
+      const root = dialog.element;
+      const sel = root.querySelector('select[name="behavior"]');
+      const sync = () => root.querySelectorAll('[data-for]').forEach(el => { el.style.display = el.dataset.for === sel.value ? '' : 'none'; });
+      sel.addEventListener('change', sync);
+      sync();
+    },
     ok: {
       label: L('Create'), icon: 'fa-solid fa-draw-polygon',
-      callback: (ev, btn) => ({
-        journal: btn.form.elements.journal.value || null,
-        speaker: btn.form.elements.speaker.value.trim(),
-        highlight: btn.form.elements.highlight.value,
-        trace: btn.form.elements.trace.checked
-      })
+      callback: (ev, btn) => {
+        const f = btn.form.elements;
+        const behavior = f.behavior.value;
+        const system = {};
+        if ( behavior === 'dialogue' ) system.journal = f.journal.value || null;
+        if ( behavior === 'toScene' ) system.targetScene = f.targetScene.value || null;
+        if ( behavior === 'openDocument' ) {
+          system.document = f.documentUuid.value.trim() || f.document.value || null;
+          system.grant = f.grant.checked;
+        }
+        return { behavior, system, name: f.name.value.trim(), highlight: f.highlight.value, trace: f.trace.checked };
+      }
     },
     rejectClose: false
   });
   if ( !choice ) return null;
   const out = [];
   for ( const tile of tiles ) {
-    out.push(await tileToDialogueRegion(tile, { ...choice, speaker: tiles.length === 1 ? choice.speaker : '', openSheet: tiles.length === 1 }));
+    out.push(await tileToRegion(tile, { ...choice, name: tiles.length === 1 ? choice.name : '', openSheet: tiles.length === 1 }));
   }
   return out;
+}
+
+/** Dialogue-only prompt (kept for the 0.12 macro). */
+export function promptTileToDialogueRegion(tiles) {
+  return promptTileToRegion(tiles, 'dialogue');
 }
 
 /** Tile HUD button (GM). */
@@ -123,11 +181,11 @@ export function registerTileHud() {
     btn.dataset.coc7Dialogues = 'tile-to-region';
     btn.dataset.tooltip = game.i18n.localize('COC7DIALOGUES.TileRegion.HudTooltip');
     btn.setAttribute('aria-label', btn.dataset.tooltip);
-    btn.innerHTML = '<i class="fa-solid fa-comments" inert></i>';
+    btn.innerHTML = '<i class="fa-solid fa-draw-polygon" inert></i>';
     btn.addEventListener('click', ev => {
       ev.preventDefault(); ev.stopPropagation();
       const selected = canvas.tiles.controlled.map(t => t.document);
-      promptTileToDialogueRegion(selected.length ? selected : [hud.document]);
+      promptTileToRegion(selected.length ? selected : [hud.document]);
     });
     col.appendChild(btn);
   });

@@ -261,6 +261,25 @@ pattern que `../coc7-ledger/`).
   lève → repli rectangle. Bouton HUD via `renderTileHUD` (html =
   HTMLElement en V13+, colonne `.col.right`).
 
+- **Behavior « Ouvrir un document » (v0.13.0, `scripts/document-behavior.js`)** :
+  5ᵉ behavior `coc7-dialogues.openDocument` (champ `document` =
+  DocumentUUIDField sans `type` — journal OU page, validé au clic). Un
+  joueur ne reçoit même pas un journal sur lequel il n'a aucun droit
+  (`fromUuid` → null côté client) : avec `grant`, le client émet
+  `grantDocument` sur le socket du module, SEUL le `game.users.activeGM`
+  traite (update `ownership.<userId> = OBSERVER` sur le journal, et sur la
+  page seulement si elle a des droits explicites plus bas), répond
+  `grantDocumentDone` ; le client attend (8 s max) puis poll `fromUuid`
+  jusqu'à l'arrivée du document. Socket partagé : `handleDocumentSocket`
+  appelé en tête du listener de `sync-music.js`. Nouveau sous-type →
+  relancement du monde.
+- **Tuile → région généralisée (v0.13.0)** : `tileToRegion(tile, {behavior:
+  'dialogue'|'toScene'|'openDocument', system, name, highlight, trace})`
+  (table `TILE_BEHAVIORS`) ; `tileToDialogueRegion` /
+  `promptTileToDialogueRegion` conservés comme alias. Le prompt DialogV2
+  masque les champs non pertinents via l'option `render` (attribut
+  `data-for`).
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

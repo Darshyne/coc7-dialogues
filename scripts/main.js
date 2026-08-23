@@ -3,14 +3,15 @@
  * Branching NPC dialogues for theatre-of-the-mind scenes. See README.md.
  */
 
-import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_JUKEBOX, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
+import { MODULE_ID, PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_JUKEBOX, BEHAVIOR_TYPE_DOC, SETTING_BLUR, SETTING_TYPEWRITER, SETTING_TYPEWRITER_SPEED } from './constants.js';
 import { DialoguePageModel } from './dialogue-page-model.js';
 import { DialoguePageSheet } from './dialogue-page-sheet.js';
 import { DialogueBehaviorType } from './dialogue-behavior.js';
 import { ClickMacroBehaviorType, executeClickMacro } from './macro-behavior.js';
 import { ToSceneBehaviorType, executeToScene } from './scene-behavior.js';
 import * as jukebox from './jukebox.js';
-import { tileToDialogueRegion, promptTileToDialogueRegion, traceTileOutline, tileFootprint, registerTileHud } from './tile-to-region.js';
+import { tileToRegion, promptTileToRegion, tileToDialogueRegion, promptTileToDialogueRegion, traceTileOutline, tileFootprint, registerTileHud, TILE_BEHAVIORS } from './tile-to-region.js';
+import { OpenDocumentBehaviorType, executeOpenDocument, grantObserver } from './document-behavior.js';
 import { registerCanvasHooks, getDialogueRegions, getClickableRegions } from './region-click.js';
 import { openDialogue, openDialogueFromBehavior, DialogueApp } from './dialogue-app.js';
 import { applyPlaceholders, describeActor, getPlayerActor, normalizeGender } from './player.js';
@@ -55,6 +56,11 @@ Hooks.once('init', () => {
   jukebox.registerJukeboxHooks();
   registerTileHud();
 
+  // Region behavior sub-type "Open document".
+  CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_DOC] = OpenDocumentBehaviorType;
+  CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_DOC] = 'fa-solid fa-book-open';
+  if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE_DOC] = 'COC7DIALOGUES.DocumentBehavior.Hint';
+
   // Region behavior sub-type "Macro on click".
   CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE_MACRO] = ClickMacroBehaviorType;
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE_MACRO] = 'fa-solid fa-scroll';
@@ -92,9 +98,10 @@ Hooks.once('ready', () => {
     rollDialogueCheck, resolveCheckTarget, rollSanLoss,
     applyItemDirectives, findActorItem, hasItem,
     resyncMusicForEveryone, resyncLocalMusic,
-    tileToDialogueRegion, promptTileToDialogueRegion, traceTileOutline, tileFootprint,
+    tileToRegion, promptTileToRegion, tileToDialogueRegion, promptTileToDialogueRegion, traceTileOutline, tileFootprint, TILE_BEHAVIORS,
+    executeOpenDocument, grantObserver,
     jukebox: { start: jukebox.start, stop: jukebox.stop, toggle: jukebox.toggle, isPlaying: jukebox.isPlaying, status: jukebox.status, listActive: jukebox.listActive },
     applyQuestDirectives, findQuestLog, findGivenQuest, ensureQuestLog, createQuestLogFor,
-    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_JUKEBOX
+    PAGE_TYPE, BEHAVIOR_TYPE, BEHAVIOR_TYPE_MACRO, BEHAVIOR_TYPE_SCENE, BEHAVIOR_TYPE_JUKEBOX, BEHAVIOR_TYPE_DOC
   };
 });

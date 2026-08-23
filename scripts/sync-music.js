@@ -13,12 +13,14 @@
 
 import { MODULE_ID } from './constants.js';
 import { stop as stopJukebox } from './jukebox.js';
+import { handleDocumentSocket } from './document-behavior.js';
 
 const SOCKET = `module.${MODULE_ID}`;
 
 /** Register the socket listener (call once, at ready). */
 export function registerMusicSocket() {
   game.socket.on(SOCKET, data => {
+    if ( handleDocumentSocket(data) ) return;   // grantDocument / grantDocumentDone
     if ( data?.action !== 'resyncMusic' ) return;
     // Only honor requests initiated by a GM.
     if ( !game.users.get(data.userId)?.isGM ) return;

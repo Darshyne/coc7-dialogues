@@ -10,7 +10,8 @@
         "dialogue": "ARK — Dialogue (clickable NPC)",
         "clickMacro": "ARK — Macro on click",
         "toScene": "ARK — To scene (click)",
-        "jukebox": "ARK — Jukebox"
+        "jukebox": "ARK — Jukebox",
+        "openDocument": "ARK — Open document (click)"
       }
     }
   },
@@ -56,7 +57,11 @@
       "NoPlaylist": "No playlist configured (or the playlist was deleted).",
       "EmptyPlaylist": "This playlist is empty.",
       "TileGMOnly": "Keeper only.",
-      "TileNotOnCanvas": "Select a tile on the viewed scene."
+      "TileNotOnCanvas": "Select a tile on the viewed scene.",
+      "NoDocument": "This region has no journal (or page) configured.",
+      "DocumentNoPermission": "You don't have permission to read this document.",
+      "DocumentNoGM": "No Keeper online to grant you access to this document — try again when the Keeper is connected.",
+      "DocumentGrantFailed": "The Keeper could not grant you access to this document."
     },
     "Settings": {
       "Blur": {
@@ -248,8 +253,8 @@
       "JukeboxOn": "🎷 Jukebox: {playlist} — {track}",
       "JukeboxOff": "🎷 Jukebox off.",
       "JukeboxOffResumed": "🎷 Jukebox off — the Keeper's music resumes.",
-      "TileRegionTraced": "Region “{name}” created: traced outline ({n} points), Dialogue behavior attached, portrait = tile image.",
-      "TileRegionRect": "Region “{name}” created on the tile's footprint (image not readable for tracing), Dialogue behavior attached."
+      "TileRegionTraced": "Region “{name}” created: traced outline ({n} points), “{behavior}” behavior attached.",
+      "TileRegionRect": "Region “{name}” created on the tile's footprint (image not readable for tracing), “{behavior}” behavior attached."
     },
     "SceneBehavior": {
       "Hint": "Makes the region clickable: a click takes the clicking user to the chosen scene (no token needed — a door, a staircase, a city map…). Players can reach it even if the scene isn't in the navigation bar.",
@@ -318,7 +323,7 @@
       }
     },
     "TileRegion": {
-      "Title": "Tile → dialogue region",
+      "Title": "Tile → clickable region",
       "Create": "Create region",
       "Journal": "Dialogue journal",
       "NoJournal": "— configure later —",
@@ -326,9 +331,47 @@
       "SpeakerAuto": "(derived from each tile's file name)",
       "Highlight": "Highlight",
       "Trace": "Trace the outline (image alpha)",
-      "Hint": "Creates a region shaped like the tile's visible pixels, attaches “ARK — Dialogue” and reuses the tile image as portrait. Untick tracing for a rectangular region.",
-      "HudTooltip": "ARK — Create a dialogue region from this tile",
-      "DefaultName": "NPC"
+      "Hint": "Creates a region shaped like the tile's visible pixels (alpha) and attaches the chosen behavior: Dialogue (tile image = portrait), To scene, or Open document. Untick tracing for a rectangular region.",
+      "HudTooltip": "ARK — Create a clickable region from this tile",
+      "DefaultName": "NPC",
+      "Behavior": "Behavior",
+      "Scene": "Target scene",
+      "NoScene": "— configure later —",
+      "Document": "Journal to open",
+      "NoDocument": "— configure later —",
+      "DocumentUuid": "…or exact UUID (page)",
+      "Grant": "Grant permission to the clicker",
+      "Name": "Region / NPC name"
+    },
+    "DocumentBehavior": {
+      "Hint": "Makes the region clickable: a click opens a journal (or a specific page) for the clicking user — poster, letter, newspaper, clue… If the player may not see it yet, the connected Keeper automatically grants Observer permission (permanent, per player).",
+      "FIELDS": {
+        "document": {
+          "label": "Journal or page",
+          "hint": "Drag and drop a journal, or a journal page (UUID JournalEntry.x.JournalEntryPage.y)."
+        },
+        "label": {
+          "label": "Hover label",
+          "hint": "Empty = document name."
+        },
+        "grant": {
+          "label": "Grant permission to the clicker",
+          "hint": "Gives Observer to the clicking player (through the connected Keeper — a Keeper must be online). Unticked: only players who already have permission can open it."
+        },
+        "highlight": {
+          "label": "Highlight",
+          "hint": "How to signal the clickable area to players.",
+          "choices": {
+            "hover": "On hover only",
+            "always": "Always (subtle) + hover",
+            "never": "Never (cursor only)"
+          }
+        },
+        "color": {
+          "label": "Highlight color",
+          "hint": "Empty = region color."
+        }
+      }
     }
   }
 }

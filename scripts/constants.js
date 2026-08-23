@@ -6,6 +6,7 @@ export const BEHAVIOR_TYPE = `${MODULE_ID}.dialogue`;
 export const BEHAVIOR_TYPE_MACRO = `${MODULE_ID}.clickMacro`;
 export const BEHAVIOR_TYPE_SCENE = `${MODULE_ID}.toScene`;
 export const BEHAVIOR_TYPE_JUKEBOX = `${MODULE_ID}.jukebox`;
+export const BEHAVIOR_TYPE_DOC = `${MODULE_ID}.openDocument`;
 
 /** Actor/User flag keys (all state lives under flags[MODULE_ID]). */
 export const FLAG_VISITED = 'visited'; // { [pageUuid]: count }

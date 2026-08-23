@@ -61,12 +61,12 @@
   },
   {
     "_id": "arkTileToRegion1",
-    "name": "ARK — Tuile → région de dialogue (MJ)",
+    "name": "ARK — Tuile → région cliquable (MJ)",
     "type": "script",
     "scope": "global",
     "img": "icons/sundries/documents/document-sealed-signatures-red.webp",
     "author": null,
-    "command": "// MJ : transforme la/les tuile(s) sélectionnée(s) (PNJ détouré) en région de\n// dialogue de la même forme, behavior « ARK — Dialogue » + portrait = image.\nconst api = game.modules.get('coc7-dialogues')?.api;\nif (!api?.promptTileToDialogueRegion) return ui.notifications.warn('coc7-dialogues 0.12.0+ requis.');\nconst tiles = canvas.tiles.controlled.map(t => t.document);\nif (!tiles.length) return ui.notifications.warn('Sélectionnez au moins une tuile (calque Tuiles).');\napi.promptTileToDialogueRegion(tiles);",
+    "command": "// MJ : transforme la/les tuile(s) sélectionnée(s) en région cliquable de la même\n// forme (contour alpha) avec le behavior choisi : Dialogue (portrait = image de\n// la tuile), Vers une scène, ou Ouvrir un document.\nconst api = game.modules.get('coc7-dialogues')?.api;\nif (!api?.promptTileToRegion) return ui.notifications.warn('coc7-dialogues 0.13.0+ requis.');\nconst tiles = canvas.tiles.controlled.map(t => t.document);\nif (!tiles.length) return ui.notifications.warn('Sélectionnez au moins une tuile (calque Tuiles).');\napi.promptTileToRegion(tiles);",
     "folder": null,
     "sort": 500000,
     "ownership": {
