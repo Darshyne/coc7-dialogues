@@ -83,7 +83,7 @@ function onCanvasReady() {
   container = canvas.interface.addChild(new PIXI.Container());
   container.name = `${MODULE_ID}-highlights`;
   container.zIndex = 1000;
-  container.eventMode = 'passive';   // children decide; the hit layer below is interactive
+  container.eventMode = 'none';      // purely decorative: must never capture pointer events (objects under it stay grabbable)
   container.sortableChildren = true;
   if ( typeof canvas.interface.sortChildren === 'function' ) canvas.interface.sortChildren();
 
@@ -160,13 +160,14 @@ function onPointerUp(event) {
 }
 
 /**
- * Belt and braces for the pointer cursor. The hit layer below lets PIXI
- * pick "pointer" natively — but the CoC7 system's own Chaosium Canvas
- * Interface handler (clickable-events.js) resets `#board.style.cursor = ''`
- * on EVERY mousemove that isn't over one of ITS regions, and PIXI, which
- * caches the mode it last applied, never re-applies it. So while one of our
- * regions is hovered (and no button is held) we re-assert the style each
- * frame: a string compare per tick, invisible flicker.
+ * Pointer cursor over a clickable region — done by writing the canvas
+ * style each frame from a ticker, NOT with an interactive PIXI hit object:
+ * an interactive object in the interface group captures pointer events and
+ * keeps the Keeper from grabbing/editing sounds, tiles or regions under it
+ * (0.13.1). The per-frame re-assert is needed because the CoC7 system's
+ * Chaosium Canvas Interface handler resets `#board.style.cursor = ''` on
+ * every mousemove that isn't over one of ITS regions. Only on the Token
+ * layer (the only layer where our clicks fire) — never in editing modes.
  */
 function enforceCursor(active) {
   if ( cursorTicker ) { canvas.app?.ticker?.remove(cursorTicker); cursorTicker = null; }
@@ -180,6 +181,7 @@ function enforceCursor(active) {
   }
   cursorTicker = () => {
     if ( !hovered || downAt ) return;      // dragging/panning: leave Foundry's grab cursors alone
+    if ( canvas.activeLayer !== canvas.tokens ) return; // editing layers: never override Foundry's own cursors
     const want = cursorStyle('pointer');
     if ( view.style.cursor !== want ) view.style.cursor = want;
   };
@@ -190,31 +192,6 @@ function enforceCursor(active) {
 function cursorStyle(mode) {
   const style = canvas.app?.renderer?.events?.cursorStyles?.[mode];
   return typeof style === 'string' ? style : mode;
-}
-
-/**
- * Cursor handling is delegated to PIXI: an invisible, interactive Graphics
- * per clickable region carries cursor = "pointer" (exactly how core's own
- * Region placeable does it). Setting view.style.cursor by hand does not
- * work — PIXI's EventSystem rewrites the cursor on every pointer move from
- * the hit object's `cursor` property, and empty canvas has none.
- */
-function rebuildHitLayer() {
-  if ( !container ) return;
-  for ( const child of [...container.children] ) {
-    if ( child.name === 'hit' ) child.destroy({ children: true });
-  }
-  for ( const { region } of getClickableRegions() ) {
-    const g = new PIXI.Graphics();
-    g.name = 'hit';
-    g.zIndex = -1;
-    g.eventMode = 'static';
-    g.cursor = 'pointer';
-    g.beginFill(0xffffff, 0.001); // invisible but hit-testable
-    for ( const poly of region.polygons ) g.drawPolygon(poly);
-    g.endFill();
-    container.addChild(g);
-  }
 }
 
 /* -------------------------------------------- */
@@ -230,13 +207,12 @@ function refreshStatic() {
   const g = new PIXI.Graphics();
   g.name = 'static';
   g.zIndex = 0;
-  g.eventMode = 'none'; // decorative: must never shadow the hit layer (PIXI stops at the first hit, even a non-interactive one)
+  g.eventMode = 'none';
   for ( const { region, behavior } of getClickableRegions() ) {
     if ( behavior.system.highlight !== 'always' ) continue;
     fillRegion(g, region, colorOf(region, behavior), ALWAYS_ALPHA, false);
   }
   container.addChild(g);
-  rebuildHitLayer();
   drawHover();
 }
 

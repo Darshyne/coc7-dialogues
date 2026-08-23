@@ -280,6 +280,15 @@ pattern que `../coc7-ledger/`).
   masque les champs non pertinents via l'option `render` (attribut
   `data-for`).
 
+- **Plus de couche « hit » PIXI (v0.13.1, demande du MJ)** : les Graphics
+  interactifs invisibles (`eventMode='static'`, `cursor='pointer'`) posés
+  par région dans `canvas.interface` capturaient les événements pointeur et
+  empêchaient le MJ d'attraper/éditer sons, tuiles, régions situés dessous.
+  Supprimés ; le conteneur est `eventMode='none'`. Le curseur main ne
+  repose plus que sur le ticker `enforceCursor` (écriture de
+  `view.style.cursor`, n'intercepte rien), limité au calque Jetons. Les
+  notes v0.8.1/v0.9.2 ci-dessus sur la couche hit sont donc historiques.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`
