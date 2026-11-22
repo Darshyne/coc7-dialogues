@@ -131,7 +131,13 @@ export async function rollSanLoss(actor, lossSpec) {
     await lossRoll.evaluate();
     loss = Math.max(0, lossRoll.total);
   }
-  if ( loss > 0 ) await actor.setSan((actor.system.attribs.san.value ?? 0) - loss);
+  if ( loss > 0 ) {
+    // setSan() returns the SAN it wrote: bounded at 0, and in CoC7 9.x
+    // possibly reduced by talents / the pulp Luck rule — report that loss.
+    const before = actor.system.attribs.san.value ?? 0;
+    const after = await actor.setSan(before - loss);
+    if ( Number.isFinite(after) ) loss = Math.max(0, before - after);
+  }
 
   const resultLabel = game.i18n.localize(`COC7DIALOGUES.Check.${success ? 'Success' : 'Failure'}`);
   const lossLabel = loss > 0

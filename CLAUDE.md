@@ -289,6 +289,15 @@ pattern que `../coc7-ledger/`).
   `view.style.cursor`, n'intercepte rien), limité au calque Jetons. Les
   notes v0.8.1/v0.9.2 ci-dessus sur la couche hit sont donc historiques.
 
+- **CoC7 9.x (v0.13.2, 2026-11-22, relevé `MIGRATION-COC7.md`)** : données
+  acteur/objets inchangées depuis 8.15. Deux écarts : `actor.setSan()` peut
+  ouvrir `CoC7PickTalentDialog` (talents `takingSanityLoss`, règle pulp) et
+  l'attendre → pendant le jet de SAN l'overlay prend la classe
+  `yield-windows` (sous `--z-index-window`), sinon la fenêtre reste cachée et
+  le dialogue fige ; le style global CoC 9.x sur toute `.application`
+  (`scale: var(--ui-scale)`, fond parchemin) est annulé sur l'overlay.
+  Scénarios du banc CoC : `banc-de-test/coc7/scenarios/coc7-dialogues.mjs`.
+
 ## Pièges rencontrés
 
 - Clefs de flags : les UUID contiennent des points → stockés avec `.`

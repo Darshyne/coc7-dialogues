@@ -21,6 +21,20 @@
   font-family: "Libre Caslon Text", "Signika", Georgia, serif;
   color: #ede4d1;
 }
+/* CoC7 9.x styles every .application (scale: var(--ui-scale), capped
+   max-width/height, parchment background-image): a full-screen overlay
+   must stay at 1:1 over the whole viewport. */
+#coc7-dialogues-overlay {
+  scale: none;
+  max-width: none;
+  max-height: none;
+  background-image: none;
+}
+/* While a system window is awaited (setSan talents / pulp Luck), drop
+   just under the window layer so that window is visible and clickable. */
+#coc7-dialogues-overlay.yield-windows {
+  z-index: calc(var(--z-index-window, 100) - 1);
+}
 #coc7-dialogues-overlay.no-blur {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;

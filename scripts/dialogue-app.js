@@ -292,7 +292,14 @@ export class DialogueApp extends HandlebarsApplicationMixin(ApplicationV2) {
     // conversation carries on (shaken, but talking).
     if ( choice.san?.trim() ) {
       const actor = getPlayerActor();
-      const res = await rollSanLoss(actor, choice.san);
+      // CoC7 9.x: actor.setSan() may open a window (talents that reduce
+      // SAN loss, pulp Luck rule) and waits for it. Windows sit at
+      // --z-index-window (100+), under this overlay: let them through
+      // while the roll is pending, or the dialogue would hang unseen.
+      this.element?.classList.add('yield-windows');
+      let res;
+      try { res = await rollSanLoss(actor, choice.san); }
+      finally { this.element?.classList.remove('yield-windows'); }
       if ( !res.ok ) {
         ui.notifications.warn(game.i18n.format('COC7DIALOGUES.Warn.NoActorCheck', { check: 'SAN' }));
         return this.render();
